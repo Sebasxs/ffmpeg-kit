@@ -1,7 +1,7 @@
 {
    "name": "ffmpeg-kit",
    "version": "1.0.0",
-   "description": "Edit audio & video easily using FFmpeg’s core features, without any command-line hassle.",
+   "description": "Simplifies audio and video editing with FFmpeg’s core features, without any command-line hassle.",
    "type": "module",
    "main": "dist/index.js",
    "types": "dist/index.d.ts",

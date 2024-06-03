@@ -6,7 +6,3 @@
 
 # Environment files
 .env
-
-# IDE and editor folders
-.vscode/
-
