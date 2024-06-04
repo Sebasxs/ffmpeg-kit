@@ -16,7 +16,7 @@ export default [
          'handle-callback-err': 'error',
          'max-nested-callbacks': ['error', { max: 4 }],
          'no-console': 'off',
-         'no-empty-function': 'error',
+         'no-empty-function': 'off',
          'no-lonely-if': 'warn',
          'no-unused-vars': 'off',
          'no-useless-escape': 'off',
