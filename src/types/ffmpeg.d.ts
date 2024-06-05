@@ -12,7 +12,7 @@ export interface AddFilterParams {
    outputTag?: string;
 }
 
-export interface FfmpegNodeData {
+export interface FFmpegNodeData {
    inputs: Map<string, MediaInput>;
    filterGraphParts: string[];
    outputAudioTag: string | null;

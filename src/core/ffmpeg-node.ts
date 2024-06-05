@@ -1,10 +1,10 @@
-import { AddFilterParams, FfmpegNodeData, MediaInput, MediaType } from '@/types/ffmpeg';
+import { AddFilterParams, FFmpegNodeData, MediaInput, MediaType } from '@/types/ffmpeg';
 import { FFProbeResult, SimplifiedMetadata } from '@/types/ffprobe';
 import { execSync } from 'node:child_process';
 import { join } from 'node:path';
 import crypto from 'node:crypto';
 
-export class FfmpegNode {
+export class FFmpegNode {
    private _hash: string;
    private _path: string | null = null;
    private _filterCounter: number = 0;
@@ -113,12 +113,55 @@ export class FfmpegNode {
       }
    }
 
-   getData(): FfmpegNodeData {
+   getData(): FFmpegNodeData {
       return {
          inputs: this.inputs,
          filterGraphParts: this.filterGraphParts,
          outputAudioTag: this._removeAudio ? null : this._outputAudioTag,
          outputVideoTag: this._removeVideo ? null : this._outputVideoTag,
       };
+   }
+
+   private async buildGraph(): Promise<void> {
+      if (this._removeAudio && this._removeVideo) {
+         throw new Error('Cannot remove both audio and video');
+      }
+
+      for (const key of this.inputs.keys()) {
+         const value = this.inputs.get(key);
+         if (!value) continue;
+
+         const { path, type } = value;
+         const metadata = this.getFileMetadata(path);
+         this.inputsMetadata.set(key, metadata);
+      }
+      // const firstAudioIndex = this.resolvedSources.findIndex((input) => input.hasAudio);
+      // if (this.expectAudio && firstAudioIndex !== -1) {
+      //    if (!this._outputAudioTag) {
+      //       this._outputAudioTag = this.addAudioFilter({
+      //          inputs: [`[${firstAudioIndex}:a]`],
+      //          filter: 'anull',
+      //       });
+      //    }
+      //    this._command.addOptions(['-map', this._outputAudioTag]);
+      // }
+      // const firstVideoIndex = this.resolvedSources.findIndex(
+      //    ({ hasVideo, type }) => hasVideo || type === 'image',
+      // );
+      // if (this.expectVideo && firstVideoIndex !== -1) {
+      //    if (!this._outputVideoTag) {
+      //       this._outputVideoTag = this.addVideoFilter({
+      //          inputs: [`[${firstVideoIndex}:v]`],
+      //          filter: 'null',
+      //       });
+      //    }
+      //    this._command.addOptions(['-map', this._outputVideoTag]);
+      // }
+      // this._command.complexFilter(this.filterGraphParts);
+   }
+
+   async run(): Promise<void> {
+      // si solo hay una imagen se retonar la misma imagen
+      // si solo hay una imagen pero se pide exportar video, asignar una duracion si no se asigna
    }
 }
