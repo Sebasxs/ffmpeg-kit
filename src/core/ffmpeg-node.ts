@@ -1,4 +1,6 @@
-import { AddFilterParams, MediaInput, MediaType } from '@/types/ffmpeg';
+import { AddFilterParams, FfmpegNodeData, MediaInput, MediaType } from '@/types/ffmpeg';
+import { FFProbeResult, SimplifiedMetadata } from '@/types/ffprobe';
+import { execSync } from 'node:child_process';
 import { join } from 'node:path';
 import crypto from 'node:crypto';
 
@@ -13,6 +15,7 @@ export class FfmpegNode {
    protected _removeVideo: boolean = false;
    protected filterGraphParts: string[];
    protected inputs: Map<string, MediaInput>;
+   protected inputsMetadata: Map<string, SimplifiedMetadata>;
 
    constructor(filePath?: string | string[], type?: MediaType) {
       this._hash = this.generateHash(filePath);
@@ -20,6 +23,7 @@ export class FfmpegNode {
       this._outputVideoTag = null;
 
       this.inputs = new Map();
+      this.inputsMetadata = new Map();
       this.filterGraphParts = [];
 
       if (filePath && type) {
@@ -62,5 +66,59 @@ export class FfmpegNode {
       this._outputVideoTag = generatedOutputTag;
       this.filterGraphParts.push(filterString);
       return generatedOutputTag;
+   }
+
+   protected getFileMetadata(path: string, full: true): FFProbeResult;
+
+   protected getFileMetadata(path: string, full?: false): SimplifiedMetadata;
+
+   protected getFileMetadata(path: string, full?: boolean): FFProbeResult | SimplifiedMetadata {
+      try {
+         const cmd = `ffprobe -v quiet -print_format json -show_format -show_streams "${path}"`;
+         const result = execSync(cmd, { encoding: 'utf-8' });
+         const { streams, format } = JSON.parse(result) as FFProbeResult;
+         if (full) return { streams, format };
+
+         const videoStream = streams.find((source) => source.codec_type === 'video');
+         const audioStream = streams.find((source) => source.codec_type === 'audio');
+
+         const getFrameRate = (frameRate: string | undefined) => {
+            if (!frameRate) return undefined;
+            const [numerator, denominator] = frameRate.split('/');
+            return Number(numerator) / Number(denominator);
+         };
+
+         const parseProperty = (property: string | undefined) => {
+            if (!property) return undefined;
+            return parseInt(property, 10);
+         };
+
+         return {
+            hasAudio: !!audioStream,
+            hasVideo: !!videoStream,
+            duration: parseProperty(format.duration),
+            size: parseProperty(format.size),
+            bitRate: parseProperty(format.bit_rate),
+            height: videoStream?.height,
+            width: videoStream?.width,
+            aspectRatio: videoStream?.display_aspect_ratio,
+            frameRate: getFrameRate(videoStream?.r_frame_rate),
+            audioChannels: audioStream?.channels,
+            audioSampleRate: parseProperty(audioStream?.sample_rate),
+            formatName: format.format_name,
+            tags: format.tags || {},
+         };
+      } catch (error: any) {
+         throw new Error(`Failed to get media info: ${error.message}`);
+      }
+   }
+
+   getData(): FfmpegNodeData {
+      return {
+         inputs: this.inputs,
+         filterGraphParts: this.filterGraphParts,
+         outputAudioTag: this._removeAudio ? null : this._outputAudioTag,
+         outputVideoTag: this._removeVideo ? null : this._outputVideoTag,
+      };
    }
 }

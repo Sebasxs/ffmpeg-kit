@@ -11,3 +11,14 @@ export interface AddFilterParams {
    inputs?: string[];
    outputTag?: string;
 }
+
+export interface FfmpegNodeData {
+   inputs: Map<string, MediaInput>;
+   filterGraphParts: string[];
+   outputAudioTag: string | null;
+   outputVideoTag: string | null;
+}
+
+// type AtLeastOne<T, K extends keyof T = keyof T> => {
+//    [P in K]-?: Required<Pick<T, P>> & Partial<Omit<T, P>>;
+// }[K];
