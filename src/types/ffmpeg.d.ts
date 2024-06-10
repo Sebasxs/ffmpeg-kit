@@ -13,10 +13,52 @@ export interface AddFilterParams {
 }
 
 export interface FFmpegNodeData {
+   hash: string;
    inputs: Map<string, MediaInput>;
    filterGraphParts: string[];
    outputAudioTag: string | null;
    outputVideoTag: string | null;
+}
+
+export type AudioCodec = 'aac' | 'mp3' | 'opus' | 'flac' | 'vorbis' | 'copy' | (string & {});
+
+export type VideoCodec = 'libx264' | 'libx265' | 'vp9' | 'av1' | 'copy' | (string & {});
+
+export type Preset =
+   | 'ultrafast'
+   | 'superfast'
+   | 'veryfast'
+   | 'faster'
+   | 'fast'
+   | 'medium'
+   | 'slow'
+   | 'slower'
+   | 'veryslow';
+
+export type PixelFormat =
+   | 'yuv420p'
+   | 'yuv422p'
+   | 'yuv444p'
+   | 'rgb24'
+   | 'rgba'
+   | 'gray'
+   | 'gray16le'
+   | 'yuva420p'
+   | (string & {});
+
+export interface OutputOptions {
+   audioCodec?: AudioCodec;
+   videoCodec?: VideoCodec;
+   channels?: 1 | 2 | 5 | 7;
+   fps?: number;
+   audioBitrate?: `${number}k`;
+   videoBitrate?: `${number}M`;
+   crf?: number;
+   preset?: Preset;
+   duration?: number;
+   shortest?: boolean;
+   pixelFormat?: PixelFormat;
+   overwrite?: boolean;
 }
 
 // type AtLeastOne<T, K extends keyof T = keyof T> => {

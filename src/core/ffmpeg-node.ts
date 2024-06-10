@@ -1,8 +1,18 @@
-import { AddFilterParams, FFmpegNodeData, MediaInput, MediaType } from '@/types/ffmpeg';
-import { FFProbeResult, SimplifiedMetadata } from '@/types/ffprobe';
+// @dependencies
 import { execSync } from 'node:child_process';
-import { join } from 'node:path';
+import { join, extname } from 'node:path';
 import crypto from 'node:crypto';
+import mime from 'mime';
+
+// @types
+import { FFProbeResult, SimplifiedMetadata } from '@/types/ffprobe';
+import {
+   AddFilterParams,
+   OutputOptions,
+   FFmpegNodeData,
+   MediaInput,
+   MediaType,
+} from '@/types/ffmpeg';
 
 export class FFmpegNode {
    private _hash: string;
@@ -10,6 +20,7 @@ export class FFmpegNode {
    private _filterCounter: number = 0;
    private _outputAudioTag: string | null;
    private _outputVideoTag: string | null;
+   private _options: OutputOptions = {};
 
    protected _removeAudio: boolean = false;
    protected _removeVideo: boolean = false;
@@ -115,6 +126,7 @@ export class FFmpegNode {
 
    getData(): FFmpegNodeData {
       return {
+         hash: this._hash,
          inputs: this.inputs,
          filterGraphParts: this.filterGraphParts,
          outputAudioTag: this._removeAudio ? null : this._outputAudioTag,
@@ -122,46 +134,80 @@ export class FFmpegNode {
       };
    }
 
-   private async buildGraph(): Promise<void> {
-      if (this._removeAudio && this._removeVideo) {
-         throw new Error('Cannot remove both audio and video');
+   async run(output: string | string[], options?: OutputOptions): Promise<string> {
+      if (Array.isArray(output)) output = join(...output);
+      if (!output || output === '.') throw new Error('Output path is required');
+      const ext = extname(output).slice(1);
+      if (!ext) throw new Error('Output filename and extension is required');
+      if (options) this._options = { ...this._options, ...options };
+      const mimeType = mime.getType(ext);
+      if (!mimeType) throw new Error('Invalid output file extension');
+
+      const onlyImages = Array.from(this.inputs.values()).every((input) => input.type === 'image');
+      const someTrimmed = this.filterGraphParts.some((part) => part.includes('trim'));
+      const gifExpected = mimeType.includes('gif');
+      const imageExpected = mimeType.includes('image') || !gifExpected;
+      const videoExpected = mimeType.includes('video');
+      if (onlyImages && !someTrimmed && videoExpected && !this._options.duration) {
+         this._options.duration = 5;
       }
 
-      for (const key of this.inputs.keys()) {
-         const value = this.inputs.get(key);
-         if (!value) continue;
+      const {
+         audioCodec,
+         videoCodec,
+         audioBitrate = '96k',
+         videoBitrate = '1M',
+         channels,
+         fps,
+         crf,
+         preset,
+         duration,
+         shortest = true,
+         pixelFormat,
+         overwrite = true,
+      } = this._options;
 
-         const { path, type } = value;
-         const metadata = this.getFileMetadata(path);
-         this.inputsMetadata.set(key, metadata);
+      let inputIndex = 0;
+      const inputOptions = [];
+      if (overwrite) inputOptions.push('-y');
+
+      for (const [key, { path, type }] of this.inputs) {
+         if (type === 'image' && !imageExpected) {
+            inputOptions.push(`-loop 1`);
+         }
+
+         inputOptions.push(`-i ${path}`);
+
+         this.filterGraphParts = this.filterGraphParts.map((part) => {
+            const hash = `{${key}}`;
+            return part.includes(hash) ? part.replace(hash, inputIndex.toString()) : part;
+         });
+
+         inputIndex++;
       }
-      // const firstAudioIndex = this.resolvedSources.findIndex((input) => input.hasAudio);
-      // if (this.expectAudio && firstAudioIndex !== -1) {
-      //    if (!this._outputAudioTag) {
-      //       this._outputAudioTag = this.addAudioFilter({
-      //          inputs: [`[${firstAudioIndex}:a]`],
-      //          filter: 'anull',
-      //       });
-      //    }
-      //    this._command.addOptions(['-map', this._outputAudioTag]);
-      // }
-      // const firstVideoIndex = this.resolvedSources.findIndex(
-      //    ({ hasVideo, type }) => hasVideo || type === 'image',
-      // );
-      // if (this.expectVideo && firstVideoIndex !== -1) {
-      //    if (!this._outputVideoTag) {
-      //       this._outputVideoTag = this.addVideoFilter({
-      //          inputs: [`[${firstVideoIndex}:v]`],
-      //          filter: 'null',
-      //       });
-      //    }
-      //    this._command.addOptions(['-map', this._outputVideoTag]);
-      // }
-      // this._command.complexFilter(this.filterGraphParts);
-   }
 
-   async run(): Promise<void> {
-      // si solo hay una imagen se retonar la misma imagen
-      // si solo hay una imagen pero se pide exportar video, asignar una duracion si no se asigna
+      const filterGraph = '-filter_complex "' + this.filterGraphParts.join(';') + '"';
+
+      const outputOptions = [];
+      if (audioCodec) outputOptions.push(`-c:a ${audioCodec}`);
+      if (videoCodec) outputOptions.push(`-c:v ${videoCodec}`);
+      if (duration) outputOptions.push(`-t ${duration}`);
+      if (audioBitrate) outputOptions.push(`-b:a ${audioBitrate}`);
+      if (videoBitrate) outputOptions.push(`-b:v ${videoBitrate}`);
+      if (channels) outputOptions.push(`-ac ${channels}`);
+      if (fps) outputOptions.push(`-r ${fps}`);
+      if (shortest) outputOptions.push('-shortest');
+      if (crf) outputOptions.push(`-crf ${crf}`);
+      if (preset) outputOptions.push(`-preset ${preset}`);
+      if (pixelFormat) outputOptions.push(`-pix_fmt ${pixelFormat}`);
+
+      const cmd = `ffmpeg ${inputOptions.join(' ')} ${filterGraph} -map "${this._outputVideoTag}" -map "${this._outputAudioTag}" ${outputOptions.join(' ')} ${output}`;
+
+      try {
+         execSync(cmd, { encoding: 'utf-8' });
+         return cmd;
+      } catch (error: any) {
+         throw new Error(`Failed to run ffmpeg: ${error.message}`);
+      }
    }
 }
