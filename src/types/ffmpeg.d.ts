@@ -7,7 +7,6 @@ export type MediaInput = {
 
 export interface AddFilterParams {
    filter: string;
-   ref: string;
    inputs?: string[];
    outputTag?: string;
 }
@@ -59,6 +58,24 @@ export interface OutputOptions {
    shortest?: boolean;
    pixelFormat?: PixelFormat;
    overwrite?: boolean;
+   audioNone?: boolean;
+   videoNone?: boolean;
+}
+
+export interface PrepareInputOptionsParams {
+   overwrite: boolean;
+   inputs: Map<string, MediaInput>;
+   filterGraphParts: string[];
+   mimeType: string;
+}
+
+export interface BuildCommandParams {
+   output: string;
+   inputOptions: string[];
+   outputOptions: string[];
+   filterGraphParts: string[];
+   mapAudio: string | null;
+   mapVideo: string | null;
 }
 
 // type AtLeastOne<T, K extends keyof T = keyof T> => {
