@@ -14,6 +14,7 @@ import {
    MediaType,
    PrepareInputOptionsParams,
    BuildCommandParams,
+   PrepareOutputOptionsParams,
 } from '@/types/ffmpeg';
 
 export class FFmpegNode {
@@ -161,17 +162,19 @@ export class FFmpegNode {
       );
 
       const inputOptions = this.prepareInputOptions({
-         overwrite: options.overwrite || true,
+         overwrite: options.overwrite ?? true,
          inputs,
          filterGraphParts,
          mimeType,
       });
 
-      const { outputOptions, mapAudio, mapVideo } = this.prepareOutputOptions(
-         { inputs, outputAudioTag, outputVideoTag },
+      const { outputOptions, mapAudio, mapVideo } = this.prepareOutputOptions({
+         inputs,
+         outputAudioTag,
+         outputVideoTag,
          mimeType,
          options,
-      );
+      });
 
       const ffmpegCommand = this.buildFFmpegCommand({
          output: outputPath,
@@ -216,12 +219,12 @@ export class FFmpegNode {
       const { inputs, filterGraphParts, mimeType, overwrite } = params;
       const inputOptions: string[] = [];
       if (overwrite) inputOptions.push('-y');
-      const imageExpected = mimeType.includes('image') && !mimeType.includes('gif');
+      const staticImageExpected = mimeType.includes('image') && !mimeType.includes('gif');
       let inputIndex = 0;
       let updatedFilterGraphParts = [...filterGraphParts];
 
       for (const [key, { path, type }] of inputs) {
-         if (type === 'image' && !imageExpected) {
+         if (type === 'image' && !staticImageExpected) {
             inputOptions.push(`-loop 1`);
          }
 
@@ -235,31 +238,32 @@ export class FFmpegNode {
       return inputOptions;
    }
 
-   private prepareOutputOptions(
-      data: Omit<FFmpegNodeData, 'hash' | 'filterGraphParts'>,
-      mimeType: string,
-      options: OutputOptions,
-   ): { outputOptions: string[]; mapAudio: string | null; mapVideo: string | null } {
-      const inputs = Array.from(data.inputs.values());
-      const firstAudioStream = inputs.findIndex(
+   private prepareOutputOptions(params: PrepareOutputOptionsParams) {
+      const { inputs, outputAudioTag, outputVideoTag, mimeType, options } = params;
+      let mapAudio = outputAudioTag;
+      let mapVideo = outputVideoTag;
+      const outputOptions: string[] = [];
+      const gifExpected = mimeType.includes('gif');
+      const imageExpected = mimeType.includes('image');
+
+      const firstAudioStream = Array.from(inputs.values()).findIndex(
          ({ type, path }) =>
             type === 'audio' || (type === 'video' && this.getFileMetadata(path).hasAudio),
       );
 
-      const outputOptions: string[] = [];
-      const gifExpected = mimeType.includes('gif');
-
-      if (!options.audioNone && firstAudioStream !== -1 && !gifExpected) {
+      if (!options.audioNone && firstAudioStream !== -1 && !imageExpected) {
          if (options.audioCodec) outputOptions.push(`-c:a ${options.audioCodec}`);
          if (options.audioBitrate ?? '96k') outputOptions.push(`-b:a ${options.audioBitrate}`);
          if (options.channels) outputOptions.push(`-ac ${options.channels}`);
-         if (!data.outputAudioTag) {
-            data.outputAudioTag = `${firstAudioStream}:a?`;
+         if (!outputAudioTag) {
+            mapAudio = `${firstAudioStream}:a?`;
             if (!options.audioCodec) outputOptions.push('-c:a copy');
          }
       }
 
-      const firstVideoStream = inputs.findIndex(({ type }) => type === 'video' || type === 'image');
+      const firstVideoStream = Array.from(inputs.values()).findIndex(
+         ({ type }) => type === 'video' || type === 'image',
+      );
 
       if (!options.videoNone && firstVideoStream !== -1) {
          if (options.videoCodec) outputOptions.push(`-c:v ${options.videoCodec}`);
@@ -268,8 +272,8 @@ export class FFmpegNode {
          if (options.crf) outputOptions.push(`-crf ${options.crf}`);
          if (options.preset) outputOptions.push(`-preset ${options.preset}`);
          if (options.pixelFormat) outputOptions.push(`-pix_fmt ${options.pixelFormat}`);
-         if (!data.outputVideoTag) {
-            data.outputVideoTag = `${firstVideoStream}:v?`;
+         if (!outputVideoTag) {
+            mapVideo = `${firstVideoStream}:v?`;
             if (!options.videoCodec) outputOptions.push('-c:v copy');
          }
       }
@@ -278,11 +282,7 @@ export class FFmpegNode {
       if (options.duration) outputOptions.push(`-t ${options.duration}`);
       if (options.shortest ?? true) outputOptions.push('-shortest');
 
-      return {
-         outputOptions,
-         mapAudio: data.outputAudioTag,
-         mapVideo: data.outputVideoTag,
-      };
+      return { outputOptions, mapAudio, mapVideo };
    }
 
    private buildFFmpegCommand(params: BuildCommandParams): string {
