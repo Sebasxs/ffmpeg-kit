@@ -23,13 +23,14 @@ export class FFmpegNode {
    private _filterCounter: number = 0;
    private _outputAudioTag: string | null;
    private _outputVideoTag: string | null;
+   private _metadata: SimplifiedMetadata;
 
    protected filterGraphParts: string[];
    protected inputs: Map<string, MediaInput>;
    protected audioSubgraph: string[];
    protected videoSubgraph: string[];
 
-   constructor(filePath?: string | string[], type?: MediaType) {
+   constructor(filePath: string | string[], type: MediaType) {
       this._hash = this.generateHash(filePath);
       this._outputAudioTag = null;
       this._outputVideoTag = null;
@@ -39,20 +40,17 @@ export class FFmpegNode {
       this.audioSubgraph = [];
       this.videoSubgraph = [];
 
-      if (filePath && type) {
-         const normalizedPath = Array.isArray(filePath) ? join(...filePath) : filePath;
-         this._path = normalizedPath;
-         this.inputs.set(this._hash, { path: normalizedPath, type });
-      }
+      const normalizedPath = Array.isArray(filePath) ? join(...filePath) : filePath;
+      this._path = normalizedPath;
+      this._metadata = this.getFileMetadata(normalizedPath);
+      this.inputs.set(this._hash, { path: normalizedPath, type });
    }
 
    protected getPath(): string | null {
       return this._path;
    }
 
-   private generateHash(filePath?: string | string[]): string {
-      if (!filePath) return crypto.randomBytes(3).toString('hex');
-
+   private generateHash(filePath: string | string[]): string {
       const path = Array.isArray(filePath) ? join(...filePath) : filePath;
       return crypto.createHash('md5').update(path).digest('hex').slice(0, 6);
    }
@@ -87,6 +85,33 @@ export class FFmpegNode {
       this._outputVideoTag = generatedOutputTag;
       this.filterGraphParts.push(filterString);
       return generatedOutputTag;
+   }
+
+   getData(): FFmpegNodeData {
+      if (this.audioSubgraph.length) {
+         const filter = this.audioSubgraph.join(',');
+         this.addAudioFilterPart({ filter });
+         this.audioSubgraph = [];
+      }
+
+      if (this.videoSubgraph.length) {
+         const filter = this.videoSubgraph.join(',');
+         this.addVideoFilterPart({ filter });
+         this.videoSubgraph = [];
+      }
+
+      return {
+         hash: this._hash,
+         inputs: this.inputs,
+         filterGraphParts: this.filterGraphParts,
+         outputAudioTag: this._outputAudioTag,
+         outputVideoTag: this._outputVideoTag,
+      };
+   }
+
+   getMetadata(full?: boolean): SimplifiedMetadata | FFProbeResult {
+      if (full && this._path) return this.getFileMetadata(this._path, true);
+      return this._metadata;
    }
 
    protected getFileMetadata(path: string, full: true): FFProbeResult;
@@ -130,26 +155,6 @@ export class FFmpegNode {
       } catch (error: any) {
          throw new Error(`Failed to get media info: ${error.message}`);
       }
-   }
-
-   getData(): FFmpegNodeData {
-      if (this.audioSubgraph.length) {
-         const filter = this.audioSubgraph.join(',');
-         this.addAudioFilterPart({ filter });
-      }
-
-      if (this.videoSubgraph.length) {
-         const filter = this.videoSubgraph.join(',');
-         this.addVideoFilterPart({ filter });
-      }
-
-      return {
-         hash: this._hash,
-         inputs: this.inputs,
-         filterGraphParts: this.filterGraphParts,
-         outputAudioTag: this._outputAudioTag,
-         outputVideoTag: this._outputVideoTag,
-      };
    }
 
    run(output: string | string[], options: OutputOptions = {}): string {
@@ -247,8 +252,7 @@ export class FFmpegNode {
       const imageExpected = mimeType.includes('image');
 
       const firstAudioStream = Array.from(inputs.values()).findIndex(
-         ({ type, path }) =>
-            type === 'audio' || (type === 'video' && this.getFileMetadata(path).hasAudio),
+         ({ type }) => type === 'audio' || (type === 'video' && this._metadata.hasAudio),
       );
 
       if (!options.audioNone && firstAudioStream !== -1 && !imageExpected) {
