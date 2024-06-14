@@ -1,8 +1,11 @@
+import { SimplifiedMetadata } from '@/core/ffprobe';
+
 export type MediaType = 'audio' | 'image' | 'video';
 
 export type MediaInput = {
    path: string;
    type: MediaType;
+   metadata: SimplifiedMetadata;
 };
 
 export interface AddFilterParams {
@@ -11,7 +14,7 @@ export interface AddFilterParams {
    outputTag?: string;
 }
 
-export interface FFmpegNodeData {
+export interface FFmpegBaseData {
    hash: string;
    inputs: Map<string, MediaInput>;
    filterGraphParts: string[];

@@ -62,6 +62,7 @@ export interface FFProbeFormat {
 export interface FFProbeResult {
    streams: FFProbeStream[];
    format: FFProbeFormat;
+   summary: SimplifiedMetadata;
 }
 
 interface SimplifiedMetadata {
@@ -73,6 +74,7 @@ interface SimplifiedMetadata {
    height?: number;
    width?: number;
    aspectRatio?: string;
+   frameCount?: number;
    frameRate?: number; // FPS
    audioChannels?: number;
    audioSampleRate?: number; // Hz

@@ -9,7 +9,7 @@ import { FFProbeResult, SimplifiedMetadata } from '@/types/ffprobe';
 import {
    AddFilterParams,
    OutputOptions,
-   FFmpegNodeData,
+   FFmpegBaseData,
    MediaInput,
    MediaType,
    PrepareInputOptionsParams,
@@ -17,20 +17,23 @@ import {
    PrepareOutputOptionsParams,
 } from '@/types/ffmpeg';
 
-export class FFmpegNode {
+// @utils
+import { getFileMetadata } from '@/utils/ffprobe';
+
+export class FFmpegBase {
    private _hash: string;
-   private _path: string | null = null;
+   private _path: string;
    private _filterCounter: number = 0;
    private _outputAudioTag: string | null;
    private _outputVideoTag: string | null;
-   private _metadata: SimplifiedMetadata;
+   private _metadata: FFProbeResult;
 
    protected filterGraphParts: string[];
    protected inputs: Map<string, MediaInput>;
    protected audioSubgraph: string[];
    protected videoSubgraph: string[];
 
-   constructor(filePath: string | string[], type: MediaType) {
+   constructor(filePath: string | string[]) {
       this._hash = this.generateHash(filePath);
       this._outputAudioTag = null;
       this._outputVideoTag = null;
@@ -40,19 +43,36 @@ export class FFmpegNode {
       this.audioSubgraph = [];
       this.videoSubgraph = [];
 
-      const normalizedPath = Array.isArray(filePath) ? join(...filePath) : filePath;
-      this._path = normalizedPath;
-      this._metadata = this.getFileMetadata(normalizedPath);
-      this.inputs.set(this._hash, { path: normalizedPath, type });
-   }
-
-   protected getPath(): string | null {
-      return this._path;
+      const path = Array.isArray(filePath) ? join(...filePath) : filePath;
+      this._path = path;
+      this._metadata = getFileMetadata(path);
+      const type = this.getFileType(this._metadata.summary);
+      this.inputs.set(this._hash, { path, type, metadata: this._metadata.summary });
    }
 
    private generateHash(filePath: string | string[]): string {
       const path = Array.isArray(filePath) ? join(...filePath) : filePath;
       return crypto.createHash('md5').update(path).digest('hex').slice(0, 6);
+   }
+
+   protected getPath(): string {
+      return this._path;
+   }
+
+   protected hasAudioStream(): boolean {
+      return this._metadata.summary.hasAudio || this._outputAudioTag !== null;
+   }
+
+   protected hasVideoStream(): boolean {
+      return this._metadata.summary.hasVideo || this._outputVideoTag !== null;
+   }
+
+   private getFileType(metadata: SimplifiedMetadata): MediaType {
+      const { hasAudio, hasVideo, frameCount, duration } = metadata;
+      if (hasAudio && !hasVideo) return 'audio';
+      if (!hasVideo) throw new Error('No video or audio stream found');
+      if (!frameCount || frameCount === 0 || !duration) return 'image';
+      return 'video';
    }
 
    protected addAudioFilter(filter: string): void {
@@ -87,7 +107,7 @@ export class FFmpegNode {
       return generatedOutputTag;
    }
 
-   getData(): FFmpegNodeData {
+   getData(): FFmpegBaseData {
       if (this.audioSubgraph.length) {
          const filter = this.audioSubgraph.join(',');
          this.addAudioFilterPart({ filter });
@@ -109,52 +129,11 @@ export class FFmpegNode {
       };
    }
 
+   getMetadata(full: true): FFProbeResult;
+   getMetadata(full?: false): SimplifiedMetadata;
    getMetadata(full?: boolean): SimplifiedMetadata | FFProbeResult {
-      if (full && this._path) return this.getFileMetadata(this._path, true);
-      return this._metadata;
-   }
-
-   protected getFileMetadata(path: string, full: true): FFProbeResult;
-   protected getFileMetadata(path: string, full?: false): SimplifiedMetadata;
-   protected getFileMetadata(path: string, full?: boolean): FFProbeResult | SimplifiedMetadata {
-      const cmd = `ffprobe -v quiet -print_format json -show_format -show_streams "${path}"`;
-      try {
-         const result = execSync(cmd, { encoding: 'utf-8' });
-         const { streams, format } = JSON.parse(result) as FFProbeResult;
-         if (full) return { streams, format };
-
-         const videoStream = streams.find((source) => source.codec_type === 'video');
-         const audioStream = streams.find((source) => source.codec_type === 'audio');
-
-         const getFrameRate = (frameRate: string | undefined) => {
-            if (!frameRate) return undefined;
-            const [numerator, denominator] = frameRate.split('/');
-            return Number(numerator) / Number(denominator);
-         };
-
-         const parseProperty = (property: string | undefined) => {
-            if (!property) return undefined;
-            return parseInt(property, 10);
-         };
-
-         return {
-            hasAudio: !!audioStream,
-            hasVideo: !!videoStream,
-            duration: parseProperty(format.duration),
-            size: parseProperty(format.size),
-            bitRate: parseProperty(format.bit_rate),
-            height: videoStream?.height,
-            width: videoStream?.width,
-            aspectRatio: videoStream?.display_aspect_ratio,
-            frameRate: getFrameRate(videoStream?.r_frame_rate),
-            audioChannels: audioStream?.channels,
-            audioSampleRate: parseProperty(audioStream?.sample_rate),
-            formatName: format.format_name,
-            tags: format.tags || {},
-         };
-      } catch (error: any) {
-         throw new Error(`Failed to get media info: ${error.message}`);
-      }
+      if (full) return this._metadata;
+      return this._metadata.summary;
    }
 
    run(output: string | string[], options: OutputOptions = {}): string {
@@ -207,7 +186,7 @@ export class FFmpegNode {
       return mimeType;
    }
 
-   private prepareData(mimeType: string, options: OutputOptions): Omit<FFmpegNodeData, 'hash'> {
+   private prepareData(mimeType: string, options: OutputOptions): Omit<FFmpegBaseData, 'hash'> {
       const { inputs, filterGraphParts, outputAudioTag, outputVideoTag } = this.getData();
       const onlyImages = Array.from(inputs.values()).every((input) => input.type === 'image');
       const someTrimmed = filterGraphParts.some((part) => part.includes('trim'));
@@ -252,7 +231,7 @@ export class FFmpegNode {
       const imageExpected = mimeType.includes('image');
 
       const firstAudioStream = Array.from(inputs.values()).findIndex(
-         ({ type }) => type === 'audio' || (type === 'video' && this._metadata.hasAudio),
+         ({ metadata }) => metadata.hasAudio,
       );
 
       if (!options.audioNone && firstAudioStream !== -1 && !imageExpected) {
@@ -266,7 +245,7 @@ export class FFmpegNode {
       }
 
       const firstVideoStream = Array.from(inputs.values()).findIndex(
-         ({ type }) => type === 'video' || type === 'image',
+         ({ metadata }) => metadata.hasVideo,
       );
 
       if (!options.videoNone && firstVideoStream !== -1) {
