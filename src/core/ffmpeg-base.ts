@@ -1,6 +1,7 @@
 // @dependencies
 import { execSync } from 'node:child_process';
-import { join, extname } from 'node:path';
+import { join, extname, dirname } from 'node:path';
+import { accessSync, mkdirSync, constants } from 'node:fs';
 import crypto from 'crypto';
 import mime from 'mime';
 
@@ -268,8 +269,18 @@ export class FFmpegBase {
       return { outputOptions, mapAudio, mapVideo };
    }
 
+   private ensureDirectoryExists(outputPath: string): void {
+      const dirPath = dirname(outputPath);
+      try {
+         accessSync(dirPath, constants.F_OK);
+      } catch (error) {
+         mkdirSync(dirPath, { recursive: true });
+      }
+   }
+
    private buildFFmpegCommand(params: BuildCommandParams): string {
       const { output, inputOptions, outputOptions, filterGraphParts, mapAudio, mapVideo } = params;
+      this.ensureDirectoryExists(output);
 
       let cmd = `ffmpeg ${inputOptions.join(' ')}`;
 
