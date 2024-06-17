@@ -14,13 +14,13 @@ export interface VolumeBuilder {
    (options: VolumeOptions): RequiredFilterOutput<'audioFilter'>;
 }
 
-export interface NormalizeOptions {
+export interface LoudnormOptions {
    I: number;
    LRA: number;
    TP: number;
    linear?: boolean;
 }
 
-export interface NormalizeBuilder {
-   (options: NormalizeOptions): RequiredFilterOutput<'audioFilter'>;
+export interface LoudnormBuilder {
+   (options: LoudnormOptions): RequiredFilterOutput<'audioFilter'>;
 }

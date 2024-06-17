@@ -1,6 +1,6 @@
-import { NormalizeBuilder } from '@/types/filters';
+import { LoudnormBuilder } from '@/types/filters';
 
-export const BuildNormalizeFilter: NormalizeBuilder = (options) => {
+export const BuildLoudnormFilter: LoudnormBuilder = (options) => {
    const { I, LRA, TP, linear } = options;
    let normalizeString = `loudnorm=I=${I}:LRA=${LRA}:TP=${TP}`;
 

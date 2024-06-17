@@ -1,7 +1,7 @@
 import { FFmpegBase } from '@/core/ffmpeg-base';
-import { BuildNormalizeFilter } from '@/filters/normalize';
+import { BuildLoudnormFilter } from '@/filters/normalize';
 import { BuildVolumeFilter } from '@/filters/volume';
-import { NormalizeOptions, VolumeOptions } from '@/types/filters';
+import { LoudnormOptions, VolumeOptions } from '@/types/filters';
 
 export class MediaLayer extends FFmpegBase {
    constructor(filePath: string | string[]) {
@@ -18,12 +18,12 @@ export class MediaLayer extends FFmpegBase {
       return this;
    }
 
-   normalize(options: NormalizeOptions = { I: -23, LRA: 9, TP: -1 }): this {
+   loudnorm(options: LoudnormOptions = { I: -23, LRA: 9, TP: -1 }): this {
       if (!this.hasAudioStream()) {
-         throw new Error('Normalize filter can only be applied to audio streams.');
+         throw new Error('Loudnorm filter can only be applied to audio streams.');
       }
 
-      const { audioFilter } = BuildNormalizeFilter(options);
+      const { audioFilter } = BuildLoudnormFilter(options);
       this.addAudioFilter(audioFilter);
       return this;
    }
