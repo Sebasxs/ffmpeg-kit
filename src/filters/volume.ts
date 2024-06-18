@@ -1,6 +1,6 @@
 import { VolumeBuilder } from '@/types/filters';
 
-export const BuildVolumeFilter: VolumeBuilder = (options) => {
+export const VolumeFilter: VolumeBuilder = (options) => {
    const { volume, precision } = options;
    let volumeString = `volume=${volume}`;
 

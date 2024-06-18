@@ -24,3 +24,17 @@ export interface LoudnormOptions {
 export interface LoudnormBuilder {
    (options: LoudnormOptions): RequiredFilterOutput<'audioFilter'>;
 }
+
+export interface DynaudnormOptions {
+   f?: number;
+   g?: number;
+   p?: number;
+   m?: boolean;
+   r?: boolean;
+   s?: boolean;
+   t?: number;
+}
+
+export interface DynaudnormBuilder {
+   (options: DynaudnormOptions): RequiredFilterOutput<'audioFilter'>;
+}
