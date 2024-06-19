@@ -2,19 +2,19 @@ import { FFmpegBase } from '@/core/ffmpeg-base';
 import { DynaudnormFilter } from '@/filters/dynaudnorm';
 import { LoudnormFilter } from '@/filters/loudnorm';
 import { VolumeFilter } from '@/filters/volume';
-import { DynaudnormOptions, LoudnormOptions, VolumeOptions } from '@/types/filters';
+import { DynaudnormOptions, LoudnormOptions } from '@/types/filters';
 
 export class MediaLayer extends FFmpegBase {
    constructor(filePath: string | string[]) {
       super(filePath);
    }
 
-   volume(options: VolumeOptions): this {
+   volume(value: number): this {
       if (!this.hasAudioStream()) {
          throw new Error('Volume filter can only be applied to audio streams.');
       }
 
-      const { audioFilter } = VolumeFilter(options);
+      const { audioFilter } = VolumeFilter(value);
       this.addAudioFilter(audioFilter);
       return this;
    }

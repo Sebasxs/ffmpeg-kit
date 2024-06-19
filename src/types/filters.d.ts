@@ -5,13 +5,8 @@ interface FilterOutput {
 
 type RequiredFilterOutput<T extends keyof FilterOuput> = Required<Pick<FilterOutput, T>>;
 
-export interface VolumeOptions {
-   volume: string | number;
-   precision?: 'fixed' | 'float' | 'double';
-}
-
 export interface VolumeBuilder {
-   (options: VolumeOptions): RequiredFilterOutput<'audioFilter'>;
+   (value: number): RequiredFilterOutput<'audioFilter'>;
 }
 
 export interface LoudnormOptions {
