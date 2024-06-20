@@ -33,3 +33,13 @@ export interface DynaudnormOptions {
 export interface DynaudnormBuilder {
    (options: DynaudnormOptions): RequiredFilterOutput<'audioFilter'>;
 }
+
+export type PitchOptions = {
+   pitch: number;
+   tempo?: number;
+   formant?: boolean;
+};
+
+export interface PitchBuilder {
+   (options: PitchOptions): RequiredFilterOutput<'audioFilter'>;
+}
