@@ -2,8 +2,9 @@ import { FFmpegBase } from '@/core/ffmpeg-base';
 import { DynaudnormFilter } from '@/filters/dynaudnorm';
 import { LoudnormFilter } from '@/filters/loudnorm';
 import { PitchFilter } from '@/filters/pitch';
+import { TrimFilter } from '@/filters/trim';
 import { VolumeFilter } from '@/filters/volume';
-import { DynaudnormOptions, LoudnormOptions, PitchOptions } from '@/types/filters';
+import { DynaudnormOptions, LoudnormOptions, PitchOptions, TrimOptions } from '@/types/filters';
 
 export class MediaLayer extends FFmpegBase {
    constructor(filePath: string | string[]) {
@@ -47,6 +48,16 @@ export class MediaLayer extends FFmpegBase {
 
       const { audioFilter } = PitchFilter(options);
       this.addAudioFilter(audioFilter);
+      return this;
+   }
+
+   trim({ stream, ...options }: TrimOptions): this {
+      const { audioFilter, videoFilter } = TrimFilter(options);
+      const hasAudioStream = this.hasAudioStream();
+      const hasVideoStream = this.hasVideoStream();
+
+      if (hasAudioStream && (!stream || stream !== 'onlyVideo')) this.addAudioFilter(audioFilter);
+      if (hasVideoStream && (!stream || stream !== 'onlyAudio')) this.addVideoFilter(videoFilter);
       return this;
    }
 }
