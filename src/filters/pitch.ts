@@ -1,17 +1,7 @@
 import { PitchBuilder } from '@/types/filters';
 
-export const PitchFilter: PitchBuilder = (options) => {
-   const { pitch, tempo, formant } = options;
-   let pitchString = `pitch=pitch=${pitch}`;
-
-   if (tempo) {
-      pitchString += `:tempo=${tempo}`;
-   }
-   if (formant) {
-      pitchString += `:formant=${formant}`;
-   }
-
+export const PitchFilter: PitchBuilder = (factor, sampleRate) => {
    return {
-      audioFilter: pitchString,
+      audioFilter: `asetrate=${sampleRate}*${factor},aresample=${sampleRate},atempo=${1 / factor}`,
    };
 };

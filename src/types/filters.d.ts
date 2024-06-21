@@ -36,14 +36,8 @@ export interface DynaudnormBuilder {
    (options: DynaudnormOptions): RequiredFilterOutput<'audioFilter'>;
 }
 
-export type PitchOptions = {
-   pitch: number;
-   tempo?: number;
-   formant?: boolean;
-};
-
 export interface PitchBuilder {
-   (options: PitchOptions): RequiredFilterOutput<'audioFilter'>;
+   (factor: number, sampleRate: number): RequiredFilterOutput<'audioFilter'>;
 }
 
 export type TrimOptions = { stream?: StreamConstraint } & (

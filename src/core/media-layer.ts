@@ -4,7 +4,7 @@ import { LoudnormFilter } from '@/filters/loudnorm';
 import { PitchFilter } from '@/filters/pitch';
 import { TrimFilter } from '@/filters/trim';
 import { VolumeFilter } from '@/filters/volume';
-import { DynaudnormOptions, LoudnormOptions, PitchOptions, TrimOptions } from '@/types/filters';
+import { DynaudnormOptions, LoudnormOptions, TrimOptions } from '@/types/filters';
 
 export class MediaLayer extends FFmpegBase {
    constructor(filePath: string | string[]) {
@@ -41,12 +41,13 @@ export class MediaLayer extends FFmpegBase {
       return this;
    }
 
-   pitch(options: PitchOptions): this {
+   pitch(factor: number): this {
       if (!this.hasAudioStream()) {
          throw new Error('Pitch filter can only be applied to audio streams.');
       }
 
-      const { audioFilter } = PitchFilter(options);
+      const sampleRate = this.getMetadata().audioSampleRate || 44100;
+      const { audioFilter } = PitchFilter(factor, sampleRate);
       this.addAudioFilter(audioFilter);
       return this;
    }

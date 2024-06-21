@@ -46,9 +46,10 @@ export class FFmpegBase {
 
       const path = Array.isArray(filePath) ? join(...filePath) : filePath;
       this._path = path;
-      this._metadata = getFileMetadata(path);
-      const type = this.getFileType(this._metadata.summary);
-      this.inputs.set(this._hash, { path, type, metadata: this._metadata.summary });
+      const metadata = getFileMetadata(path);
+      this._metadata = metadata;
+      const type = this.getFileType(metadata.summary);
+      this.inputs.set(this._hash, { path, type, metadata: metadata.summary });
    }
 
    private generateHash(filePath: string | string[]): string {
@@ -56,16 +57,12 @@ export class FFmpegBase {
       return crypto.createHash('md5').update(path).digest('hex').slice(0, 6);
    }
 
-   protected getPath(): string {
-      return this._path;
-   }
-
    protected hasAudioStream(): boolean {
-      return this._metadata.summary.hasAudio || this._outputAudioTag !== null;
+      return this.getMetadata().hasAudio || this._outputAudioTag !== null;
    }
 
    protected hasVideoStream(): boolean {
-      return this._metadata.summary.hasVideo || this._outputVideoTag !== null;
+      return this.getMetadata().hasVideo || this._outputVideoTag !== null;
    }
 
    private getFileType(metadata: SimplifiedMetadata): MediaType {
