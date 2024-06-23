@@ -47,5 +47,33 @@ export type TrimOptions = { stream?: StreamConstraint } & (
 );
 
 export interface TrimBuilder {
-   (options: TrimOptions): RequiredFilterOutput<'audioFilter' | 'videoFilter'>;
+   (options: Omit<TrimOptions, 'stream'>): RequiredFilterOutput<'audioFilter' | 'videoFilter'>;
+}
+
+export interface FadeOptions {
+   type: 'in' | 'out';
+   duration: number;
+   start?: number;
+   curve?:
+      | 'tri'
+      | 'qsin'
+      | 'hsin'
+      | 'esin'
+      | 'log'
+      | 'ipar'
+      | 'qua'
+      | 'cub'
+      | 'squ'
+      | 'cbr'
+      | 'par'
+      | 'exp'
+      | 'iqsin'
+      | 'ihsin'
+      | 'dese'
+      | 'desi';
+   stream?: StreamConstraint;
+}
+
+export interface FadeBuilder {
+   (options: Omit<FadeOptions, 'stream'>): RequiredFilterOutput<'audioFilter' | 'videoFilter'>;
 }
