@@ -8,7 +8,7 @@ export type StreamConstraint = 'onlyAudio' | 'onlyVideo' | 'both';
 type RequiredFilterOutput<T extends keyof FilterOuput> = Required<Pick<FilterOutput, T>>;
 
 export interface VolumeBuilder {
-   (value: number): RequiredFilterOutput<'audioFilter'>;
+   (value: number | string): RequiredFilterOutput<'audioFilter'>;
 }
 
 export interface LoudnormOptions {

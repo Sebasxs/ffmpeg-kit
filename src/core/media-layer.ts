@@ -12,7 +12,7 @@ export class MediaLayer extends FFmpegBase {
       super(filePath);
    }
 
-   volume(value: number): this {
+   volume(value: number | string): this {
       if (!this.hasAudioStream()) {
          throw new Error('Volume filter can only be applied to audio streams.');
       }
