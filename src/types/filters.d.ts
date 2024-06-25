@@ -77,3 +77,52 @@ export interface FadeOptions {
 export interface FadeBuilder {
    (options: Omit<FadeOptions, 'stream'>): RequiredFilterOutput<'audioFilter' | 'videoFilter'>;
 }
+
+export type CropOptions =
+   | {
+        width: string | number;
+        height: string | number;
+        x?: never;
+        y?: never;
+        aspectRatio?: never;
+     }
+   | {
+        width: string | number;
+        height: string | number;
+        x: string | number;
+        y: string | number;
+        aspectRatio?: never;
+     }
+   | {
+        width?: never;
+        height?: never;
+        x?: never;
+        y?: never;
+        aspectRatio:
+           | '1:1'
+           | '1:2'
+           | '2:1'
+           | '2:3'
+           | '3:2'
+           | '3:4'
+           | '4:3'
+           | '4:5'
+           | '5:4'
+           | '9:16'
+           | '9:21'
+           | '9:32'
+           | '10:16'
+           | '16:9'
+           | '16:10'
+           | '21:9'
+           | '32:9'
+           | (string & {});
+     };
+
+export interface CropBuilder {
+   (
+      options: CropOptions,
+      inputWidth?: number,
+      inputHeight?: number,
+   ): RequiredFilterOutput<'videoFilter'>;
+}

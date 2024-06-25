@@ -1,11 +1,18 @@
 import { FFmpegBase } from '@/core/ffmpeg-base';
+import { CropFilter } from '@/filters/crop';
 import { DynaudnormFilter } from '@/filters/dynaudnorm';
 import { FadeFilter } from '@/filters/fade';
 import { LoudnormFilter } from '@/filters/loudnorm';
 import { PitchFilter } from '@/filters/pitch';
 import { TrimFilter } from '@/filters/trim';
 import { VolumeFilter } from '@/filters/volume';
-import { DynaudnormOptions, FadeOptions, LoudnormOptions, TrimOptions } from '@/types/filters';
+import {
+   CropOptions,
+   DynaudnormOptions,
+   FadeOptions,
+   LoudnormOptions,
+   TrimOptions,
+} from '@/types/filters';
 
 export class MediaLayer extends FFmpegBase {
    constructor(filePath: string | string[]) {
@@ -70,6 +77,17 @@ export class MediaLayer extends FFmpegBase {
 
       if (hasAudioStream && (!stream || stream !== 'onlyVideo')) this.addAudioFilter(audioFilter);
       if (hasVideoStream && (!stream || stream !== 'onlyAudio')) this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   crop(options: CropOptions): this {
+      if (!this.hasVideoStream()) {
+         throw new Error('Crop filter can only be applied to video streams.');
+      }
+
+      const { width, height } = this.getMetadata();
+      const { videoFilter } = CropFilter(options, width, height);
+      this.addVideoFilter(videoFilter);
       return this;
    }
 }
