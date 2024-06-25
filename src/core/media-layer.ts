@@ -65,8 +65,8 @@ export class MediaLayer extends FFmpegBase {
       const hasAudioStream = this.hasAudioStream();
       const hasVideoStream = this.hasVideoStream();
 
-      if (hasAudioStream && (!stream || stream !== 'onlyVideo')) this.addAudioFilter(audioFilter);
-      if (hasVideoStream && (!stream || stream !== 'onlyAudio')) this.addVideoFilter(videoFilter);
+      if (hasAudioStream && (!stream || stream !== 'video')) this.addAudioFilter(audioFilter);
+      if (hasVideoStream && (!stream || stream !== 'audio')) this.addVideoFilter(videoFilter);
       return this;
    }
 
@@ -75,8 +75,8 @@ export class MediaLayer extends FFmpegBase {
       const hasAudioStream = this.hasAudioStream();
       const hasVideoStream = this.hasVideoStream();
 
-      if (hasAudioStream && (!stream || stream !== 'onlyVideo')) this.addAudioFilter(audioFilter);
-      if (hasVideoStream && (!stream || stream !== 'onlyAudio')) this.addVideoFilter(videoFilter);
+      if (hasAudioStream && (!stream || stream !== 'video')) this.addAudioFilter(audioFilter);
+      if (hasVideoStream && (!stream || stream !== 'audio')) this.addVideoFilter(videoFilter);
       return this;
    }
 

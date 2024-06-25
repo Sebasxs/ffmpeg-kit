@@ -3,7 +3,7 @@ interface FilterOutput {
    videoFilter?: string;
 }
 
-export type StreamConstraint = 'onlyAudio' | 'onlyVideo' | 'both';
+export type StreamConstraint = 'audio' | 'video' | 'all';
 
 type RequiredFilterOutput<T extends keyof FilterOuput> = Required<Pick<FilterOutput, T>>;
 
@@ -126,3 +126,32 @@ export interface CropBuilder {
       inputHeight?: number,
    ): RequiredFilterOutput<'videoFilter'>;
 }
+
+export interface OverlayOptions {
+   x: string | number;
+   y: string | number;
+   enable?: string | number | boolean;
+}
+
+// export interface MediaFilters {
+//    speed?: number;
+//    reverse?: boolean;
+//    denoise?: boolean;
+//    blur?: number;
+//    correction?: {}; // contrast, brightness, saturation
+//    color?: {}; // color balance with lut filter (lookup table)
+//    flip?: {};
+//    alpha?: number;
+//    scale?: {};
+//    rotate?: number;
+//    pad?: {};
+//    delay?: number;
+//    negate?: boolean;
+//    grayscale?: boolean;
+//    drawtext?: {};
+//    drawbox?: {};
+//    stabilize?: boolean;
+//    overlay?: OverlayOptions;
+// }
+
+// subtitles?: {};
