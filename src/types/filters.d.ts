@@ -127,10 +127,17 @@ export interface CropBuilder {
    ): RequiredFilterOutput<'videoFilter'>;
 }
 
-export interface OverlayOptions {
-   x: string | number;
-   y: string | number;
-   enable?: string | number | boolean;
+export type ScaleOptions = {
+   flags?: 'bilinear' | 'bicubic' | 'lanczos' | 'gaussian';
+   forceAspectRatio?: 'decrease' | 'increase' | 'disable';
+} & (
+   | { width: number | string; height?: number | string; percentage?: never }
+   | { width?: number | string; height: number | string; percentage?: never }
+   | { percentage: number; width?: never; height?: never }
+);
+
+export interface ScaleBuilder {
+   (options: ScaleOptions): RequiredFilterOutput<'videoFilter'>;
 }
 
 // export interface MediaFilters {
@@ -142,7 +149,6 @@ export interface OverlayOptions {
 //    color?: {}; // color balance with lut filter (lookup table)
 //    flip?: {};
 //    alpha?: number;
-//    scale?: {};
 //    rotate?: number;
 //    pad?: {};
 //    delay?: number;
@@ -151,7 +157,12 @@ export interface OverlayOptions {
 //    drawtext?: {};
 //    drawbox?: {};
 //    stabilize?: boolean;
-//    overlay?: OverlayOptions;
 // }
 
 // subtitles?: {};
+
+export interface OverlayOptions {
+   x: string | number;
+   y: string | number;
+   enable?: string | number | boolean;
+}

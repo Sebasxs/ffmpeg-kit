@@ -1,16 +1,24 @@
 import { FFmpegBase } from '@/core/ffmpeg-base';
-import { CropFilter } from '@/filters/crop';
-import { DynaudnormFilter } from '@/filters/dynaudnorm';
-import { FadeFilter } from '@/filters/fade';
-import { LoudnormFilter } from '@/filters/loudnorm';
-import { PitchFilter } from '@/filters/pitch';
-import { TrimFilter } from '@/filters/trim';
-import { VolumeFilter } from '@/filters/volume';
+
+// @filters
+import {
+   CropFilter,
+   DynaudnormFilter,
+   FadeFilter,
+   LoudnormFilter,
+   PitchFilter,
+   ScaleFilter,
+   TrimFilter,
+   VolumeFilter,
+} from '@/filters';
+
+// @types
 import {
    CropOptions,
    DynaudnormOptions,
    FadeOptions,
    LoudnormOptions,
+   ScaleOptions,
    TrimOptions,
 } from '@/types/filters';
 
@@ -87,6 +95,16 @@ export class MediaLayer extends FFmpegBase {
 
       const { width, height } = this.getMetadata();
       const { videoFilter } = CropFilter(options, width, height);
+      this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   scale(options: ScaleOptions): this {
+      if (!this.hasVideoStream()) {
+         throw new Error('Scale filter can only be applied to video streams.');
+      }
+
+      const { videoFilter } = ScaleFilter(options);
       this.addVideoFilter(videoFilter);
       return this;
    }
