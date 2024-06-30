@@ -22,7 +22,7 @@ import {
    TrimOptions,
 } from '@/types/filters';
 
-export class MediaLayer extends FFmpegBase {
+export class MediaEditor extends FFmpegBase {
    constructor(filePath: string | string[]) {
       super(filePath);
    }
