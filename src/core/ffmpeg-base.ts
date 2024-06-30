@@ -87,7 +87,7 @@ export class FFmpegBase {
       return `[${nodeId}:${streamChannel}]`;
    }
 
-   protected addAudioFilterPart({ filter, inputs, outputTag }: AddFilterParams): string {
+   protected appendAudioFilterToGraph({ filter, inputs, outputTag }: AddFilterParams): string {
       const inputTags = inputs || [this._outputAudioTag || `[{${this._hash}}:a]`];
       const generatedOutputTag = outputTag || this.generateFilterTag('audio');
       const filterString = `${inputTags.join('')}${filter}${generatedOutputTag}`;
@@ -96,7 +96,7 @@ export class FFmpegBase {
       return generatedOutputTag;
    }
 
-   protected addVideoFilterPart({ filter, inputs, outputTag }: AddFilterParams): string {
+   protected appendVideoFilterToGraph({ filter, inputs, outputTag }: AddFilterParams): string {
       const inputTags = inputs || [this._outputVideoTag || `[{${this._hash}}:v]`];
       const generatedOutputTag = outputTag || this.generateFilterTag('video');
       const filterString = `${inputTags.join('')}${filter}${generatedOutputTag}`;
@@ -108,13 +108,13 @@ export class FFmpegBase {
    getData(): FFmpegBaseData {
       if (this.audioSubgraph.length) {
          const filter = this.audioSubgraph.join(',');
-         this.addAudioFilterPart({ filter });
+         this.appendAudioFilterToGraph({ filter });
          this.audioSubgraph = [];
       }
 
       if (this.videoSubgraph.length) {
          const filter = this.videoSubgraph.join(',');
-         this.addVideoFilterPart({ filter });
+         this.appendVideoFilterToGraph({ filter });
          this.videoSubgraph = [];
       }
 
