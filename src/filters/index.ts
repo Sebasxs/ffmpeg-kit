@@ -6,3 +6,4 @@ export { FadeFilter } from '@/filters/fade';
 export { ScaleFilter } from '@/filters/scale';
 export { CropFilter } from '@/filters/crop';
 export { PitchFilter } from '@/filters/pitch';
+export { SpeedFilter } from '@/filters/speed';

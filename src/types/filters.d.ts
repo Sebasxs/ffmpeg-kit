@@ -140,8 +140,11 @@ export interface ScaleBuilder {
    (options: ScaleOptions): RequiredFilterOutput<'videoFilter'>;
 }
 
+export interface SpeedBuilder {
+   (factor: number): RequiredFilterOutput<'audioFilter' | 'videoFilter'>;
+}
+
 // export interface MediaFilters {
-//    speed?: number;
 //    reverse?: boolean;
 //    denoise?: boolean;
 //    blur?: number;

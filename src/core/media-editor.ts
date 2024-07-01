@@ -10,6 +10,7 @@ import {
    ScaleFilter,
    TrimFilter,
    VolumeFilter,
+   SpeedFilter,
 } from '@/filters';
 
 // @types
@@ -106,6 +107,24 @@ export class MediaEditor extends FFmpegBase {
 
       const { videoFilter } = ScaleFilter(options);
       this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   speed(factor: number): this {
+      if (factor === 0) {
+         throw new Error('Speed factor cannot be zero.');
+      }
+
+      if (factor < 0) this.reverse();
+      if (Math.abs(factor) === 1) return this;
+
+      const { audioFilter, videoFilter } = SpeedFilter(Math.abs(factor));
+      if (this.hasAudioStream()) this.addAudioFilter(audioFilter);
+      if (this.hasVideoStream()) this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   reverse(): this {
       return this;
    }
 }
