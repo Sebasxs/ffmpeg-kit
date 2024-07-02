@@ -144,6 +144,14 @@ export interface SpeedBuilder {
    (factor: number): RequiredFilterOutput<'audioFilter' | 'videoFilter'>;
 }
 
+export interface ReverseOptions {
+   stream?: StreamConstraint;
+}
+
+export interface ReverseBuilder {
+   (options?: ReverseOptions): RequiredFilterOutput<'audioFilter' | 'videoFilter'>;
+}
+
 // export interface MediaFilters {
 //    reverse?: boolean;
 //    denoise?: boolean;

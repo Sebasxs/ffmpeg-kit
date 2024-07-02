@@ -11,6 +11,7 @@ import {
    TrimFilter,
    VolumeFilter,
    SpeedFilter,
+   ReverseFilter,
 } from '@/filters';
 
 // @types
@@ -19,6 +20,7 @@ import {
    DynaudnormOptions,
    FadeOptions,
    LoudnormOptions,
+   ReverseOptions,
    ScaleOptions,
    TrimOptions,
 } from '@/types/filters';
@@ -110,6 +112,18 @@ export class MediaEditor extends FFmpegBase {
       return this;
    }
 
+   reverse(options?: ReverseOptions): this {
+      const { audioFilter, videoFilter } = ReverseFilter();
+      const { stream } = options || {};
+
+      const hasAudioStream = this.hasAudioStream();
+      const hasVideoStream = this.hasVideoStream();
+
+      if (hasAudioStream && (!stream || stream !== 'video')) this.addAudioFilter(audioFilter);
+      if (hasVideoStream && (!stream || stream !== 'audio')) this.addVideoFilter(videoFilter);
+      return this;
+   }
+
    speed(factor: number): this {
       if (factor === 0) {
          throw new Error('Speed factor cannot be zero.');
@@ -121,10 +135,6 @@ export class MediaEditor extends FFmpegBase {
       const { audioFilter, videoFilter } = SpeedFilter(Math.abs(factor));
       if (this.hasAudioStream()) this.addAudioFilter(audioFilter);
       if (this.hasVideoStream()) this.addVideoFilter(videoFilter);
-      return this;
-   }
-
-   reverse(): this {
       return this;
    }
 }
