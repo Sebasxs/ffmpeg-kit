@@ -153,7 +153,6 @@ export interface ReverseBuilder {
 }
 
 // export interface MediaFilters {
-//    reverse?: boolean;
 //    denoise?: boolean;
 //    blur?: number;
 //    correction?: {}; // contrast, brightness, saturation
@@ -170,7 +169,9 @@ export interface ReverseBuilder {
 //    stabilize?: boolean;
 // }
 
-// subtitles?: {};
+//    subtitles?: {};
+//    alphamerge?:
+//    blend?: {};
 
 export interface OverlayOptions {
    x: string | number;

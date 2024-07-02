@@ -23,7 +23,6 @@ import { getFileMetadata } from '@/utils/ffprobe';
 
 export class FFmpegBase {
    private _hash: string;
-   private _path: string;
    private _filterCounter: number = 0;
    private _outputAudioTag: string | null;
    private _outputVideoTag: string | null;
@@ -45,7 +44,6 @@ export class FFmpegBase {
       this.videoSubgraph = [];
 
       const path = Array.isArray(filePath) ? join(...filePath) : filePath;
-      this._path = path;
       const metadata = getFileMetadata(path);
       this._metadata = metadata;
       const type = this.getFileType(metadata.summary);
@@ -245,6 +243,10 @@ export class FFmpegBase {
       const firstVideoStream = Array.from(inputs.values()).findIndex(
          ({ metadata }) => metadata.hasVideo,
       );
+
+      if (!options.pixelFormat && (!options.videoCodec || options.videoCodec === 'libx264')) {
+         options.pixelFormat = 'yuv420p';
+      }
 
       if (!options.videoNone && firstVideoStream !== -1) {
          if (options.videoCodec) outputOptions.push(`-c:v ${options.videoCodec}`);
