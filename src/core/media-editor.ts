@@ -12,6 +12,7 @@ import {
    VolumeFilter,
    SpeedFilter,
    ReverseFilter,
+   BlurFilter,
 } from '@/filters';
 
 // @types
@@ -135,6 +136,16 @@ export class MediaEditor extends FFmpegBase {
       const { audioFilter, videoFilter } = SpeedFilter(Math.abs(factor));
       if (this.hasAudioStream()) this.addAudioFilter(audioFilter);
       if (this.hasVideoStream()) this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   blur(radius: number = 3): this {
+      if (!this.hasVideoStream()) {
+         throw new Error('Blur filter can only be applied to video streams.');
+      }
+
+      const { videoFilter } = BlurFilter(radius);
+      this.addVideoFilter(videoFilter);
       return this;
    }
 }

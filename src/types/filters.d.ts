@@ -152,9 +152,12 @@ export interface ReverseBuilder {
    (options?: ReverseOptions): RequiredFilterOutput<'audioFilter' | 'videoFilter'>;
 }
 
+export interface BlurBuilder {
+   (radius: number): RequiredFilterOutput<'videoFilter'>;
+}
+
 // export interface MediaFilters {
 //    denoise?: boolean;
-//    blur?: number;
 //    correction?: {}; // contrast, brightness, saturation
 //    color?: {}; // color balance with lut filter (lookup table)
 //    flip?: {};

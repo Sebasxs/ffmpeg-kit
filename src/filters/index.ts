@@ -8,3 +8,4 @@ export { CropFilter } from '@/filters/crop';
 export { PitchFilter } from '@/filters/pitch';
 export { SpeedFilter } from '@/filters/speed';
 export { ReverseFilter } from '@/filters/reverse';
+export { BlurFilter } from '@/filters/blur';
