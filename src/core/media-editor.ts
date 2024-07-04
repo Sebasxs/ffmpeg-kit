@@ -13,6 +13,7 @@ import {
    SpeedFilter,
    ReverseFilter,
    BlurFilter,
+   FlipFilter,
 } from '@/filters';
 
 // @types
@@ -20,6 +21,7 @@ import {
    CropOptions,
    DynaudnormOptions,
    FadeOptions,
+   FlipOptions,
    LoudnormOptions,
    ReverseOptions,
    ScaleOptions,
@@ -145,6 +147,16 @@ export class MediaEditor extends FFmpegBase {
       }
 
       const { videoFilter } = BlurFilter(radius);
+      this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   flip(mode: FlipOptions): this {
+      if (!this.hasVideoStream()) {
+         throw new Error('Flip filter can only be applied to video streams.');
+      }
+
+      const { videoFilter } = FlipFilter(mode);
       this.addVideoFilter(videoFilter);
       return this;
    }

@@ -156,11 +156,16 @@ export interface BlurBuilder {
    (radius: number): RequiredFilterOutput<'videoFilter'>;
 }
 
+export type FlipOptions = 'horizontal' | 'vertical' | 'both';
+
+export interface FlipBuilder {
+   (options: FlipOptions): RequiredFilterOutput<'videoFilter'>;
+}
+
 // export interface MediaFilters {
 //    denoise?: boolean;
 //    correction?: {}; // contrast, brightness, saturation
 //    color?: {}; // color balance with lut filter (lookup table)
-//    flip?: {};
 //    alpha?: number;
 //    rotate?: number;
 //    pad?: {};
