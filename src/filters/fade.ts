@@ -6,6 +6,6 @@ export const FadeFilter: FadeBuilder = (options) => {
 
    return {
       audioFilter: `afade=t=${type}:st=${start}:d=${duration}${fadeCurve}`,
-      videoFilter: `fade=t=${type}:st=${start}:d=${duration}:alpha=1`,
+      videoFilter: `format=yuva420p,fade=t=${type}:st=${start}:d=${duration}:alpha=1`,
    };
 };
