@@ -15,7 +15,6 @@ export interface AddFilterParams {
 }
 
 export interface FFmpegBaseData {
-   hash: string;
    inputs: Map<string, MediaInput>;
    filterGraphParts: string[];
    outputAudioTag: string | null;

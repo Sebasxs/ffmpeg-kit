@@ -56,11 +56,11 @@ export class FFmpegBase {
    }
 
    protected hasAudioStream(): boolean {
-      return this.getMetadata().hasAudio || this._outputAudioTag !== null;
+      return this.getMetadata().summary.hasAudio || this._outputAudioTag !== null;
    }
 
    protected hasVideoStream(): boolean {
-      return this.getMetadata().hasVideo || this._outputVideoTag !== null;
+      return this.getMetadata().summary.hasVideo || this._outputVideoTag !== null;
    }
 
    private getFileType(metadata: SimplifiedMetadata): MediaType {
@@ -103,7 +103,7 @@ export class FFmpegBase {
       return generatedOutputTag;
    }
 
-   getData(): FFmpegBaseData {
+   getCommandData(): FFmpegBaseData {
       if (this.audioSubgraph.length) {
          const filter = this.audioSubgraph.join(',');
          this.appendAudioFilterToGraph({ filter });
@@ -117,7 +117,6 @@ export class FFmpegBase {
       }
 
       return {
-         hash: this._hash,
          inputs: this.inputs,
          filterGraphParts: this.filterGraphParts,
          outputAudioTag: this._outputAudioTag,
@@ -125,11 +124,8 @@ export class FFmpegBase {
       };
    }
 
-   getMetadata(full: true): FFProbeResult;
-   getMetadata(full?: false): SimplifiedMetadata;
-   getMetadata(full?: boolean): SimplifiedMetadata | FFProbeResult {
-      if (full) return this._metadata;
-      return this._metadata.summary;
+   getMetadata(): FFProbeResult {
+      return this._metadata;
    }
 
    run(output: string | string[], options: OutputOptions = {}): string {
@@ -183,7 +179,7 @@ export class FFmpegBase {
    }
 
    private prepareData(mimeType: string, options: OutputOptions): Omit<FFmpegBaseData, 'hash'> {
-      const { inputs, filterGraphParts, outputAudioTag, outputVideoTag } = this.getData();
+      const { inputs, filterGraphParts, outputAudioTag, outputVideoTag } = this.getCommandData();
       const onlyImages = Array.from(inputs.values()).every((input) => input.type === 'image');
       const someTrimmed = filterGraphParts.some((part) => part.includes('trim'));
       const videoExpected = mimeType.includes('video');

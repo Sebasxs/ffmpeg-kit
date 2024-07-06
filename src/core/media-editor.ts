@@ -70,7 +70,8 @@ export class MediaEditor extends FFmpegBase {
          throw new Error('Pitch filter can only be applied to audio streams.');
       }
 
-      const sampleRate = this.getMetadata().audioSampleRate || 44100;
+      const { summary } = this.getMetadata();
+      const sampleRate = summary.audioSampleRate || 44100;
       const { audioFilter } = PitchFilter(factor, sampleRate);
       this.addAudioFilter(audioFilter);
       return this;
@@ -101,7 +102,8 @@ export class MediaEditor extends FFmpegBase {
          throw new Error('Crop filter can only be applied to video streams.');
       }
 
-      const { width, height } = this.getMetadata();
+      const { summary } = this.getMetadata();
+      const { width, height } = summary;
       const { videoFilter } = CropFilter(options, width, height);
       this.addVideoFilter(videoFilter);
       return this;
