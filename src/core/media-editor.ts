@@ -14,11 +14,13 @@ import {
    ReverseFilter,
    BlurFilter,
    FlipFilter,
+   DenoiseFilter,
 } from '@/filters';
 
 // @types
 import {
    CropOptions,
+   DenoiseOptions,
    DynaudnormOptions,
    FadeOptions,
    FlipOptions,
@@ -158,6 +160,21 @@ export class MediaEditor extends FFmpegBase {
 
       const { videoFilter } = FlipFilter(mode);
       this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   denoise(method: DenoiseOptions): this {
+      if (method === 'afftdn' && !this.hasAudioStream()) {
+         throw new Error('afftdn filter can only be applied to audio streams.');
+      }
+
+      if (method !== 'afftdn' && !this.hasVideoStream()) {
+         throw new Error('Denoise filter can only be applied to video streams.');
+      }
+
+      const { audioFilter, videoFilter } = DenoiseFilter(method);
+      if (audioFilter) this.addAudioFilter(audioFilter);
+      if (videoFilter) this.addVideoFilter(videoFilter);
       return this;
    }
 }

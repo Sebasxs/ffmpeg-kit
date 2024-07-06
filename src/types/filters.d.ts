@@ -162,6 +162,12 @@ export interface FlipBuilder {
    (options: FlipOptions): RequiredFilterOutput<'videoFilter'>;
 }
 
+export type DenoiseOptions = 'hqdn3d' | 'nlmeans' | 'atadenoise' | 'afftdn';
+
+export interface DenoiseBuilder {
+   (method: DenoiseOptions): RequiredFilterOutput<'videoFilter' | 'audioFilter'>;
+}
+
 // export interface MediaFilters {
 //    denoise?: boolean;
 //    correction?: {}; // contrast, brightness, saturation

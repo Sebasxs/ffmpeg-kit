@@ -10,3 +10,4 @@ export { SpeedFilter } from '@/filters/speed';
 export { ReverseFilter } from '@/filters/reverse';
 export { BlurFilter } from '@/filters/blur';
 export { FlipFilter } from '@/filters/flip';
+export { DenoiseFilter } from '@/filters/denoise';
