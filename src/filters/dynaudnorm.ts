@@ -1,17 +1,17 @@
 import { DynaudnormBuilder } from '@/types/filters';
 
 export const DynaudnormFilter: DynaudnormBuilder = (options) => {
-   const { f = 1, g, p, m = true, r, s, t } = options;
+   const { frameLength, gaussSize, peak, maxGain, rms, compress, threshold } = options;
    let normalizeString = 'dynaudnorm=';
 
    const filterParams: string[] = [];
-   if (f !== undefined) filterParams.push(`f=${f}`);
-   if (g !== undefined) filterParams.push(`g=${g}`);
-   if (p !== undefined) filterParams.push(`p=${p}`);
-   if (m !== undefined) filterParams.push(`m=${m}`);
-   if (r !== undefined) filterParams.push(`r=${r}`);
-   if (s !== undefined) filterParams.push(`s=${s}`);
-   if (t !== undefined) filterParams.push(`t=${t}`);
+   if (frameLength !== undefined) filterParams.push(`f=${frameLength}`);
+   if (gaussSize !== undefined) filterParams.push(`g=${gaussSize}`);
+   if (peak !== undefined) filterParams.push(`p=${peak}`);
+   if (maxGain !== undefined) filterParams.push(`m=${maxGain}`);
+   if (rms !== undefined) filterParams.push(`r=${rms}`);
+   if (compress !== undefined) filterParams.push(`s=${compress}`);
+   if (threshold !== undefined) filterParams.push(`t=${threshold}`);
 
    normalizeString += filterParams.join(':');
 

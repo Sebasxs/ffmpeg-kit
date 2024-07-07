@@ -1,8 +1,8 @@
 import { LoudnormBuilder } from '@/types/filters';
 
 export const LoudnormFilter: LoudnormBuilder = (options) => {
-   const { I, LRA, TP, linear } = options;
-   let normalizeString = `loudnorm=I=${I}:LRA=${LRA}:TP=${TP}`;
+   const { average, range, peak, linear } = options;
+   let normalizeString = `loudnorm=I=${average}:LRA=${range}:TP=${peak}`;
 
    if (linear) {
       normalizeString += `:linear=${linear}`;

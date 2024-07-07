@@ -12,9 +12,9 @@ export interface VolumeBuilder {
 }
 
 export interface LoudnormOptions {
-   I: number;
-   LRA: number;
-   TP: number;
+   average: number;
+   range: number;
+   peak: number;
    linear?: boolean;
 }
 
@@ -23,13 +23,13 @@ export interface LoudnormBuilder {
 }
 
 export interface DynaudnormOptions {
-   f?: number;
-   g?: number;
-   p?: number;
-   m?: boolean;
-   r?: boolean;
-   s?: boolean;
-   t?: number;
+   frameLength?: number;
+   gaussSize?: number;
+   peak?: number;
+   maxGain?: number;
+   rms?: number;
+   compress?: number;
+   threshold?: number;
 }
 
 export interface DynaudnormBuilder {
@@ -169,7 +169,6 @@ export interface DenoiseBuilder {
 }
 
 // export interface MediaFilters {
-//    denoise?: boolean;
 //    correction?: {}; // contrast, brightness, saturation
 //    color?: {}; // color balance with lut filter (lookup table)
 //    alpha?: number;

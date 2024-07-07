@@ -45,7 +45,7 @@ export class MediaEditor extends FFmpegBase {
       return this;
    }
 
-   loudnorm(options: LoudnormOptions = { I: -23, LRA: 9, TP: -1 }): this {
+   loudnorm(options: LoudnormOptions = { average: -23, range: 9, peak: -1 }): this {
       if (!this.hasAudioStream()) {
          throw new Error('Loudnorm filter can only be applied to audio streams.');
       }
@@ -55,7 +55,7 @@ export class MediaEditor extends FFmpegBase {
       return this;
    }
 
-   dynaudnorm(options: DynaudnormOptions = { f: 1, m: true }): this {
+   dynaudnorm(options: DynaudnormOptions = { frameLength: 200, peak: 0.9 }): this {
       if (!this.hasAudioStream()) {
          throw new Error('Dynaudnorm filter can only be applied to audio streams.');
       }
