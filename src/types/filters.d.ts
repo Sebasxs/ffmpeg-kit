@@ -168,6 +168,30 @@ export interface DenoiseBuilder {
    (method: DenoiseOptions): RequiredFilterOutput<'videoFilter' | 'audioFilter'>;
 }
 
+export type RotateOptions =
+   | {
+        degrees: number;
+        expression?: never;
+        outputWidth?: number | string;
+        outputHeight?: number | string;
+        pivotX?: number | string;
+        pivotY?: number | string;
+        emptyAreaColor?: string;
+     }
+   | {
+        degrees?: never;
+        expression: string;
+        outputWidth?: number | string;
+        outputHeight?: number | string;
+        pivotX?: number | string;
+        pivotY?: number | string;
+        emptyAreaColor?: string;
+     };
+
+export interface RotateBuilder {
+   (options: RotateOptions): RequiredFilterOutput<'videoFilter'>;
+}
+
 // export interface MediaFilters {
 //    correction?: {}; // contrast, brightness, saturation
 //    color?: {}; // color balance with lut filter (lookup table)

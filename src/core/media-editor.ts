@@ -15,6 +15,7 @@ import {
    BlurFilter,
    FlipFilter,
    DenoiseFilter,
+   RotateFilter,
 } from '@/filters';
 
 // @types
@@ -26,6 +27,7 @@ import {
    FlipOptions,
    LoudnormOptions,
    ReverseOptions,
+   RotateOptions,
    ScaleOptions,
    TrimOptions,
 } from '@/types/filters';
@@ -177,6 +179,16 @@ export class MediaEditor extends FFmpegBase {
       const { audioFilter, videoFilter } = DenoiseFilter(method);
       if (audioFilter) this.addAudioFilter(audioFilter);
       if (videoFilter) this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   rotate(options: RotateOptions): this {
+      if (!this.hasVideoStream()) {
+         throw new Error('Rotate filter can only be applied to video streams.');
+      }
+
+      const { videoFilter } = RotateFilter(options);
+      this.addVideoFilter(videoFilter);
       return this;
    }
 }
