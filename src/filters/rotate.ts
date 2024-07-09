@@ -12,7 +12,7 @@ export const RotateFilter: RotateBuilder = (options) => {
    } = options;
 
    const angle = expression ? expression : `${degrees}*PI/180`;
-   let videoFilter = `rotate='${angle}':c='${emptyAreaColor}'`;
+   let videoFilter = `format=yuva420p,rotate='${angle}':c='${emptyAreaColor}'`;
 
    const defaultOH = `rotw(${angle})`;
    const defaultOW = `roth(${angle})`;

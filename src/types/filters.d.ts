@@ -196,7 +196,6 @@ export interface RotateBuilder {
 //    correction?: {}; // contrast, brightness, saturation
 //    color?: {}; // color balance with lut filter (lookup table)
 //    alpha?: number;
-//    rotate?: number;
 //    pad?: {};
 //    delay?: number;
 //    negate?: boolean;
