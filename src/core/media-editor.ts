@@ -16,6 +16,7 @@ import {
    FlipFilter,
    DenoiseFilter,
    RotateFilter,
+   AlphaFilter,
 } from '@/filters';
 
 // @types
@@ -188,6 +189,20 @@ export class MediaEditor extends FFmpegBase {
       }
 
       const { videoFilter } = RotateFilter(options);
+      this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   alpha(value: number): this {
+      if (!this.hasVideoStream()) {
+         throw new Error('Alpha filter can only be applied to video streams.');
+      }
+
+      if (value < 0 || value > 1) {
+         throw new Error('Alpha value must be between 0 and 1.');
+      }
+
+      const { videoFilter } = AlphaFilter(value);
       this.addVideoFilter(videoFilter);
       return this;
    }

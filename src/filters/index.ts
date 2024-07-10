@@ -12,3 +12,4 @@ export { BlurFilter } from '@/filters/blur';
 export { FlipFilter } from '@/filters/flip';
 export { DenoiseFilter } from '@/filters/denoise';
 export { RotateFilter } from '@/filters/rotate';
+export { AlphaFilter } from '@/filters/alpha';

@@ -192,10 +192,13 @@ export interface RotateBuilder {
    (options: RotateOptions): RequiredFilterOutput<'videoFilter'>;
 }
 
+export interface AlphaBuilder {
+   (value: number): RequiredFilterOutput<'videoFilter'>;
+}
+
 // export interface MediaFilters {
 //    correction?: {}; // contrast, brightness, saturation
 //    color?: {}; // color balance with lut filter (lookup table)
-//    alpha?: number;
 //    pad?: {};
 //    delay?: number;
 //    negate?: boolean;
