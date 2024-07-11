@@ -103,6 +103,25 @@ export class FFmpegBase {
       return generatedOutputTag;
    }
 
+   private cleanFilters(): string {
+      const yuvaFilter = 'format=yuva420p,';
+      let filterString = this.videoSubgraph.join(',');
+      const yuvaCtr = filterString.match(new RegExp(yuvaFilter, 'g'))?.length || 0;
+      if (yuvaCtr < 2) return filterString;
+
+      filterString = '';
+      const firstYuvaIndex = filterString.indexOf(yuvaFilter);
+      for (const [index, filter] of Object.entries(this.videoSubgraph)) {
+         if (!filter.includes(yuvaFilter) || parseInt(index) === firstYuvaIndex) {
+            filterString += filter;
+            continue;
+         }
+
+         filterString += filter.replace(yuvaFilter, '');
+      }
+      return filterString;
+   }
+
    getCommandData(): FFmpegBaseData {
       if (this.audioSubgraph.length) {
          const filter = this.audioSubgraph.join(',');
@@ -111,7 +130,7 @@ export class FFmpegBase {
       }
 
       if (this.videoSubgraph.length) {
-         const filter = this.videoSubgraph.join(',');
+         const filter = this.cleanFilters();
          this.appendVideoFilterToGraph({ filter });
          this.videoSubgraph = [];
       }
