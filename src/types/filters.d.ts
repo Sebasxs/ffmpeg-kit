@@ -1,3 +1,7 @@
+import { FFmpegColor } from '@/utils/colors.ts';
+import { aspectRatios } from '@/utils/aspect-ratios.ts';
+import { curves } from '@/utils/curves.ts';
+
 interface FilterOutput {
    audioFilter?: string;
    videoFilter?: string;
@@ -54,23 +58,7 @@ export interface FadeOptions {
    type: 'in' | 'out';
    duration: number;
    start?: number;
-   curve?:
-      | 'tri'
-      | 'qsin'
-      | 'hsin'
-      | 'esin'
-      | 'log'
-      | 'ipar'
-      | 'qua'
-      | 'cub'
-      | 'squ'
-      | 'cbr'
-      | 'par'
-      | 'exp'
-      | 'iqsin'
-      | 'ihsin'
-      | 'dese'
-      | 'desi';
+   curve?: (typeof curves)[number] | (string & {});
    stream?: StreamConstraint;
 }
 
@@ -98,25 +86,7 @@ export type CropOptions =
         height?: never;
         x?: never;
         y?: never;
-        aspectRatio:
-           | '1:1'
-           | '1:2'
-           | '2:1'
-           | '2:3'
-           | '3:2'
-           | '3:4'
-           | '4:3'
-           | '4:5'
-           | '5:4'
-           | '9:16'
-           | '9:21'
-           | '9:32'
-           | '10:16'
-           | '16:9'
-           | '16:10'
-           | '21:9'
-           | '32:9'
-           | (string & {});
+        aspectRatio: (typeof aspectRatios)[number] | (string & {});
      };
 
 export interface CropBuilder {
@@ -196,10 +166,21 @@ export interface AlphaBuilder {
    (value: number): RequiredFilterOutput<'videoFilter'>;
 }
 
+export interface PadOptions {
+   width: number | string;
+   height: number | string;
+   color?: (typeof FFmpegColor)[number] | (string & {});
+   x?: number | string;
+   y?: number | string;
+}
+
+export interface PadBuilder {
+   (options: PadOptions): RequiredFilterOutput<'videoFilter'>;
+}
+
 // export interface MediaFilters {
 //    correction?: {}; // contrast, brightness, saturation
 //    color?: {}; // color balance with lut filter (lookup table)
-//    pad?: {};
 //    delay?: number;
 //    negate?: boolean;
 //    grayscale?: boolean;

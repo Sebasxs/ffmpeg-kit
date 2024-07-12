@@ -1,0 +1,18 @@
+export const curves = [
+   'tri',
+   'qsin',
+   'hsin',
+   'esin',
+   'log',
+   'ipar',
+   'qua',
+   'cub',
+   'squ',
+   'cbr',
+   'par',
+   'exp',
+   'iqsin',
+   'ihsin',
+   'dese',
+   'desi',
+] as const;

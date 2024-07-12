@@ -17,6 +17,7 @@ import {
    DenoiseFilter,
    RotateFilter,
    AlphaFilter,
+   PadFilter,
 } from '@/filters';
 
 // @types
@@ -27,6 +28,7 @@ import {
    FadeOptions,
    FlipOptions,
    LoudnormOptions,
+   PadOptions,
    ReverseOptions,
    RotateOptions,
    ScaleOptions,
@@ -203,6 +205,16 @@ export class MediaEditor extends FFmpegBase {
       }
 
       const { videoFilter } = AlphaFilter(value);
+      this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   pad(options: PadOptions): this {
+      if (!this.hasVideoStream()) {
+         throw new Error('Pad filter can only be applied to video streams.');
+      }
+
+      const { videoFilter } = PadFilter(options);
       this.addVideoFilter(videoFilter);
       return this;
    }
