@@ -146,7 +146,7 @@ export type RotateOptions =
         outputHeight?: number | string;
         pivotX?: number | string;
         pivotY?: number | string;
-        emptyAreaColor?: string;
+        emptyAreaColor?: (typeof FFmpegColor)[number] | (string & {});
      }
    | {
         degrees?: never;

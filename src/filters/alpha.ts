@@ -1,8 +1,6 @@
 import { AlphaBuilder } from '@/types/filters';
 
-export const AlphaFilter: AlphaBuilder = (value) => {
-   const alpha = value * 255;
-   const videoFilter = `format=yuva420p,lut=a=${alpha}`;
-
+export const AlphaFilter: AlphaBuilder = (alpha) => {
+   const videoFilter = `format=rgba,colorchannelmixer=aa=${alpha}`;
    return { videoFilter };
 };
