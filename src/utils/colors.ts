@@ -1,4 +1,5 @@
 export const FFmpegColor = [
+   'black@0',
    'black@1',
    'white@1',
    'red@1',

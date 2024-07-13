@@ -103,25 +103,6 @@ export class FFmpegBase {
       return generatedOutputTag;
    }
 
-   private cleanFilters(): string {
-      const yuvaFilter = 'format=yuva420p,';
-      let filterString = this.videoSubgraph.join(',');
-      const yuvaCtr = filterString.match(new RegExp(yuvaFilter, 'g'))?.length || 0;
-      if (yuvaCtr < 2) return filterString;
-
-      filterString = '';
-      const firstYuvaIndex = filterString.indexOf(yuvaFilter);
-      for (const [index, filter] of Object.entries(this.videoSubgraph)) {
-         if (!filter.includes(yuvaFilter) || parseInt(index) === firstYuvaIndex) {
-            filterString += filter;
-            continue;
-         }
-
-         filterString += filter.replace(yuvaFilter, '');
-      }
-      return filterString;
-   }
-
    getCommandData(): FFmpegBaseData {
       if (this.audioSubgraph.length) {
          const filter = this.audioSubgraph.join(',');
@@ -130,7 +111,7 @@ export class FFmpegBase {
       }
 
       if (this.videoSubgraph.length) {
-         const filter = this.cleanFilters();
+         const filter = this.videoSubgraph.join(',');
          this.appendVideoFilterToGraph({ filter });
          this.videoSubgraph = [];
       }
@@ -149,7 +130,7 @@ export class FFmpegBase {
 
    run(output: string | string[], options: OutputOptions = {}): string {
       const outputPath = this.normalizeOutputPath(output);
-      const mimeType = this.validateOutputAndGetMimeType(outputPath);
+      const mimeType = this.getMimeType(outputPath);
 
       const { inputs, filterGraphParts, outputAudioTag, outputVideoTag } = this.prepareData(
          mimeType,
@@ -189,7 +170,7 @@ export class FFmpegBase {
       return outputPath;
    }
 
-   private validateOutputAndGetMimeType(outputPath: string): string {
+   private getMimeType(outputPath: string): string {
       const ext = extname(outputPath).slice(1);
       if (!ext) throw new Error('Output filename and extension is required');
       const mimeType = mime.getType(ext);
@@ -201,7 +182,7 @@ export class FFmpegBase {
       const { inputs, filterGraphParts, outputAudioTag, outputVideoTag } = this.getCommandData();
       const onlyImages = Array.from(inputs.values()).every((input) => input.type === 'image');
       const someTrimmed = filterGraphParts.some((part) => part.includes('trim'));
-      const videoExpected = mimeType.includes('video');
+      const videoExpected = mimeType.includes('video') || mimeType.includes('gif');
 
       if (onlyImages && !someTrimmed && videoExpected && !options.duration) {
          options.duration = 5;
