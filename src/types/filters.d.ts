@@ -178,6 +178,10 @@ export interface PadBuilder {
    (options: PadOptions): RequiredFilterOutput<'videoFilter'>;
 }
 
+export interface DelayBuilder {
+   (seconds: number): RequiredFilterOutput<'audioFilter' | 'videoFilter'>;
+}
+
 // export interface MediaFilters {
 //    correction?: {}; // contrast, brightness, saturation
 //    color?: {}; // color balance with lut filter (lookup table)

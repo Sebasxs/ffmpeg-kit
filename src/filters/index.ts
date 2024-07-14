@@ -14,3 +14,4 @@ export { DenoiseFilter } from '@/filters/denoise';
 export { RotateFilter } from '@/filters/rotate';
 export { AlphaFilter } from '@/filters/alpha';
 export { PadFilter } from '@/filters/pad';
+export { DelayFilter } from '@/filters/delay';

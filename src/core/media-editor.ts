@@ -18,6 +18,7 @@ import {
    RotateFilter,
    AlphaFilter,
    PadFilter,
+   DelayFilter,
 } from '@/filters';
 
 // @types
@@ -216,6 +217,13 @@ export class MediaEditor extends FFmpegBase {
 
       const { videoFilter } = PadFilter(options);
       this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   delay(seconds: number): this {
+      const { audioFilter, videoFilter } = DelayFilter(seconds);
+      if (this.hasAudioStream()) this.addAudioFilter(audioFilter);
+      if (this.hasVideoStream()) this.addVideoFilter(videoFilter);
       return this;
    }
 }
