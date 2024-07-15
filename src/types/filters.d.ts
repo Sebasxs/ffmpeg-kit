@@ -182,11 +182,13 @@ export interface DelayBuilder {
    (seconds: number): RequiredFilterOutput<'audioFilter' | 'videoFilter'>;
 }
 
+export interface NegateBuilder {
+   (alpha?: boolean): RequiredFilterOutput<'videoFilter'>;
+}
+
 // export interface MediaFilters {
 //    correction?: {}; // contrast, brightness, saturation
 //    color?: {}; // color balance with lut filter (lookup table)
-//    delay?: number;
-//    negate?: boolean;
 //    grayscale?: boolean;
 //    drawtext?: {};
 //    drawbox?: {};

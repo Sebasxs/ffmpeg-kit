@@ -19,6 +19,7 @@ import {
    AlphaFilter,
    PadFilter,
    DelayFilter,
+   NegateFilter,
 } from '@/filters';
 
 // @types
@@ -224,6 +225,16 @@ export class MediaEditor extends FFmpegBase {
       const { audioFilter, videoFilter } = DelayFilter(seconds);
       if (this.hasAudioStream()) this.addAudioFilter(audioFilter);
       if (this.hasVideoStream()) this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   negate(alpha: boolean = false): this {
+      if (!this.hasVideoStream()) {
+         throw new Error('Negate filter can only be applied to video streams.');
+      }
+
+      const { videoFilter } = NegateFilter(alpha);
+      this.addVideoFilter(videoFilter);
       return this;
    }
 }
