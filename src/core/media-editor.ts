@@ -20,6 +20,7 @@ import {
    PadFilter,
    DelayFilter,
    NegateFilter,
+   GrayscaleFilter,
 } from '@/filters';
 
 // @types
@@ -234,6 +235,16 @@ export class MediaEditor extends FFmpegBase {
       }
 
       const { videoFilter } = NegateFilter(alpha);
+      this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   grayscale(): this {
+      if (!this.hasVideoStream()) {
+         throw new Error('Grayscale filter can only be applied to video streams.');
+      }
+
+      const { videoFilter } = GrayscaleFilter();
       this.addVideoFilter(videoFilter);
       return this;
    }

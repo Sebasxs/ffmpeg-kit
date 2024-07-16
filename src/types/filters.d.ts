@@ -186,10 +186,13 @@ export interface NegateBuilder {
    (alpha?: boolean): RequiredFilterOutput<'videoFilter'>;
 }
 
+export interface GrayscaleBuilder {
+   (): RequiredFilterOutput<'videoFilter'>;
+}
+
 // export interface MediaFilters {
 //    correction?: {}; // contrast, brightness, saturation
 //    color?: {}; // color balance with lut filter (lookup table)
-//    grayscale?: boolean;
 //    drawtext?: {};
 //    drawbox?: {};
 //    stabilize?: boolean;
