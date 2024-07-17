@@ -194,15 +194,15 @@ export interface GrayscaleBuilder {
    (): RequiredFilterOutput<'videoFilter'>;
 }
 
-export type ColorAdjustmentOptions = AtLeastOne<{
+export type BrightnessOptions = AtLeastOne<{
    brightness?: number | string;
    contrast?: number | string;
    saturation?: number | string;
    gamma?: number | string;
 }>;
 
-export interface ColorAdjustmentBuilder {
-   (options: ColorAdjustmentOptions): RequiredFilterOutput<'videoFilter'>;
+export interface BrightnessBuilder {
+   (options: BrightnessOptions): RequiredFilterOutput<'videoFilter'>;
 }
 
 // export interface MediaFilters {

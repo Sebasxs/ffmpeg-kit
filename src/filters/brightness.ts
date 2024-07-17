@@ -1,6 +1,6 @@
-import { ColorAdjustmentBuilder } from '@/types/filters';
+import { BrightnessBuilder } from '@/types/filters';
 
-export const ColorAdjustmentFilter: ColorAdjustmentBuilder = (options) => {
+export const BrightnessFilter: BrightnessBuilder = (options) => {
    const { brightness, contrast, saturation, gamma } = options;
 
    const params = [];

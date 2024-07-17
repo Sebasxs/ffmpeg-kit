@@ -21,12 +21,12 @@ import {
    DelayFilter,
    NegateFilter,
    GrayscaleFilter,
-   ColorAdjustmentFilter,
+   BrightnessFilter,
 } from '@/filters';
 
 // @types
 import {
-   ColorAdjustmentOptions,
+   BrightnessOptions,
    CropOptions,
    DenoiseOptions,
    DynaudnormOptions,
@@ -251,12 +251,12 @@ export class MediaEditor extends FFmpegBase {
       return this;
    }
 
-   colorAdjustment(options: ColorAdjustmentOptions): this {
+   brightness(options: BrightnessOptions): this {
       if (!this.hasVideoStream()) {
-         throw new Error('Color adjustment filter can only be applied to video streams.');
+         throw new Error('Brightness filter can only be applied to video streams.');
       }
 
-      const { videoFilter } = ColorAdjustmentFilter(options);
+      const { videoFilter } = BrightnessFilter(options);
       this.addVideoFilter(videoFilter);
       return this;
    }

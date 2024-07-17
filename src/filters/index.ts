@@ -17,4 +17,4 @@ export { PadFilter } from '@/filters/pad';
 export { DelayFilter } from '@/filters/delay';
 export { NegateFilter } from '@/filters/negate';
 export { GrayscaleFilter } from '@/filters/grayscale';
-export { ColorAdjustmentFilter } from '@/filters/color-adjust';
+export { BrightnessFilter } from '@/filters/brightness';
