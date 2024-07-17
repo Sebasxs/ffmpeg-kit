@@ -2,6 +2,10 @@ import { FFmpegColor } from '@/utils/colors.ts';
 import { aspectRatios } from '@/utils/aspect-ratios.ts';
 import { curves } from '@/utils/curves.ts';
 
+type AtLeastOne<T, K extends keyof T = keyof T> = {
+   [P in K]-?: Required<Pick<T, P>> & Partial<Omit<T, P>>;
+}[K];
+
 interface FilterOutput {
    audioFilter?: string;
    videoFilter?: string;
@@ -26,7 +30,7 @@ export interface LoudnormBuilder {
    (options: LoudnormOptions): RequiredFilterOutput<'audioFilter'>;
 }
 
-export interface DynaudnormOptions {
+export type DynaudnormOptions = AtLeastOne<{
    frameLength?: number;
    gaussSize?: number;
    peak?: number;
@@ -34,7 +38,7 @@ export interface DynaudnormOptions {
    rms?: number;
    compress?: number;
    threshold?: number;
-}
+}>;
 
 export interface DynaudnormBuilder {
    (options: DynaudnormOptions): RequiredFilterOutput<'audioFilter'>;
@@ -190,8 +194,18 @@ export interface GrayscaleBuilder {
    (): RequiredFilterOutput<'videoFilter'>;
 }
 
+export type ColorAdjustmentOptions = AtLeastOne<{
+   brightness?: number | string;
+   contrast?: number | string;
+   saturation?: number | string;
+   gamma?: number | string;
+}>;
+
+export interface ColorAdjustmentBuilder {
+   (options: ColorAdjustmentOptions): RequiredFilterOutput<'videoFilter'>;
+}
+
 // export interface MediaFilters {
-//    correction?: {}; // contrast, brightness, saturation
 //    color?: {}; // color balance with lut filter (lookup table)
 //    drawtext?: {};
 //    drawbox?: {};

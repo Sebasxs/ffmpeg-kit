@@ -21,10 +21,12 @@ import {
    DelayFilter,
    NegateFilter,
    GrayscaleFilter,
+   ColorAdjustmentFilter,
 } from '@/filters';
 
 // @types
 import {
+   ColorAdjustmentOptions,
    CropOptions,
    DenoiseOptions,
    DynaudnormOptions,
@@ -245,6 +247,16 @@ export class MediaEditor extends FFmpegBase {
       }
 
       const { videoFilter } = GrayscaleFilter();
+      this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   colorAdjustment(options: ColorAdjustmentOptions): this {
+      if (!this.hasVideoStream()) {
+         throw new Error('Color adjustment filter can only be applied to video streams.');
+      }
+
+      const { videoFilter } = ColorAdjustmentFilter(options);
       this.addVideoFilter(videoFilter);
       return this;
    }
