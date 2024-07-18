@@ -205,6 +205,24 @@ export interface BrightnessBuilder {
    (options: BrightnessOptions): RequiredFilterOutput<'videoFilter'>;
 }
 
+export type HueOptions =
+   | {
+        degrees: number;
+        expression?: never;
+        saturation?: number | string;
+        brightness?: number | string;
+     }
+   | {
+        degrees?: never;
+        expression: string;
+        saturation?: number | string;
+        brightness?: number | string;
+     };
+
+export interface HueBuilder {
+   (options: HueOptions): RequiredFilterOutput<'videoFilter'>;
+}
+
 // export interface MediaFilters {
 //    color?: {}; // color balance with lut filter (lookup table)
 //    drawtext?: {};

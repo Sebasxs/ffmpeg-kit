@@ -18,3 +18,4 @@ export { DelayFilter } from '@/filters/delay';
 export { NegateFilter } from '@/filters/negate';
 export { GrayscaleFilter } from '@/filters/grayscale';
 export { BrightnessFilter } from '@/filters/brightness';
+export { HueFilter } from '@/filters/hue';

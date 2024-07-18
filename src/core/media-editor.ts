@@ -22,6 +22,7 @@ import {
    NegateFilter,
    GrayscaleFilter,
    BrightnessFilter,
+   HueFilter,
 } from '@/filters';
 
 // @types
@@ -32,6 +33,7 @@ import {
    DynaudnormOptions,
    FadeOptions,
    FlipOptions,
+   HueOptions,
    LoudnormOptions,
    PadOptions,
    ReverseOptions,
@@ -257,6 +259,16 @@ export class MediaEditor extends FFmpegBase {
       }
 
       const { videoFilter } = BrightnessFilter(options);
+      this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   hue(options: HueOptions): this {
+      if (!this.hasVideoStream()) {
+         throw new Error('Hue filter can only be applied to video streams.');
+      }
+
+      const { videoFilter } = HueFilter(options);
       this.addVideoFilter(videoFilter);
       return this;
    }
