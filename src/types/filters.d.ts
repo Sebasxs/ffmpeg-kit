@@ -223,6 +223,22 @@ export interface HueBuilder {
    (options: HueOptions): RequiredFilterOutput<'videoFilter'>;
 }
 
+export type ColorBalanceOptions = { preserveLightness?: boolean } & AtLeastOne<{
+   redShadows?: number;
+   greenShadows?: number;
+   blueShadows?: number;
+   redMidtones?: number;
+   greenMidtones?: number;
+   blueMidtones?: number;
+   redHighlights?: number;
+   greenHighlights?: number;
+   blueHighlights?: number;
+}>;
+
+export interface ColorBalanceBuilder {
+   (options: ColorBalanceOptions): RequiredFilterOutput<'videoFilter'>;
+}
+
 // export interface MediaFilters {
 //    color?: {}; // color balance with lut filter (lookup table)
 //    drawtext?: {};

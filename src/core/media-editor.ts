@@ -23,11 +23,13 @@ import {
    GrayscaleFilter,
    BrightnessFilter,
    HueFilter,
+   ColorBalanceFilter,
 } from '@/filters';
 
 // @types
 import {
    BrightnessOptions,
+   ColorBalanceOptions,
    CropOptions,
    DenoiseOptions,
    DynaudnormOptions,
@@ -269,6 +271,16 @@ export class MediaEditor extends FFmpegBase {
       }
 
       const { videoFilter } = HueFilter(options);
+      this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   colorBalance(options: ColorBalanceOptions): this {
+      if (!this.hasVideoStream()) {
+         throw new Error('Color balance filter can only be applied to video streams.');
+      }
+
+      const { videoFilter } = ColorBalanceFilter(options);
       this.addVideoFilter(videoFilter);
       return this;
    }
