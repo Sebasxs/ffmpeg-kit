@@ -24,12 +24,16 @@ import {
    BrightnessFilter,
    HueFilter,
    ColorBalanceFilter,
+   ColorChannelMixerFilter,
+   LutFilter,
 } from '@/filters';
 
 // @types
 import {
    BrightnessOptions,
    ColorBalanceOptions,
+   ColorChannelMixerOptions,
+   ColorPresetValues,
    CropOptions,
    DenoiseOptions,
    DynaudnormOptions,
@@ -281,6 +285,26 @@ export class MediaEditor extends FFmpegBase {
       }
 
       const { videoFilter } = ColorBalanceFilter(options);
+      this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   colorMixer(options: ColorChannelMixerOptions): this {
+      if (!this.hasVideoStream()) {
+         throw new Error('Color channel mixer filter can only be applied to video streams.');
+      }
+
+      const { videoFilter } = ColorChannelMixerFilter(options);
+      this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   colorPreset(options: ColorPresetValues): this {
+      if (!this.hasVideoStream()) {
+         throw new Error('Color preset filter can only be applied to video streams.');
+      }
+
+      const { videoFilter } = LutFilter(options);
       this.addVideoFilter(videoFilter);
       return this;
    }

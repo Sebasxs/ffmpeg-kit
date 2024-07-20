@@ -239,8 +239,53 @@ export interface ColorBalanceBuilder {
    (options: ColorBalanceOptions): RequiredFilterOutput<'videoFilter'>;
 }
 
+export type PreserveColorModeValues = 'none' | 'lum' | 'max' | 'avg' | 'sum' | 'nrm' | 'pwr';
+
+export type ColorChannelMixerOptions = {
+   preserveColorMode?: PreserveColorModeValues;
+   preserveColorAmount?: number;
+} & AtLeastOne<{
+   redInRed?: number;
+   redInGreen?: number;
+   redInBlue?: number;
+   redInAlpha?: number;
+   greenInRed?: number;
+   greenInGreen?: number;
+   greenInBlue?: number;
+   greenInAlpha?: number;
+   blueInRed?: number;
+   blueInGreen?: number;
+   blueInBlue?: number;
+   blueInAlpha?: number;
+   alphaInRed?: number;
+   alphaInGreen?: number;
+   alphaInBlue?: number;
+   alphaInAlpha?: number;
+}>;
+
+export interface ColorChannelMixerBuilder {
+   (options: ColorChannelMixerOptions): RequiredFilterOutput<'videoFilter'>;
+}
+
+export type ColorPresetValues =
+   | 'sepia'
+   | 'golden hour'
+   | 'purple noir'
+   | 'grayscale'
+   | 'moonlight'
+   | 'teal & orange'
+   | 'vibrant'
+   | 'desaturated'
+   | 'negative'
+   | 'matrix code green'
+   | 'cyberpunk'
+   | 'vintage film';
+
+export interface LookUpTableBuilder {
+   (preset: ColorPresetValues): RequiredFilterOutput<'videoFilter'>;
+}
+
 // export interface MediaFilters {
-//    color?: {}; // color balance with lut filter (lookup table)
 //    drawtext?: {};
 //    drawbox?: {};
 //    stabilize?: boolean;

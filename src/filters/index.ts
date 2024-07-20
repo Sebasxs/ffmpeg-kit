@@ -20,3 +20,5 @@ export { GrayscaleFilter } from '@/filters/grayscale';
 export { BrightnessFilter } from '@/filters/brightness';
 export { HueFilter } from '@/filters/hue';
 export { ColorBalanceFilter } from '@/filters/color-balance';
+export { ColorChannelMixerFilter } from '@/filters/color-mixer';
+export { LutFilter } from '@/filters/lut';
