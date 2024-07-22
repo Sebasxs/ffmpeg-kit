@@ -29,7 +29,7 @@ export const LutFilter: LookUpTableBuilder = (preset) => {
          videoFilter = 'lutrgb=r=0.8*r:g=0.8*g:b=0.8*b';
          break;
       case 'negative':
-         videoFilter = 'lutrgb="r=negval:g=negval:b=negval"';
+         videoFilter = 'lutrgb=r=negval:g=negval:b=negval';
          break;
       case 'matrix code green':
          videoFilter = 'lutrgb=r=val*0.5:g=val*1.5:b=val*0.5';

@@ -26,6 +26,7 @@ import {
    ColorBalanceFilter,
    ColorChannelMixerFilter,
    LutFilter,
+   ColorMultiplierFilter,
 } from '@/filters';
 
 // @types
@@ -33,6 +34,7 @@ import {
    BrightnessOptions,
    ColorBalanceOptions,
    ColorChannelMixerOptions,
+   ColorMultiplierOptions,
    ColorPresetValues,
    CropOptions,
    DenoiseOptions,
@@ -305,6 +307,16 @@ export class MediaEditor extends FFmpegBase {
       }
 
       const { videoFilter } = LutFilter(options);
+      this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   colorMultiplier(options: ColorMultiplierOptions): this {
+      if (!this.hasVideoStream()) {
+         throw new Error('Color multiplier filter can only be applied to video streams.');
+      }
+
+      const { videoFilter } = ColorMultiplierFilter(options);
       this.addVideoFilter(videoFilter);
       return this;
    }

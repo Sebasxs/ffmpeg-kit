@@ -285,6 +285,17 @@ export interface LookUpTableBuilder {
    (preset: ColorPresetValues): RequiredFilterOutput<'videoFilter'>;
 }
 
+export type ColorMultiplierOptions = AtLeastOne<{
+   red?: number;
+   green?: number;
+   blue?: number;
+   alpha?: number;
+}>;
+
+export interface ColorMultiplierBuilder {
+   (options: ColorMultiplierOptions): RequiredFilterOutput<'videoFilter'>;
+}
+
 // export interface MediaFilters {
 //    drawtext?: {};
 //    drawbox?: {};
