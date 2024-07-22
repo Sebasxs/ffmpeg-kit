@@ -1,6 +1,7 @@
 import { FFmpegColor } from '@/utils/colors.ts';
 import { aspectRatios } from '@/utils/aspect-ratios.ts';
 import { curves } from '@/utils/curves.ts';
+import { ColorPresets } from '@/utils/color-presets.ts';
 
 type AtLeastOne<T, K extends keyof T = keyof T> = {
    [P in K]-?: Required<Pick<T, P>> & Partial<Omit<T, P>>;
@@ -267,19 +268,7 @@ export interface ColorChannelMixerBuilder {
    (options: ColorChannelMixerOptions): RequiredFilterOutput<'videoFilter'>;
 }
 
-export type ColorPresetValues =
-   | 'sepia'
-   | 'golden hour'
-   | 'purple noir'
-   | 'grayscale'
-   | 'moonlight'
-   | 'teal & orange'
-   | 'vibrant'
-   | 'desaturated'
-   | 'negative'
-   | 'matrix code green'
-   | 'cyberpunk'
-   | 'vintage film';
+export type ColorPresetValues = (typeof ColorPresets)[number];
 
 export interface LookUpTableBuilder {
    (preset: ColorPresetValues): RequiredFilterOutput<'videoFilter'>;
