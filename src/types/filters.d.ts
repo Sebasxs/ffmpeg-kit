@@ -285,15 +285,31 @@ export interface ColorMultiplierBuilder {
    (options: ColorMultiplierOptions): RequiredFilterOutput<'videoFilter'>;
 }
 
-// export interface MediaFilters {
-//    drawtext?: {};
-//    drawbox?: {};
-//    stabilize?: boolean;
-// }
+export interface DeshakeOptions {
+   x?: number;
+   y?: number;
+   width?: number;
+   height?: number;
+   rangeX?: number;
+   rangeY?: number;
+   edge?: 'blank' | 'clamp' | 'mirror' | 'smear';
+   blocksize?: number;
+   contrast?: number;
+}
 
-//    subtitles?: {};
-//    alphamerge?:
-//    blend?: {};
+export interface DeshakeBuilder {
+   (options?: DeshakeOptions): RequiredFilterOutput<'videoFilter'>;
+}
+
+//    pan
+//    drawtext
+//    drawbox
+
+//    subtitles
+//    alphamerge
+//    overlay
+//    blend
+//    stack
 
 export interface OverlayOptions {
    x: string | number;

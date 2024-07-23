@@ -23,3 +23,4 @@ export { ColorBalanceFilter } from '@/filters/color-balance';
 export { ColorChannelMixerFilter } from '@/filters/color-mixer';
 export { LutFilter } from '@/filters/lut';
 export { ColorMultiplierFilter } from '@/filters/color-multiplier';
+export { DeshakeFilter } from '@/filters/deshake';

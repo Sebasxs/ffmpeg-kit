@@ -27,6 +27,7 @@ import {
    ColorChannelMixerFilter,
    LutFilter,
    ColorMultiplierFilter,
+   DeshakeFilter,
 } from '@/filters';
 
 // @types
@@ -38,6 +39,7 @@ import {
    ColorPresetValues,
    CropOptions,
    DenoiseOptions,
+   DeshakeOptions,
    DynaudnormOptions,
    FadeOptions,
    FlipOptions,
@@ -317,6 +319,16 @@ export class MediaEditor extends FFmpegBase {
       }
 
       const { videoFilter } = ColorMultiplierFilter(options);
+      this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   deshake(options?: DeshakeOptions): this {
+      if (!this.hasVideoStream()) {
+         throw new Error('Deshake filter can only be applied to video streams.');
+      }
+
+      const { videoFilter } = DeshakeFilter(options);
       this.addVideoFilter(videoFilter);
       return this;
    }
