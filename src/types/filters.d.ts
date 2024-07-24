@@ -301,7 +301,15 @@ export interface DeshakeBuilder {
    (options?: DeshakeOptions): RequiredFilterOutput<'videoFilter'>;
 }
 
-//    pan
+export interface PanOptions {
+   layout: 'mono' | 'stereo' | '5.1' | '7.1';
+   channels: (number | string)[];
+}
+
+export interface PanBuilder {
+   (options: PanOptions): RequiredFilterOutput<'audioFilter'>;
+}
+
 //    drawtext
 //    drawbox
 

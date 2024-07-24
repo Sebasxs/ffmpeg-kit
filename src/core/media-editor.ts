@@ -28,6 +28,7 @@ import {
    LutFilter,
    ColorMultiplierFilter,
    DeshakeFilter,
+   PanFilter,
 } from '@/filters';
 
 // @types
@@ -46,6 +47,7 @@ import {
    HueOptions,
    LoudnormOptions,
    PadOptions,
+   PanOptions,
    ReverseOptions,
    RotateOptions,
    ScaleOptions,
@@ -330,6 +332,16 @@ export class MediaEditor extends FFmpegBase {
 
       const { videoFilter } = DeshakeFilter(options);
       this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   pan(options: PanOptions): this {
+      if (!this.hasAudioStream()) {
+         throw new Error('Pan filter can only be applied to audio streams.');
+      }
+
+      const { audioFilter } = PanFilter(options);
+      this.addAudioFilter(audioFilter);
       return this;
    }
 }
