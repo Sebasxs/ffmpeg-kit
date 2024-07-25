@@ -29,6 +29,7 @@ import {
    ColorMultiplierFilter,
    DeshakeFilter,
    PanFilter,
+   DrawTextFilter,
 } from '@/filters';
 
 // @types
@@ -41,6 +42,7 @@ import {
    CropOptions,
    DenoiseOptions,
    DeshakeOptions,
+   DrawTextOptions,
    DynaudnormOptions,
    FadeOptions,
    FlipOptions,
@@ -342,6 +344,16 @@ export class MediaEditor extends FFmpegBase {
 
       const { audioFilter } = PanFilter(options);
       this.addAudioFilter(audioFilter);
+      return this;
+   }
+
+   drawText(options: DrawTextOptions): this {
+      if (!this.hasVideoStream()) {
+         throw new Error('Draw text filter can only be applied to video streams.');
+      }
+
+      const { videoFilter } = DrawTextFilter(options);
+      this.addVideoFilter(videoFilter);
       return this;
    }
 }

@@ -310,7 +310,41 @@ export interface PanBuilder {
    (options: PanOptions): RequiredFilterOutput<'audioFilter'>;
 }
 
-//    drawtext
+export type TextAlign =
+   | 'left+top'
+   | 'left+middle'
+   | 'left+bottom'
+   | 'center+top'
+   | 'center+middle'
+   | 'center+bottom'
+   | 'right+top'
+   | 'right+middle'
+   | 'right+bottom';
+
+export interface DrawTextOptions {
+   text: string;
+   textAlign?: TextAlign;
+   lineSpacing?: number;
+   fontfile?: string;
+   fontsize?: number | string;
+   fontcolor?: (typeof FFmpegColor)[number] | (string & {});
+   x?: number | string;
+   y?: number | string;
+   borderw?: number;
+   bordercolor?: (typeof FFmpegColor)[number] | (string & {});
+   shadowX?: number;
+   shadowY?: number;
+   shadowColor?: (typeof FFmpegColor)[number] | (string & {});
+   box?: boolean;
+   boxcolor?: (typeof FFmpegColor)[number] | (string & {});
+   boxborderw?: number;
+   enable?: string | number | boolean;
+}
+
+export interface DrawTextBuilder {
+   (options: DrawTextOptions): RequiredFilterOutput<'videoFilter'>;
+}
+
 //    drawbox
 
 //    subtitles

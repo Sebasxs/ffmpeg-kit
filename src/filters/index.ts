@@ -25,3 +25,4 @@ export { LutFilter } from '@/filters/lut';
 export { ColorMultiplierFilter } from '@/filters/color-multiplier';
 export { DeshakeFilter } from '@/filters/deshake';
 export { PanFilter } from '@/filters/pan';
+export { DrawTextFilter } from '@/filters/draw-text';
