@@ -3,19 +3,19 @@ import { DrawTextBuilder } from '@/types/filters';
 export const DrawTextFilter: DrawTextBuilder = (options) => {
    const {
       text,
-      fontfile,
-      fontsize,
-      fontcolor,
+      fontFile,
+      fontSize,
+      fontColor,
       x,
       y,
-      borderw,
-      bordercolor,
+      borderWidth,
+      borderColor,
       shadowX,
       shadowY,
       shadowColor,
       box,
-      boxcolor,
-      boxborderw,
+      boxColor,
+      boxBorderWidth,
       textAlign,
       lineSpacing,
       enable,
@@ -23,11 +23,11 @@ export const DrawTextFilter: DrawTextBuilder = (options) => {
 
    let videoFilter = `drawtext=text=${text}`;
    const params = [];
-   if (fontfile !== undefined) params.push(`fontfile='${fontfile}'`);
-   if (fontsize !== undefined) params.push(`fontsize=${fontsize}`);
-   if (fontcolor !== undefined) {
-      if (/[a-z]+/.test(fontcolor)) params.push(`fontcolor=${fontcolor}`);
-      else params.push(`fontcolor='${fontcolor}'`);
+   if (fontFile !== undefined) params.push(`fontfile='${fontFile}'`);
+   if (fontSize !== undefined) params.push(`fontsize=${fontSize}`);
+   if (fontColor !== undefined) {
+      if (/[a-z]+/.test(fontColor)) params.push(`fontcolor=${fontColor}`);
+      else params.push(`fontcolor='${fontColor}'`);
    }
    if (x !== undefined) {
       if (typeof x === 'number') params.push(`x=${x}`);
@@ -37,10 +37,10 @@ export const DrawTextFilter: DrawTextBuilder = (options) => {
       if (typeof y === 'number') params.push(`y=${y}`);
       else params.push(`y='${y}'`);
    }
-   if (borderw !== undefined) params.push(`borderw=${borderw}`);
-   if (bordercolor !== undefined) {
-      if (/[a-z]+/.test(bordercolor)) params.push(`bordercolor=${bordercolor}`);
-      else params.push(`bordercolor='${bordercolor}'`);
+   if (borderWidth !== undefined) params.push(`borderw=${borderWidth}`);
+   if (borderColor !== undefined) {
+      if (/[a-z]+/.test(borderColor)) params.push(`bordercolor=${borderColor}`);
+      else params.push(`bordercolor='${borderColor}'`);
    }
    if (shadowX !== undefined) params.push(`shadowx=${shadowX}`);
    if (shadowY !== undefined) params.push(`shadowy=${shadowY}`);
@@ -49,11 +49,11 @@ export const DrawTextFilter: DrawTextBuilder = (options) => {
       else params.push(`shadowcolor='${shadowColor}'`);
    }
    if (box !== undefined) params.push(`box=${box}`);
-   if (boxcolor !== undefined) {
-      if (/[a-z]+/.test(boxcolor)) params.push(`boxcolor=${boxcolor}`);
-      else params.push(`boxcolor='${boxcolor}'`);
+   if (boxColor !== undefined) {
+      if (/[a-z]+/.test(boxColor)) params.push(`boxcolor=${boxColor}`);
+      else params.push(`boxcolor='${boxColor}'`);
    }
-   if (boxborderw !== undefined) params.push(`boxborderw=${boxborderw}`);
+   if (boxBorderWidth !== undefined) params.push(`boxborderw=${boxBorderWidth}`);
    if (textAlign !== undefined) params.push(`textalign=${textAlign}`);
    if (lineSpacing !== undefined) params.push(`linespacing=${lineSpacing}`);
    if (enable !== undefined) {

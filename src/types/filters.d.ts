@@ -325,19 +325,19 @@ export interface DrawTextOptions {
    text: string;
    textAlign?: TextAlign;
    lineSpacing?: number;
-   fontfile?: string;
-   fontsize?: number | string;
-   fontcolor?: (typeof FFmpegColor)[number] | (string & {});
+   fontFile?: string;
+   fontSize?: number | string;
+   fontColor?: (typeof FFmpegColor)[number] | (string & {});
    x?: number | string;
    y?: number | string;
-   borderw?: number;
-   bordercolor?: (typeof FFmpegColor)[number] | (string & {});
+   borderWidth?: number;
+   borderColor?: (typeof FFmpegColor)[number] | (string & {});
    shadowX?: number;
    shadowY?: number;
    shadowColor?: (typeof FFmpegColor)[number] | (string & {});
    box?: boolean;
-   boxcolor?: (typeof FFmpegColor)[number] | (string & {});
-   boxborderw?: number;
+   boxColor?: (typeof FFmpegColor)[number] | (string & {});
+   boxBorderWidth?: number;
    enable?: string | number | boolean;
 }
 
@@ -345,7 +345,28 @@ export interface DrawTextBuilder {
    (options: DrawTextOptions): RequiredFilterOutput<'videoFilter'>;
 }
 
-//    drawbox
+export type DrawBoxOptions = {
+   x: number | string;
+   y: number | string;
+   width: number | string;
+   height: number | string;
+   enable?: string | number | boolean;
+} & (
+   | {
+        fillColor: (typeof FFmpegColor)[number] | (string & {});
+        borderColor?: (typeof FFmpegColor)[number] | (string & {});
+        thickness?: never;
+     }
+   | {
+        borderColor: (typeof FFmpegColor)[number] | (string & {});
+        thickness?: number;
+        fillColor?: (typeof FFmpegColor)[number] | (string & {});
+     }
+);
+
+export interface DrawBoxBuilder {
+   (options: DrawBoxOptions): RequiredFilterOutput<'videoFilter'>;
+}
 
 //    subtitles
 //    alphamerge

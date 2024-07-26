@@ -30,6 +30,7 @@ import {
    DeshakeFilter,
    PanFilter,
    DrawTextFilter,
+   DrawBoxFilter,
 } from '@/filters';
 
 // @types
@@ -42,6 +43,7 @@ import {
    CropOptions,
    DenoiseOptions,
    DeshakeOptions,
+   DrawBoxOptions,
    DrawTextOptions,
    DynaudnormOptions,
    FadeOptions,
@@ -353,6 +355,16 @@ export class MediaEditor extends FFmpegBase {
       }
 
       const { videoFilter } = DrawTextFilter(options);
+      this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   drawBox(options: DrawBoxOptions): this {
+      if (!this.hasVideoStream()) {
+         throw new Error('Draw box filter can only be applied to video streams.');
+      }
+
+      const { videoFilter } = DrawBoxFilter(options);
       this.addVideoFilter(videoFilter);
       return this;
    }
