@@ -1,7 +1,4 @@
-import { FFmpegColor } from '@/utils/colors.ts';
-import { aspectRatios } from '@/utils/aspect-ratios.ts';
-import { curves } from '@/utils/curves.ts';
-import { ColorPresets } from '@/utils/color-presets.ts';
+import { FFmpegColor, AspectRatios, Curves, ColorPresets } from '@/utils/constants.ts';
 
 type AtLeastOne<T, K extends keyof T = keyof T> = {
    [P in K]-?: Required<Pick<T, P>> & Partial<Omit<T, P>>;
@@ -63,7 +60,7 @@ export interface FadeOptions {
    type: 'in' | 'out';
    duration: number;
    start?: number;
-   curve?: (typeof curves)[number] | (string & {});
+   curve?: (typeof Curves)[number] | (string & {});
    stream?: StreamConstraint;
 }
 
@@ -91,7 +88,7 @@ export type CropOptions =
         height?: never;
         x?: never;
         y?: never;
-        aspectRatio: (typeof aspectRatios)[number] | (string & {});
+        aspectRatio: (typeof AspectRatios)[number] | (string & {});
      };
 
 export interface CropBuilder {
