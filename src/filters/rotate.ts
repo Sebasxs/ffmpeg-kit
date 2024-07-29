@@ -1,4 +1,5 @@
 import { RotateBuilder } from '@/types/filters';
+import { buildParam } from '@/utils/common';
 
 export const RotateFilter: RotateBuilder = (options) => {
    const {
@@ -16,11 +17,11 @@ export const RotateFilter: RotateBuilder = (options) => {
 
    const defaultOH = `rotw(${angle})`;
    const defaultOW = `roth(${angle})`;
-   videoFilter += `:ow='${outputWidth || defaultOW}'`;
-   videoFilter += `:oh='${outputHeight || defaultOH}'`;
+   videoFilter += `:${buildParam('ow', outputWidth || defaultOW)}`;
+   videoFilter += `:${buildParam('oh', outputHeight || defaultOH)}`;
 
-   if (pivotX) videoFilter += `:cx='${pivotX}'`;
-   if (pivotY) videoFilter += `:cy='${pivotY}'`;
+   if (pivotX) videoFilter += `:${buildParam('cx', pivotX)}`;
+   if (pivotY) videoFilter += `:${buildParam('cy', pivotY)}`;
 
    return { videoFilter };
 };

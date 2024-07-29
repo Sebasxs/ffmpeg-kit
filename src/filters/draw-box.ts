@@ -1,21 +1,17 @@
 import { DrawBoxBuilder, DrawBoxOptions } from '@/types/filters';
+import { buildParam } from '@/utils/common';
 
 const buildBoxParams = (options: Omit<DrawBoxOptions, 'fillColor' | 'borderColor'>) => {
    const { x, y, width, height, enable } = options || {};
    const params: string[] = [];
 
-   const addParam = (key: string, value: string | number) => {
-      if (typeof value === 'number') params.push(`${key}=${value}`);
-      else params.push(`${key}='${value}'`);
-   };
-
-   if (x !== undefined) addParam('x', x);
-   if (y !== undefined) addParam('y', y);
-   if (width !== undefined) addParam('w', width);
-   if (height !== undefined) addParam('h', height);
+   if (x !== undefined) params.push(buildParam('x', x));
+   if (y !== undefined) params.push(buildParam('y', y));
+   if (width !== undefined) params.push(buildParam('w', width));
+   if (height !== undefined) params.push(buildParam('h', height));
    if (enable !== undefined) {
-      if (typeof enable === 'string') addParam('enable', enable);
-      else addParam('enable', Number(enable));
+      if (typeof enable === 'string') params.push(buildParam('enable', enable));
+      else params.push(buildParam('enable', Number(enable)));
    }
 
    return params.join(':');
@@ -27,10 +23,12 @@ export const DrawBoxFilter: DrawBoxBuilder = (options) => {
    const boxParams = buildBoxParams({ x, y, width, height, enable });
 
    if (fillColor !== undefined) {
-      filters.push(`drawbox=${boxParams}:t=fill:color=${fillColor}`);
+      const colorParam = buildParam('color', fillColor);
+      filters.push(`drawbox=${boxParams}:t=fill:${colorParam}`);
    }
    if (borderColor !== undefined || thickness !== undefined) {
-      let borderFilter = `drawbox=${boxParams}:color=${borderColor ?? 'gray@1'}`;
+      const colorParam = buildParam('color', borderColor ?? "'gray@1'");
+      let borderFilter = `drawbox=${boxParams}:${colorParam}`;
       if (thickness !== undefined) borderFilter += `:t=${thickness}`;
       filters.push(borderFilter);
    }

@@ -17,10 +17,10 @@ export const LutFilter: LookUpTableBuilder = (preset) => {
          videoFilter = 'lutyuv=y=val:u=128:v=128';
          break;
       case 'moonlight':
-         videoFilter = "lutrgb=r='clipval*0.85':g='clipval*0.95':b='min(maxval, clipval*1.1)'";
+         videoFilter = "lutrgb=r='clipval*0.85':g='clipval*0.95':b='min(maxval,clipval*1.1)'";
          break;
       case 'teal & orange':
-         videoFilter = "lutrgb=r='min(maxval, clipval*1.08)':g='clipval*0.97':b='clipval*0.9'";
+         videoFilter = "lutrgb=r='min(maxval,clipval*1.08)':g='clipval*0.97':b='clipval*0.9'";
          break;
       case 'vibrant':
          videoFilter = 'lutrgb=r=1.2*r:g=1.2*g:b=1.2*b';

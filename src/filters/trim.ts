@@ -1,15 +1,16 @@
 import { TrimBuilder } from '@/types/filters';
+import { buildParam } from '@/utils/common';
 
 export const TrimFilter: TrimBuilder = (options) => {
    const { start, end, duration } = options;
    const filter = { audioFilter: 'atrim=', videoFilter: 'trim=' };
 
    const filterParams = [];
-   if (start !== undefined) filterParams.push(`start=${start}`);
-   if (end !== undefined) filterParams.push(`end=${end}`);
-   if (duration !== undefined) filterParams.push(`duration=${duration}`);
+   if (start !== undefined) filterParams.push(buildParam('start', start));
+   if (end !== undefined) filterParams.push(buildParam('end', end));
+   if (duration !== undefined) filterParams.push(buildParam('duration', duration));
 
-   const params = filterParams.join(':');
+   const params = filterParams.join(',');
    filter.audioFilter += params + ',asetpts=PTS-STARTPTS';
    filter.videoFilter += params + ',setpts=PTS-STARTPTS';
 

@@ -5,7 +5,7 @@ export const LoudnormFilter: LoudnormBuilder = (options) => {
    let normalizeString = `loudnorm=I=${average}:LRA=${range}:TP=${peak}`;
 
    if (linear !== undefined) {
-      normalizeString += `:linear=${linear}`;
+      normalizeString += `:linear=${Number(linear)}`;
    }
 
    return {

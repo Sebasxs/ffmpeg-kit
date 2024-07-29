@@ -1,4 +1,5 @@
 import { DrawTextBuilder } from '@/types/filters';
+import { buildParam } from '@/utils/common';
 
 export const DrawTextFilter: DrawTextBuilder = (options) => {
    const {
@@ -24,41 +25,23 @@ export const DrawTextFilter: DrawTextBuilder = (options) => {
    let videoFilter = `drawtext=text=${text}`;
    const params = [];
    if (fontFile !== undefined) params.push(`fontfile='${fontFile}'`);
-   if (fontSize !== undefined) params.push(`fontsize=${fontSize}`);
-   if (fontColor !== undefined) {
-      if (/[a-z]+/.test(fontColor)) params.push(`fontcolor=${fontColor}`);
-      else params.push(`fontcolor='${fontColor}'`);
-   }
-   if (x !== undefined) {
-      if (typeof x === 'number') params.push(`x=${x}`);
-      else params.push(`x='${x}'`);
-   }
-   if (y !== undefined) {
-      if (typeof y === 'number') params.push(`y=${y}`);
-      else params.push(`y='${y}'`);
-   }
-   if (borderWidth !== undefined) params.push(`borderw=${borderWidth}`);
-   if (borderColor !== undefined) {
-      if (/[a-z]+/.test(borderColor)) params.push(`bordercolor=${borderColor}`);
-      else params.push(`bordercolor='${borderColor}'`);
-   }
-   if (shadowX !== undefined) params.push(`shadowx=${shadowX}`);
-   if (shadowY !== undefined) params.push(`shadowy=${shadowY}`);
-   if (shadowColor !== undefined) {
-      if (/[a-z]+/.test(shadowColor)) params.push(`shadowcolor=${shadowColor}`);
-      else params.push(`shadowcolor='${shadowColor}'`);
-   }
-   if (box !== undefined) params.push(`box=${box}`);
-   if (boxColor !== undefined) {
-      if (/[a-z]+/.test(boxColor)) params.push(`boxcolor=${boxColor}`);
-      else params.push(`boxcolor='${boxColor}'`);
-   }
-   if (boxBorderWidth !== undefined) params.push(`boxborderw=${boxBorderWidth}`);
-   if (textAlign !== undefined) params.push(`textalign=${textAlign}`);
-   if (lineSpacing !== undefined) params.push(`linespacing=${lineSpacing}`);
+   if (fontSize !== undefined) params.push(buildParam('fontsize', fontSize));
+   if (fontColor !== undefined) params.push(buildParam('fontcolor', fontColor));
+   if (x !== undefined) params.push(buildParam('x', x));
+   if (y !== undefined) params.push(buildParam('y', y));
+   if (borderWidth !== undefined) params.push(buildParam('borderw', borderWidth));
+   if (borderColor !== undefined) params.push(buildParam('bordercolor', borderColor));
+   if (shadowX !== undefined) params.push(buildParam('shadowx', shadowX));
+   if (shadowY !== undefined) params.push(buildParam('shadowy', shadowY));
+   if (shadowColor !== undefined) params.push(buildParam('shadowcolor', shadowColor));
+   if (box !== undefined) params.push(buildParam('box', Number(box)));
+   if (boxColor !== undefined) params.push(buildParam('boxcolor', boxColor));
+   if (boxBorderWidth !== undefined) params.push(buildParam('boxborderw', boxBorderWidth));
+   if (textAlign !== undefined) params.push(buildParam('textalign', textAlign));
+   if (lineSpacing !== undefined) params.push(buildParam('linespacing', lineSpacing));
    if (enable !== undefined) {
-      if (['number', 'boolean'].includes(typeof enable)) params.push(`enable=${Number(enable)}`);
-      else params.push(`enable='${enable}'`);
+      if (typeof enable === 'string') params.push(buildParam('enable', enable));
+      else params.push(buildParam('enable', Number(enable)));
    }
 
    if (params.length) videoFilter += `:${params.join(':')}`;

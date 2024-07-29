@@ -223,10 +223,6 @@ export class MediaEditor extends FFmpegBase {
          throw new Error('Alpha filter can only be applied to video streams.');
       }
 
-      if (value < 0 || value > 1) {
-         throw new Error('Alpha value must be between 0 and 1.');
-      }
-
       const { videoFilter } = AlphaFilter(value);
       this.addVideoFilter(videoFilter);
       return this;

@@ -1,7 +1,6 @@
 import { VolumeBuilder } from '@/types/filters';
 
 export const VolumeFilter: VolumeBuilder = (value) => {
-   return {
-      audioFilter: `volume='${value}'`,
-   };
+   if (typeof value === 'number') return { audioFilter: `volume=${value}` };
+   return { audioFilter: `volume='${value}'` };
 };

@@ -1,4 +1,5 @@
 import { ColorChannelMixerBuilder } from '@/types/filters';
+import { buildParam } from '@/utils/common';
 
 export const ColorChannelMixerFilter: ColorChannelMixerBuilder = (options) => {
    const {
@@ -23,24 +24,24 @@ export const ColorChannelMixerFilter: ColorChannelMixerBuilder = (options) => {
    } = options;
 
    const params = [];
-   if (redInRed !== undefined) params.push(`rr=${redInRed}`);
-   if (redInGreen !== undefined) params.push(`gr=${redInGreen}`);
-   if (redInBlue !== undefined) params.push(`br=${redInBlue}`);
-   if (redInAlpha !== undefined) params.push(`ar=${redInAlpha}`);
-   if (greenInRed !== undefined) params.push(`rg=${greenInRed}`);
-   if (greenInGreen !== undefined) params.push(`gg=${greenInGreen}`);
-   if (greenInBlue !== undefined) params.push(`bg=${greenInBlue}`);
-   if (greenInAlpha !== undefined) params.push(`ag=${greenInAlpha}`);
-   if (blueInRed !== undefined) params.push(`rb=${blueInRed}`);
-   if (blueInGreen !== undefined) params.push(`gb=${blueInGreen}`);
-   if (blueInBlue !== undefined) params.push(`bb=${blueInBlue}`);
-   if (blueInAlpha !== undefined) params.push(`ab=${blueInAlpha}`);
-   if (alphaInRed !== undefined) params.push(`ra=${alphaInRed}`);
-   if (alphaInGreen !== undefined) params.push(`ga=${alphaInGreen}`);
-   if (alphaInBlue !== undefined) params.push(`ba=${alphaInBlue}`);
-   if (alphaInAlpha !== undefined) params.push(`aa=${alphaInAlpha}`);
-   if (preserveColorMode !== undefined) params.push(`pc=${preserveColorMode}`);
-   if (preserveColorAmount !== undefined) params.push(`pa=${preserveColorAmount}`);
+   if (redInRed !== undefined) params.push(buildParam('rr', redInRed));
+   if (redInGreen !== undefined) params.push(buildParam('gr', redInGreen));
+   if (redInBlue !== undefined) params.push(buildParam('br', redInBlue));
+   if (redInAlpha !== undefined) params.push(buildParam('ar', redInAlpha));
+   if (greenInRed !== undefined) params.push(buildParam('rg', greenInRed));
+   if (greenInGreen !== undefined) params.push(buildParam('gg', greenInGreen));
+   if (greenInBlue !== undefined) params.push(buildParam('bg', greenInBlue));
+   if (greenInAlpha !== undefined) params.push(buildParam('ag', greenInAlpha));
+   if (blueInRed !== undefined) params.push(buildParam('rb', blueInRed));
+   if (blueInGreen !== undefined) params.push(buildParam('gb', blueInGreen));
+   if (blueInBlue !== undefined) params.push(buildParam('bb', blueInBlue));
+   if (blueInAlpha !== undefined) params.push(buildParam('ab', blueInAlpha));
+   if (alphaInRed !== undefined) params.push(buildParam('ra', alphaInRed));
+   if (alphaInGreen !== undefined) params.push(buildParam('ga', alphaInGreen));
+   if (alphaInBlue !== undefined) params.push(buildParam('ba', alphaInBlue));
+   if (alphaInAlpha !== undefined) params.push(buildParam('aa', alphaInAlpha));
+   if (preserveColorMode !== undefined) params.push(buildParam('pc', preserveColorMode));
+   if (preserveColorAmount !== undefined) params.push(buildParam('pa', preserveColorAmount));
 
    return { videoFilter: `colorchannelmixer=${params.join(':')}` };
 };
