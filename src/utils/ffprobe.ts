@@ -1,5 +1,6 @@
 import { FFProbeResult } from '@/types/ffprobe';
 import { execSync } from 'child_process';
+import { MetadataError } from './errors';
 
 export function getFileMetadata(path: string): FFProbeResult {
    const cmd = `ffprobe -v quiet -print_format json -show_format -show_streams "${path}"`;
@@ -40,6 +41,6 @@ export function getFileMetadata(path: string): FFProbeResult {
 
       return { streams, format, summary };
    } catch (error: any) {
-      throw new Error(`Failed to get media info: ${error.message}`);
+      throw new MetadataError(`Failed to get media info: ${error.message}`);
    }
 }

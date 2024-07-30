@@ -20,6 +20,13 @@ import {
 
 // @utils
 import { getFileMetadata } from '@/utils/ffprobe';
+import {
+   FFmpegCommandError,
+   FFmpegError,
+   InvalidFileExtensionError,
+   InvalidMimeTypeError,
+   InvalidOutputPathError,
+} from '@/utils/errors';
 
 export class FFmpegBase {
    private _hash: string;
@@ -129,52 +136,59 @@ export class FFmpegBase {
    }
 
    run(output: string | string[], options: OutputOptions = {}): string {
-      const outputPath = this.normalizeOutputPath(output);
-      const mimeType = this.getMimeType(outputPath);
+      try {
+         const outputPath = this.normalizeOutputPath(output);
+         const mimeType = this.getMimeType(outputPath);
 
-      const { inputs, filterGraphParts, outputAudioTag, outputVideoTag } = this.prepareData(
-         mimeType,
-         options,
-      );
+         const { inputs, filterGraphParts, outputAudioTag, outputVideoTag } = this.prepareData(
+            mimeType,
+            options,
+         );
 
-      const inputOptions = this.prepareInputOptions({
-         overwrite: options.overwrite ?? true,
-         inputs,
-         filterGraphParts,
-         mimeType,
-      });
+         const inputOptions = this.prepareInputOptions({
+            overwrite: options.overwrite ?? true,
+            inputs,
+            filterGraphParts,
+            mimeType,
+         });
 
-      const { outputOptions, mapAudio, mapVideo } = this.prepareOutputOptions({
-         inputs,
-         outputAudioTag,
-         outputVideoTag,
-         mimeType,
-         options,
-      });
+         const { outputOptions, mapAudio, mapVideo } = this.prepareOutputOptions({
+            inputs,
+            outputAudioTag,
+            outputVideoTag,
+            mimeType,
+            options,
+         });
 
-      const ffmpegCommand = this.buildFFmpegCommand({
-         output: outputPath,
-         inputOptions,
-         filterGraphParts,
-         outputOptions,
-         mapAudio,
-         mapVideo,
-      });
+         const ffmpegCommand = this.buildFFmpegCommand({
+            output: outputPath,
+            inputOptions,
+            filterGraphParts,
+            outputOptions,
+            mapAudio,
+            mapVideo,
+         });
 
-      return this.executeFFmpegCommand(ffmpegCommand);
+         return this.executeFFmpegCommand(ffmpegCommand);
+      } catch (error: any) {
+         if (error instanceof FFmpegError) throw error;
+         throw new FFmpegError('An unexpected error occurred: ' + error.message);
+      }
    }
 
    private normalizeOutputPath(output: string | string[]): string {
       const outputPath = Array.isArray(output) ? join(...output) : output;
-      if (!outputPath || outputPath === '.') throw new Error('Output path is required');
+      if (!outputPath || outputPath === '.') {
+         throw new InvalidOutputPathError('Output path is required');
+      }
       return outputPath;
    }
 
    private getMimeType(outputPath: string): string {
       const ext = extname(outputPath).slice(1);
-      if (!ext) throw new Error('Output filename and extension is required');
+      if (!ext) throw new InvalidFileExtensionError(ext);
       const mimeType = mime.getType(ext);
-      if (!mimeType) throw new Error('Invalid output file extension');
+      if (!mimeType) throw new InvalidMimeTypeError(ext);
       return mimeType;
    }
 
@@ -292,9 +306,8 @@ export class FFmpegBase {
          execSync(command, { encoding: 'utf-8' });
          return command;
       } catch (error: any) {
-         console.error('FFmpeg command failed:', error);
-         if (error.stderr) console.error('FFmpeg stderr:', error.stderr);
-         throw new Error(`Failed to run ffmpeg: ${error.message}.`);
+         if (error.stderr) throw new FFmpegCommandError(command, error.stderr);
+         throw new FFmpegError('An unexpected error occurred: ' + error.message);
       }
    }
 }

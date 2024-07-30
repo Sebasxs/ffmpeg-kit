@@ -58,6 +58,9 @@ import {
    TrimOptions,
 } from '@/types/filters';
 
+// @utils
+import { MissingStreamError } from '@/utils/errors';
+
 export class MediaEditor extends FFmpegBase {
    constructor(filePath: string | string[]) {
       super(filePath);
@@ -65,7 +68,7 @@ export class MediaEditor extends FFmpegBase {
 
    volume(value: number | string): this {
       if (!this.hasAudioStream()) {
-         throw new Error('Volume filter can only be applied to audio streams.');
+         throw new MissingStreamError('audio', 'volume');
       }
 
       const { audioFilter } = VolumeFilter(value);
@@ -75,7 +78,7 @@ export class MediaEditor extends FFmpegBase {
 
    loudnorm(options: LoudnormOptions = { average: -23, range: 9, peak: -1 }): this {
       if (!this.hasAudioStream()) {
-         throw new Error('Loudnorm filter can only be applied to audio streams.');
+         throw new MissingStreamError('audio', 'loudnorm');
       }
 
       const { audioFilter } = LoudnormFilter(options);
@@ -85,7 +88,7 @@ export class MediaEditor extends FFmpegBase {
 
    dynaudnorm(options: DynaudnormOptions = { frameLength: 200, peak: 0.9 }): this {
       if (!this.hasAudioStream()) {
-         throw new Error('Dynaudnorm filter can only be applied to audio streams.');
+         throw new MissingStreamError('audio', 'dynaudnorm');
       }
 
       const { audioFilter } = DynaudnormFilter(options);
@@ -95,7 +98,7 @@ export class MediaEditor extends FFmpegBase {
 
    pitch(factor: number): this {
       if (!this.hasAudioStream()) {
-         throw new Error('Pitch filter can only be applied to audio streams.');
+         throw new MissingStreamError('audio', 'pitch');
       }
 
       const { summary } = this.getMetadata();
@@ -110,6 +113,10 @@ export class MediaEditor extends FFmpegBase {
       const hasAudioStream = this.hasAudioStream();
       const hasVideoStream = this.hasVideoStream();
 
+      if (!hasAudioStream && !hasVideoStream) {
+         throw new MissingStreamError('audio/video', 'trim');
+      }
+
       if (hasAudioStream && (!stream || stream !== 'video')) this.addAudioFilter(audioFilter);
       if (hasVideoStream && (!stream || stream !== 'audio')) this.addVideoFilter(videoFilter);
       return this;
@@ -120,6 +127,10 @@ export class MediaEditor extends FFmpegBase {
       const hasAudioStream = this.hasAudioStream();
       const hasVideoStream = this.hasVideoStream();
 
+      if (!hasAudioStream && !hasVideoStream) {
+         throw new MissingStreamError('audio/video', 'fade');
+      }
+
       if (hasAudioStream && (!stream || stream !== 'video')) this.addAudioFilter(audioFilter);
       if (hasVideoStream && (!stream || stream !== 'audio')) this.addVideoFilter(videoFilter);
       return this;
@@ -127,7 +138,7 @@ export class MediaEditor extends FFmpegBase {
 
    crop(options: CropOptions): this {
       if (!this.hasVideoStream()) {
-         throw new Error('Crop filter can only be applied to video streams.');
+         throw new MissingStreamError('video', 'crop');
       }
 
       const { summary } = this.getMetadata();
@@ -139,7 +150,7 @@ export class MediaEditor extends FFmpegBase {
 
    scale(options: ScaleOptions): this {
       if (!this.hasVideoStream()) {
-         throw new Error('Scale filter can only be applied to video streams.');
+         throw new MissingStreamError('video', 'scale');
       }
 
       const { videoFilter } = ScaleFilter(options);
@@ -154,28 +165,35 @@ export class MediaEditor extends FFmpegBase {
       const hasAudioStream = this.hasAudioStream();
       const hasVideoStream = this.hasVideoStream();
 
+      if (!hasAudioStream && !hasVideoStream) {
+         throw new MissingStreamError('audio/video', 'reverse');
+      }
+
       if (hasAudioStream && (!stream || stream !== 'video')) this.addAudioFilter(audioFilter);
       if (hasVideoStream && (!stream || stream !== 'audio')) this.addVideoFilter(videoFilter);
       return this;
    }
 
    speed(factor: number): this {
-      if (factor === 0) {
-         throw new Error('Speed factor cannot be zero.');
-      }
-
       if (factor < 0) this.reverse();
       if (Math.abs(factor) === 1) return this;
 
+      const hasAudioStream = this.hasAudioStream();
+      const hasVideoStream = this.hasVideoStream();
+
+      if (!hasAudioStream && !hasVideoStream) {
+         throw new MissingStreamError('audio/video', 'speed');
+      }
+
       const { audioFilter, videoFilter } = SpeedFilter(Math.abs(factor));
-      if (this.hasAudioStream()) this.addAudioFilter(audioFilter);
-      if (this.hasVideoStream()) this.addVideoFilter(videoFilter);
+      if (hasAudioStream) this.addAudioFilter(audioFilter);
+      if (hasVideoStream) this.addVideoFilter(videoFilter);
       return this;
    }
 
    blur(radius: number = 3): this {
       if (!this.hasVideoStream()) {
-         throw new Error('Blur filter can only be applied to video streams.');
+         throw new MissingStreamError('video', 'blur');
       }
 
       const { videoFilter } = BlurFilter(radius);
@@ -185,7 +203,7 @@ export class MediaEditor extends FFmpegBase {
 
    flip(mode: FlipOptions): this {
       if (!this.hasVideoStream()) {
-         throw new Error('Flip filter can only be applied to video streams.');
+         throw new MissingStreamError('video', 'flip');
       }
 
       const { videoFilter } = FlipFilter(mode);
@@ -195,11 +213,11 @@ export class MediaEditor extends FFmpegBase {
 
    denoise(method: DenoiseOptions): this {
       if (method === 'afftdn' && !this.hasAudioStream()) {
-         throw new Error('afftdn filter can only be applied to audio streams.');
+         throw new MissingStreamError('audio', 'denoise[afftdn]');
       }
 
       if (method !== 'afftdn' && !this.hasVideoStream()) {
-         throw new Error('Denoise filter can only be applied to video streams.');
+         throw new MissingStreamError('video', 'denoise[!afftdn]');
       }
 
       const { audioFilter, videoFilter } = DenoiseFilter(method);
@@ -210,7 +228,7 @@ export class MediaEditor extends FFmpegBase {
 
    rotate(options: RotateOptions): this {
       if (!this.hasVideoStream()) {
-         throw new Error('Rotate filter can only be applied to video streams.');
+         throw new MissingStreamError('video', 'rotate');
       }
 
       const { videoFilter } = RotateFilter(options);
@@ -220,7 +238,7 @@ export class MediaEditor extends FFmpegBase {
 
    alpha(value: number): this {
       if (!this.hasVideoStream()) {
-         throw new Error('Alpha filter can only be applied to video streams.');
+         throw new MissingStreamError('video', 'alpha');
       }
 
       const { videoFilter } = AlphaFilter(value);
@@ -230,7 +248,7 @@ export class MediaEditor extends FFmpegBase {
 
    pad(options: PadOptions): this {
       if (!this.hasVideoStream()) {
-         throw new Error('Pad filter can only be applied to video streams.');
+         throw new MissingStreamError('video', 'pad');
       }
 
       const { videoFilter } = PadFilter(options);
@@ -240,14 +258,22 @@ export class MediaEditor extends FFmpegBase {
 
    delay(seconds: number): this {
       const { audioFilter, videoFilter } = DelayFilter(seconds);
-      if (this.hasAudioStream()) this.addAudioFilter(audioFilter);
-      if (this.hasVideoStream()) this.addVideoFilter(videoFilter);
+
+      const hasAudioStream = this.hasAudioStream();
+      const hasVideoStream = this.hasVideoStream();
+
+      if (!hasAudioStream && !hasVideoStream) {
+         throw new MissingStreamError('audio/video', 'delay');
+      }
+
+      if (hasAudioStream) this.addAudioFilter(audioFilter);
+      if (hasVideoStream) this.addVideoFilter(videoFilter);
       return this;
    }
 
    negate(alpha: boolean = false): this {
       if (!this.hasVideoStream()) {
-         throw new Error('Negate filter can only be applied to video streams.');
+         throw new MissingStreamError('video', 'negate');
       }
 
       const { videoFilter } = NegateFilter(alpha);
@@ -257,7 +283,7 @@ export class MediaEditor extends FFmpegBase {
 
    grayscale(): this {
       if (!this.hasVideoStream()) {
-         throw new Error('Grayscale filter can only be applied to video streams.');
+         throw new MissingStreamError('video', 'grayscale');
       }
 
       const { videoFilter } = GrayscaleFilter();
@@ -267,7 +293,7 @@ export class MediaEditor extends FFmpegBase {
 
    brightness(options: BrightnessOptions): this {
       if (!this.hasVideoStream()) {
-         throw new Error('Brightness filter can only be applied to video streams.');
+         throw new MissingStreamError('video', 'brightness');
       }
 
       const { videoFilter } = BrightnessFilter(options);
@@ -277,7 +303,7 @@ export class MediaEditor extends FFmpegBase {
 
    hue(options: HueOptions): this {
       if (!this.hasVideoStream()) {
-         throw new Error('Hue filter can only be applied to video streams.');
+         throw new MissingStreamError('video', 'hue');
       }
 
       const { videoFilter } = HueFilter(options);
@@ -287,7 +313,7 @@ export class MediaEditor extends FFmpegBase {
 
    colorBalance(options: ColorBalanceOptions): this {
       if (!this.hasVideoStream()) {
-         throw new Error('Color balance filter can only be applied to video streams.');
+         throw new MissingStreamError('video', 'colorbalance');
       }
 
       const { videoFilter } = ColorBalanceFilter(options);
@@ -297,7 +323,7 @@ export class MediaEditor extends FFmpegBase {
 
    colorMixer(options: ColorChannelMixerOptions): this {
       if (!this.hasVideoStream()) {
-         throw new Error('Color channel mixer filter can only be applied to video streams.');
+         throw new MissingStreamError('video', 'colorchannelmixer');
       }
 
       const { videoFilter } = ColorChannelMixerFilter(options);
@@ -307,7 +333,7 @@ export class MediaEditor extends FFmpegBase {
 
    colorPreset(options: ColorPresetValues): this {
       if (!this.hasVideoStream()) {
-         throw new Error('Color preset filter can only be applied to video streams.');
+         throw new MissingStreamError('video', 'colorpreset[lutrgb]');
       }
 
       const { videoFilter } = LutFilter(options);
@@ -317,7 +343,7 @@ export class MediaEditor extends FFmpegBase {
 
    colorMultiplier(options: ColorMultiplierOptions): this {
       if (!this.hasVideoStream()) {
-         throw new Error('Color multiplier filter can only be applied to video streams.');
+         throw new MissingStreamError('video', 'colormultiplier[lutrgb]');
       }
 
       const { videoFilter } = ColorMultiplierFilter(options);
@@ -327,7 +353,7 @@ export class MediaEditor extends FFmpegBase {
 
    deshake(options?: DeshakeOptions): this {
       if (!this.hasVideoStream()) {
-         throw new Error('Deshake filter can only be applied to video streams.');
+         throw new MissingStreamError('video', 'deshake');
       }
 
       const { videoFilter } = DeshakeFilter(options);
@@ -337,7 +363,7 @@ export class MediaEditor extends FFmpegBase {
 
    pan(options: PanOptions): this {
       if (!this.hasAudioStream()) {
-         throw new Error('Pan filter can only be applied to audio streams.');
+         throw new MissingStreamError('audio', 'pan');
       }
 
       const { audioFilter } = PanFilter(options);
@@ -347,7 +373,7 @@ export class MediaEditor extends FFmpegBase {
 
    drawText(options: DrawTextOptions): this {
       if (!this.hasVideoStream()) {
-         throw new Error('Draw text filter can only be applied to video streams.');
+         throw new MissingStreamError('video', 'drawtext');
       }
 
       const { videoFilter } = DrawTextFilter(options);
@@ -357,7 +383,7 @@ export class MediaEditor extends FFmpegBase {
 
    drawBox(options: DrawBoxOptions): this {
       if (!this.hasVideoStream()) {
-         throw new Error('Draw box filter can only be applied to video streams.');
+         throw new MissingStreamError('video', 'drawbox');
       }
 
       const { videoFilter } = DrawBoxFilter(options);
