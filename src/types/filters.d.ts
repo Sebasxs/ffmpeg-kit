@@ -13,22 +13,53 @@ export type StreamConstraint = 'audio' | 'video' | 'all';
 
 type RequiredFilterOutput<T extends keyof FilterOuput> = Required<Pick<FilterOutput, T>>;
 
+export interface VolumeOptions {
+   volume: number | string;
+   _eval?: 'once' | 'frame';
+}
+
 export interface VolumeBuilder {
-   (value: number | string): RequiredFilterOutput<'audioFilter'>;
+   (options: VolumeOptions): RequiredFilterOutput<'audioFilter'>;
 }
 
 export interface LoudnormOptions {
+   /**
+    * Sets the integrated loudness target level in LUFS (Loudness Units relative to Full Scale).
+    *
+    * This value determines the overall loudness the filter will normalize the audio to,
+    * according to the EBU R128 standard.
+    *
+    * @range -70.0 to -5.0
+    * @default -23.0
+    */
    average: number;
+   /**
+    * Sets the target loudness range (LRA) in LU (Loudness Units).
+    *
+    * This defines the allowed dynamic range of the output signal. The filter will attempt to
+    * compress or expand the dynamics to match this target range while preserving overall balance.
+    *
+    * @range 1.0 to 50.0
+    * @default 9.0
+    */
    range: number;
+   /**
+    * Sets the maximum allowed true peak level in dBTP (decibels True Peak).
+    *
+    * This limits the highest peak that the signal can reach after normalization, helping to prevent
+    * digital clipping during playback or encoding.
+    *
+    * @range -9.0 to 0.0
+    * @default -1.0
+    */
    peak: number;
-   linear?: boolean;
 }
 
 export interface LoudnormBuilder {
    (options: LoudnormOptions): RequiredFilterOutput<'audioFilter'>;
 }
 
-export type DynaudnormOptions = AtLeastOne<{
+export interface DynaudnormOptions {
    frameLength?: number;
    gaussSize?: number;
    peak?: number;
@@ -36,7 +67,7 @@ export type DynaudnormOptions = AtLeastOne<{
    rms?: number;
    compress?: number;
    threshold?: number;
-}>;
+}
 
 export interface DynaudnormBuilder {
    (options: DynaudnormOptions): RequiredFilterOutput<'audioFilter'>;
