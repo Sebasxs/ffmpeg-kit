@@ -60,12 +60,71 @@ export interface LoudnormBuilder {
 }
 
 export interface DynaudnormOptions {
+   /**
+    * Sets the frame length in milliseconds for the Dynamic Audio Normalizer.
+    * Audio is processed in small chunks (frames) to compute peak magnitudes over time.
+    * A frame defines the duration over which normalization is applied, rather than across the entire file.
+    * The actual number of samples per frame is determined by the input's sampling rate.
+    *
+    * @range 10 to 8000 (milliseconds)
+    * @default 200
+    */
    frameLength?: number;
+   /**
+    * Sets the Gaussian filter window size, in frames, used for smoothing gain levels.
+    * Must be an odd number to center the window around the current frame.
+    * Larger values result in smoother, slower gain changes (like traditional normalization),
+    * while smaller values lead to faster gain adaptation (like a compressor).
+    *
+    * @range 3 to 301 (odd numbers only)
+    * @default 31
+    */
    gaussSize?: number;
+   /**
+    * Sets the target peak value, defining the maximum allowed amplitude after normalization.
+    * The filter attempts to approach this value closely without exceeding it.
+    * Higher values reduce headroom, increasing the risk of clipping.
+    *
+    * @range 0.0 to 1.0
+    * @default 0.9
+    */
    peak?: number;
+   /**
+    * Sets the global maximum gain factor allowed per frame to prevent over-amplification.
+    * Limits the gain in very quiet frames to avoid unnatural volume spikes.
+    * A smooth sigmoid threshold is used instead of a hard cutoff.
+    *
+    * @range 1.0 to 100.0
+    * @default 10.0
+    */
    maxGain?: number;
+   /**
+    * Sets the target RMS (Root Mean Square) level to normalize perceived loudness instead of just peak values.
+    * If set above 0.0, gain is adjusted to match the specified RMS while still avoiding clipping.
+    * When set to 0.0, RMS-based normalization is disabled and only peak normalization is used.
+    *
+    * @range 0.0 to 1.0
+    * @default 0.0
+    */
    rms?: number;
+   /**
+    * Sets the compression factor to apply soft-knee thresholding before normalization.
+    * Enables dynamic compression to reduce peaks and limit dynamic range.
+    * Lower values apply stronger compression, but values below 3.0 may cause distortion.
+    * When set to 0.0, compression is disabled.
+    *
+    * @range 0.0 to 30.0
+    * @default 0.0
+    */
    compress?: number;
+   /**
+    * Sets the minimum input magnitude required for a frame to be normalized.
+    * Frames below this threshold may be skipped to avoid amplifying digital noise.
+    * A value of 0.0 means all frames are normalized regardless of input level.
+    *
+    * @range 0.0 to 1.0
+    * @default 0.0
+    */
    threshold?: number;
 }
 
