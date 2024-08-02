@@ -136,11 +136,39 @@ export interface PitchBuilder {
    (factor: number, sampleRate: number): RequiredFilterOutput<'audioFilter'>;
 }
 
-export type TrimOptions = { stream?: StreamConstraint } & (
-   | { start: string | number; end?: never; duration?: never }
-   | { end: string | number; start?: string | number; duration: never }
-   | { duration: string | number; start?: string | number; end?: never }
-);
+export type TrimOptions = {
+   /**
+    * Specifies which stream to trim ('audio', 'video', or undefined for both).
+    */
+   stream?: StreamConstraint;
+   /**
+    * Sets the start time of the trimmed output. The frame with this timestamp will be the first in the result.
+    * Time can be specified using FFmpeg's duration syntax.
+    *
+    * @example
+    * '00:00:30' // starts output at 30 seconds
+    * 12 // starts output at 12 seconds
+    */
+   start: string | number;
+   /**
+    * Sets the end time of the trimmed output. The frame with this timestamp will be the last in the result.
+    * Time can be specified using FFmpeg's duration syntax.
+    *
+    * @example
+    * '00:01:30' // ends output at 1 minute 30 seconds
+    * 120 // ends output at 120 seconds
+    */
+   end?: string | number;
+   /**
+    * Sets the maximum duration of the output segment.
+    * Limits how long the trimmed output will be, starting from the defined `start` time.
+    *
+    * @example
+    * '00:00:10' // limits output to 10 seconds
+    * 5 // limits output to 5 seconds
+    */
+   duration?: string | number;
+};
 
 export interface TrimBuilder {
    (options: Omit<TrimOptions, 'stream'>): RequiredFilterOutput<'audioFilter' | 'videoFilter'>;
