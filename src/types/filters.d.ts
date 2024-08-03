@@ -14,7 +14,23 @@ export type StreamConstraint = 'audio' | 'video' | 'all';
 type RequiredFilterOutput<T extends keyof FilterOuput> = Required<Pick<FilterOutput, T>>;
 
 export interface VolumeOptions {
+   /**
+    * Sets the volume level to be applied to the audio stream.
+    * Can be a numeric value or a string expression.
+    *
+    * @example
+    * 1.0 // no change
+    * 2.0 // double the volume
+    * 'if(lt(t,10),1,max(1-(t-10)/5,0))' // reduce volume progressively after 10 seconds played
+    */
    volume: number | string;
+   /**
+    * Sets the evaluation mode for the volume filter.
+    * Determines how often the volume expression is evaluated.
+    * 'once' evaluates once at the beginning, while 'frame' evaluates for each frame.
+    *
+    * @default 'once'
+    */
    _eval?: 'once' | 'frame';
 }
 
