@@ -1,11 +1,13 @@
 import { FadeBuilder } from '@/types/filters';
 
 export const FadeFilter: FadeBuilder = (options) => {
-   const { type, start = 0, duration, curve } = options;
+   const { type = 'in', start = 0, duration, curve, color } = options;
    const fadeCurve = curve ? `:curve=${curve}` : '';
+   const audioFilter = `afade=t=${type}:st=${start}:d=${duration}${fadeCurve}`;
+   let videoFilter = `format=yuva420p,fade=t=${type}:st=${start}:d=${duration}`;
 
-   return {
-      audioFilter: `afade=t=${type}:st=${start}:d=${duration}${fadeCurve}`,
-      videoFilter: `format=yuva420p,fade=t=${type}:st=${start}:d=${duration}:alpha=1`,
-   };
+   if (color !== undefined) videoFilter += `:c=${color}`;
+   else videoFilter += ':alpha=1';
+
+   return { audioFilter, videoFilter };
 };

@@ -36,6 +36,14 @@ export const Curves = [
    'ihsin',
    'dese',
    'desi',
+   'losi',
+   'sinc',
+   'isinc',
+   'quat',
+   'quatr',
+   'qsin2',
+   'hsin2',
+   'nofade',
 ] as const;
 
 export const ColorPresets = [

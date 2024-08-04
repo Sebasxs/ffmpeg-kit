@@ -191,10 +191,56 @@ export interface TrimBuilder {
 }
 
 export interface FadeOptions {
+   /**
+    * Sets the fade effect type.
+    * Use "in" to gradually reveal the video or "out" to gradually hide it.
+    *
+    * @param type 'in' for fade-in, 'out' for fade-out.
+    * @default 'in'
+    */
    type: 'in' | 'out';
+   /**
+    * Sets the duration (in seconds) of the fade effect.
+    * Overrides `nb_frames` if both are specified.
+    * After fade-in, the video reaches full intensity; after fade-out, it transitions to the chosen color.
+    *
+    * @range ≥ 0
+    * @default 0
+    */
    duration: number;
+   /**
+    * Sets the start time (in seconds) for the fade effect.
+    * If both `start_time` and `start_frame` are set, the fade starts at the later of the two.
+    * Uses FFmpeg time duration format (e.g., "5", "00:00:05.0").
+    *
+    * @range ≥ 0
+    * @default 0
+    */
    start?: number;
+   /**
+    * **Audio**
+    *
+    * Sets the curve shape for the fade transition.
+    * Controls how the fade progresses over time (e.g., linear, quadratic, etc.).
+    *
+    * @example
+    * 'quadratic' // applies a quadratic easing to the fade
+    */
    curve?: (typeof Curves)[number] | (string & {});
+   /**
+    * **Video**
+    *
+    * Sets the color used for the fade effect.
+    *
+    * @example
+    * 'yellow'
+    * 'black@0.2'
+    * '#ffffff'
+    */
+   color?: (typeof FFmpegColor)[number] | (string & {});
+   /**
+    * Specifies which stream to fade ('audio', 'video', or undefined for both).
+    */
    stream?: StreamConstraint;
 }
 
