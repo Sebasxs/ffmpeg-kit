@@ -248,28 +248,49 @@ export interface FadeBuilder {
    (options: Omit<FadeOptions, 'stream'>): RequiredFilterOutput<'audioFilter' | 'videoFilter'>;
 }
 
-export type CropOptions =
-   | {
-        width: string | number;
-        height: string | number;
-        x?: never;
-        y?: never;
-        aspectRatio?: never;
-     }
-   | {
-        width: string | number;
-        height: string | number;
-        x: string | number;
-        y: string | number;
-        aspectRatio?: never;
-     }
-   | {
-        width?: never;
-        height?: never;
-        x?: never;
-        y?: never;
-        aspectRatio: (typeof AspectRatios)[number] | (string & {});
-     };
+export interface CropOptions {
+   /**
+    * Sets the output video width.
+    * Evaluated once during filter initialization or when updated via command.
+    *
+    * @range Any positive integer or expression (e.g., "iw/2")
+    * @default iw
+    */
+   width: string | number;
+   /**
+    * Sets the output video height.
+    * Evaluated once during filter initialization or when updated via command.
+    *
+    * @range Any positive integer or expression (e.g., "ih/2")
+    * @default ih
+    */
+   height: string | number;
+   /**
+    * Horizontal position of the left edge of the output within the input.
+    * Evaluated per frame.
+    *
+    * @range Any integer or expression (e.g., "(in_w-out_w)/2")
+    * @default (in_w-out_w)/2
+    */
+   x: string | number;
+   /**
+    * Vertical position of the top edge of the output within the input.
+    * Evaluated per frame.
+    *
+    * @range Any integer or expression (e.g., "(in_h-out_h)/2")
+    * @default (in_h-out_h)/2
+    */
+   y: string | number;
+   /**
+    * Sets the aspect ratio of the output video.
+    * If set, the filter will adjust the output dimensions to match the specified aspect ratio.
+    *
+    * @example
+    * '16:9' // sets the aspect ratio to 16:9
+    * '4:3' // sets the aspect ratio to 4:3
+    */
+   aspectRatio: (typeof AspectRatios)[number] | (string & {});
+}
 
 export interface CropBuilder {
    (
