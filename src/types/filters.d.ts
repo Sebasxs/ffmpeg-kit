@@ -300,14 +300,59 @@ export interface CropBuilder {
    ): RequiredFilterOutput<'videoFilter'>;
 }
 
-export type ScaleOptions = {
-   flags?: 'bilinear' | 'bicubic' | 'lanczos' | 'gaussian';
+export interface ScaleOptions {
+   /**
+    * Sets the output video width expression.
+    * If set to 0, uses input width. If set to -n (n >= 1), preserves aspect ratio based on width,
+    * rounding the result to a multiple of n.
+    * If both width and height are -n, input dimensions are used.
+    *
+    * @range 0, any positive integer, or -n where n >= 1
+    * @default in_w
+    */
+   width?: number | string;
+   /**
+    * Sets the output video height expression.
+    * If set to 0, uses input height. If set to -n (n >= 1), preserves aspect ratio based on width,
+    * rounding the result to a multiple of n.
+    * If both width and height are -n, input dimensions are used.
+    *
+    * @range 0, any positive integer, or -n where n >= 1
+    * @default in_h
+    */
+   height?: number | string;
+   /**
+    * Sets the scaling percentage for both width and height.
+    * If set, overrides width and height settings.
+    * The percentage is applied to both dimensions, preserving the aspect ratio.
+    *
+    * @range 10 to 200
+    * @default 100
+    */
+   percentage?: number;
+   /**
+    * Adjusts output dimensions to preserve the original aspect ratio.
+    * Requires explicitly setting both width and height.
+    *
+    * - 'disable': No adjustment.
+    * - 'decrease': Shrinks dimensions if needed to fit.
+    * - 'increase': Expands dimensions if needed to fit.
+    *
+    * Useful for fitting within max resolutions while maintaining aspect ratio.
+    *
+    * @range "disable" | "decrease" | "increase"
+    * @default disable
+    */
    forceAspectRatio?: 'decrease' | 'increase' | 'disable';
-} & (
-   | { width: number | string; height?: number | string; percentage?: never }
-   | { width?: number | string; height: number | string; percentage?: never }
-   | { percentage: number; width?: never; height?: never }
-);
+   /**
+    * Sets libswscale scaling algorithm flags.
+    * Controls quality and performance tradeoffs during scaling.
+    * See the ffmpeg-scaler manual for available options (e.g., "bilinear", "bicubic", "lanczos").
+    *
+    * @default bicubic
+    */
+   flags?: 'bilinear' | 'bicubic' | 'lanczos' | 'gaussian';
+}
 
 export interface ScaleBuilder {
    (options: ScaleOptions): RequiredFilterOutput<'videoFilter'>;
