@@ -40,8 +40,8 @@ export class FFmpegBase {
    protected audioSubgraph: string[];
    protected videoSubgraph: string[];
 
-   constructor(filePath: string | string[]) {
-      this._hash = this.generateHash(filePath);
+   constructor(path: string) {
+      this._hash = crypto.createHash('md5').update(path).digest('hex').slice(0, 6);
       this._outputAudioTag = null;
       this._outputVideoTag = null;
 
@@ -50,16 +50,10 @@ export class FFmpegBase {
       this.audioSubgraph = [];
       this.videoSubgraph = [];
 
-      const path = Array.isArray(filePath) ? join(...filePath) : filePath;
       const metadata = getFileMetadata(path);
       this._metadata = metadata;
       const type = this.getFileType(metadata.summary);
       this.inputs.set(this._hash, { path, type, metadata: metadata.summary });
-   }
-
-   private generateHash(filePath: string | string[]): string {
-      const path = Array.isArray(filePath) ? join(...filePath) : filePath;
-      return crypto.createHash('md5').update(path).digest('hex').slice(0, 6);
    }
 
    protected hasAudioStream(): boolean {
