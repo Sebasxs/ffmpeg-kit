@@ -358,16 +358,19 @@ export interface ScaleBuilder {
    (options: ScaleOptions): RequiredFilterOutput<'videoFilter'>;
 }
 
-export interface SpeedBuilder {
-   (factor: number): RequiredFilterOutput<'audioFilter' | 'videoFilter'>;
-}
-
 export interface ReverseOptions {
+   /**
+    * Specifies which stream to reverse ('audio', 'video', or undefined for both).
+    */
    stream?: StreamConstraint;
 }
 
 export interface ReverseBuilder {
    (options?: ReverseOptions): RequiredFilterOutput<'audioFilter' | 'videoFilter'>;
+}
+
+export interface SpeedBuilder {
+   (factor: number): RequiredFilterOutput<'audioFilter' | 'videoFilter'>;
 }
 
 export interface BlurBuilder {
@@ -386,25 +389,51 @@ export interface DenoiseBuilder {
    (method: DenoiseOptions): RequiredFilterOutput<'videoFilter' | 'audioFilter'>;
 }
 
-export type RotateOptions =
-   | {
-        degrees: number;
-        expression?: never;
-        outputWidth?: number | string;
-        outputHeight?: number | string;
-        pivotX?: number | string;
-        pivotY?: number | string;
-        emptyAreaColor?: (typeof FFmpegColor)[number] | (string & {});
-     }
-   | {
-        degrees?: never;
-        expression: string;
-        outputWidth?: number | string;
-        outputHeight?: number | string;
-        pivotX?: number | string;
-        pivotY?: number | string;
-        emptyAreaColor?: (typeof FFmpegColor)[number] | (string & {});
-     };
+export interface RotateOptions {
+   /**
+    * Specifies the rotation angle in degrees.
+    * Positive values rotate clockwise, negative values rotate counterclockwise.
+    *
+    * @range -360 to 360
+    * @default 0
+    */
+   degrees?: number;
+   /**
+    * Sets the rotation angle in radians. Positive values rotate clockwise; negative values counter-clockwise.
+    * Evaluated per frame, allows dynamic rotation based on frame count or time.
+    *
+    * Supports expressions with constants like `n` (frame index), `t` (time in seconds), and functions like `rotw(a)` and `roth(a)` for calculating output size.
+    *
+    * @range Any float expression (e.g., "PI/4", "-t/10")
+    * @default 0
+    */
+   expression?: string;
+   /**
+    * Sets the output width expression for the rotated video.
+    * Evaluated once during filter initialization.
+    *
+    * @range Any positive integer or expression (e.g., "rotw(a)")
+    * @default iw
+    */
+   outputWidth?: number | string;
+   /**
+    * Sets the output height expression for the rotated video.
+    * Evaluated once during filter initialization.
+    *
+    * @range Any positive integer or expression (e.g., "roth(a)")
+    * @default ih
+    */
+   outputHeight?: number | string;
+   /**
+    * Sets the fill color for areas not covered by the rotated image.
+    * Accepts any valid ffmpeg color string or "none" for transparency.
+    * See ffmpeg-utils "Color" section for full syntax.
+    *
+    * @range String (e.g., "black", "white@0.5", "none")
+    * @default black
+    */
+   emptyAreaColor?: (typeof FFmpegColor)[number] | (string & {});
+}
 
 export interface RotateBuilder {
    (options: RotateOptions): RequiredFilterOutput<'videoFilter'>;
