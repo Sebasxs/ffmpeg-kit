@@ -78,6 +78,11 @@ export class MediaEditor extends FFmpegBase {
    /**
     * Adjusts the volume of the audio stream.
     *
+    * @param options - Options object with the following keys:
+    *   - **volume**: Volume level or expression to apply.
+    *   - **_eval**: Evaluation mode (`once` or `frame`) to control how often the volume is recalculated.
+    *
+    * For detailed descriptions of each property, see {@link VolumeOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have an audio stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#volume FFmpeg volume filter documentation}
