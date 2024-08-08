@@ -195,7 +195,6 @@ export interface FadeOptions {
     * Sets the fade effect type.
     * Use "in" to gradually reveal the video or "out" to gradually hide it.
     *
-    * @param type 'in' for fade-in, 'out' for fade-out.
     * @default 'in'
     */
    type: 'in' | 'out';
@@ -232,10 +231,12 @@ export interface FadeOptions {
     *
     * Sets the color used for the fade effect.
     *
+    * @range any valid FFmpeg color string
+    * @default black
     * @example
-    * 'yellow'
-    * 'black@0.2'
-    * '#ffffff'
+    * 'black' // sets the background color to black
+    * 'white@0.5' // sets the background color to white with 50% transparency
+    * '#000000' // sets the background color to black using hex code
     */
    color?: (typeof FFmpegColor)[number] | (string & {});
    /**
@@ -426,11 +427,12 @@ export interface RotateOptions {
    outputHeight?: number | string;
    /**
     * Sets the fill color for areas not covered by the rotated image.
-    * Accepts any valid ffmpeg color string or "none" for transparency.
-    * See ffmpeg-utils "Color" section for full syntax.
-    *
-    * @range String (e.g., "black", "white@0.5", "none")
+    * @range any valid ffmpeg color string or "none" for transparency.
     * @default black
+    * @example
+    * 'black' // sets the background color to black
+    * 'white@0.5' // sets the background color to white with 50% transparency
+    * '#000000' // sets the background color to black using hex code
     */
    emptyAreaColor?: (typeof FFmpegColor)[number] | (string & {});
 }
@@ -444,10 +446,54 @@ export interface AlphaBuilder {
 }
 
 export interface PadOptions {
+   /**
+    * Specifies the width of the output image after padding.
+    * Accepts expressions that can reference both input and output dimensions,
+    * including constants like `in_w`, `iw`, `out_h`, `oh`, `a`, `sar`, `dar`, `x`, and `y`.
+    * If set to 0, the input width is used.
+    *
+    * @range 0 or any valid expression using input/output dimension constants
+    * @default 0
+    */
    width: number | string;
+   /**
+    * Specifies the height of the output image after padding.
+    * Accepts expressions that can reference both input and output dimensions,
+    * including constants like `in_h`, `ih`, `out_w`, `ow`, `a`, `sar`, `dar`, `x`, and `y`.
+    * If set to 0, the input height is used.
+    *
+    * @range 0 or any valid expression using input/output dimension constants
+    * @default 0
+    */
    height: number | string;
+   /**
+    * Sets the background color used for the padded area.
+    *
+    * @range any valid FFmpeg color string
+    * @default black
+    * @example
+    * 'black' // sets the background color to black
+    * 'white@0.5' // sets the background color to white with 50% transparency
+    * '#000000' // sets the background color to black using hex code
+    */
    color?: (typeof FFmpegColor)[number] | (string & {});
+   /**
+    * Horizontal offset to place the input image within the padded area, relative to the left border.
+    * Accepts expressions that can reference input/output dimensions and `y`.
+    * If the result is negative, the input image will be horizontally centered.
+    *
+    * @range any valid expression; negative values center the image
+    * @default 0
+    */
    x?: number | string;
+   /**
+    * Vertical offset to place the input image within the padded area, relative to the top border.
+    * Accepts expressions that can reference input/output dimensions and `x`.
+    * If the result is negative, the input image will be vertically centered.
+    *
+    * @range any valid expression; negative values center the image
+    * @default 0
+    */
    y?: number | string;
 }
 

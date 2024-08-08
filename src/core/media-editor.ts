@@ -238,7 +238,7 @@ export class MediaEditor extends FFmpegBase {
     * @param options - The scale options.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
-    * @see {@link https://ffmpeg.org/ffmpeg-filters.html#scale-1 FFmpeg scale filter documentation}
+    * @see {@link https://ffmpeg.org/ffmpeg-filters.html#scale FFmpeg scale filter documentation}
     */
    scale(options: ScaleOptions): this {
       if (!this.hasVideoStream()) {
@@ -393,6 +393,7 @@ export class MediaEditor extends FFmpegBase {
 
    /**
     * Adjusts the alpha (transparency) of the video stream.
+    *
     * @param value - The alpha value (0 for fully transparent, 1 for fully opaque).
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
@@ -409,16 +410,20 @@ export class MediaEditor extends FFmpegBase {
    }
 
    /**
-    * Pads the video stream with a border.
-    * @param options - The pad options.
-    * @param options.width - The output width.
-    * @param options.height - The output height.
-    * @param options.color - The border color.
-    * @param options.x - The x-coordinate of the top-left corner of the input video within the padded area.
-    * @param options.y - The y-coordinate of the top-left corner of the input video within the padded area.
+    * Adds padding to the input image and positions the original content
+    * at the specified (x, y) coordinates within the padded canvas.
+    *
+    * @param options - Options object with the following keys:
+    *   - **width**: Specifies the width of the output image after padding.
+    *   - **height**: Specifies the height of the output image after padding.
+    *   - **color**: Sets the background color used for the padded area.
+    *   - **x**: Horizontal offset for placing the input image.
+    *   - **y**: Vertical offset for placing the input image.
+    *
+    * For detailed descriptions of each property, see {@link PadOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
-    * @see {@link https://ffmpeg.org/ffmpeg-filters.html#pad-1 FFmpeg pad filter documentation}
+    * @see {@link https://ffmpeg.org/ffmpeg-filters.html#pad FFmpeg pad filter documentation}
     */
    pad(options: PadOptions): this {
       if (!this.hasVideoStream()) {
@@ -474,7 +479,7 @@ export class MediaEditor extends FFmpegBase {
     * Converts the video stream to grayscale.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
-    * @see {@link https://ffmpeg.org/ffmpeg-filters.html#format-1 FFmpeg format filter documentation}
+    * @see {@link https://ffmpeg.org/ffmpeg-filters.html#format FFmpeg format filter documentation}
     */
    grayscale(): this {
       if (!this.hasVideoStream()) {
