@@ -130,7 +130,16 @@ export class MediaEditor extends FFmpegBase {
     * without compressing the dynamic range within individual sections.
     * This ensures the natural dynamics of the audio are maintained.
     *
-    * @param options - Dynamic normalization options.
+    * @param options - Options object with the following keys:
+    *   - **frameLength**: Frame duration in milliseconds.
+    *   - **gaussSize**: Gaussian smoothing window size (must be odd).
+    *   - **peak**: Target peak level (0.0–1.0).
+    *   - **maxGain**: Maximum gain factor per frame.
+    *   - **rms**: Target RMS loudness level.
+    *   - **compress**: Compression factor before normalization.
+    *   - **threshold**: Minimum input magnitude to normalize.
+    *
+    * For detailed descriptions of each property, see {@link DynaudnormOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have an audio stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#dynaudnorm FFmpeg dynaudnorm filter documentation}
@@ -177,7 +186,13 @@ export class MediaEditor extends FFmpegBase {
     * Trims the input to output a single continuous segment.
     * Useful for extracting a specific portion of the media based on start and/or end time (or duration).
     *
-    * @param options - Trim options.
+    * @param options - Options object with the following keys:
+    *   - **stream**: Which stream to trim ('audio' | 'video').
+    *   - **start**: Timestamp to begin output (e.g. `'00:00:30'` or `12`).
+    *   - **end**: Timestamp to stop output (optional).
+    *   - **duration**: Max segment duration starting from `start` (optional).
+    *
+    * For detailed descriptions of each property, see {@link TrimOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have an audio or video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#trim FFmpeg trim filter documentation}
@@ -198,11 +213,17 @@ export class MediaEditor extends FFmpegBase {
    }
 
    /**
-    * Applies a fade-in or fade-out effect to the input video or audio.
-    * Can be used to gradually show or hide the video by adjusting the alpha over time,
-    * and/or increase or decrease the audio.
+    * Applies a fade-in or fade-out effect to the input video or audio stream.
     *
-    * @param options - Fade options.
+    * @param options - Options object with the following keys:
+    *   - **type**: `'in' | 'out'` — Whether to fade in or out.
+    *   - **duration**: How long the fade effect lasts (in seconds).
+    *   - **start**: When the fade should start (in seconds, optional).
+    *   - **curve**: (Audio) Fade curve shape (e.g., 'linear', 'quadratic').
+    *   - **color**: (Video) Color used during fade out (e.g., 'black', '#000000').
+    *   - **stream**: Which stream to apply the fade ('audio' | 'video').
+    *
+    * For detailed descriptions of each property, see {@link FadeOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have an audio or video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#afade FFmpeg afade filter documentation}
@@ -223,9 +244,16 @@ export class MediaEditor extends FFmpegBase {
    }
 
    /**
-    * Crops the input video to the specified width and height at a given position or aspect ratio.
+    * Crops the input video to a specific region or aspect ratio.
     *
-    * @param options - The crop options.
+    * @param options - Options object with the following keys:
+    *   - **width**: Desired width of the output (e.g., 640 or "iw/2").
+    *   - **height**: Desired height of the output (e.g., 360 or "ih/2").
+    *   - **x**: Horizontal offset of the cropped region (e.g., 100 or "(in_w-out_w)/2").
+    *   - **y**: Vertical offset of the cropped region (e.g., 50 or "(in_h-out_h)/2").
+    *   - **aspectRatio**: Optional aspect ratio (e.g., "16:9", "4:3") to enforce.
+    *
+    * For detailed descriptions of each property, see {@link CropOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#crop FFmpeg crop filter documentation}
@@ -243,10 +271,16 @@ export class MediaEditor extends FFmpegBase {
    }
 
    /**
-    * Resizes the input video using libswscale.
-    * Automatically adjusts output sample aspect ratio to match the input display aspect ratio.
+    * Resizes the input video with flexible scaling options.
+    * Allows for absolute or relative dimensions, and supports aspect ratio preservation and scaling quality flags.
     *
-    * @param options - The scale options.
+    * @param options - Options object with the following keys:
+    *   - **width** & **height**: Output size (e.g., 1280, "iw/2", -2 to preserve aspect ratio).
+    *   - **percentage**: Resize by percent (overrides width/height).
+    *   - **forceAspectRatio**: Ensures aspect ratio is preserved ("increase", "decrease", or "disable").
+    *   - **flags**: Sets the scaling algorithm (e.g., "bicubic", "lanczos").
+    *
+    * For detailed descriptions of each property, see {@link ScaleOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#scale FFmpeg scale filter documentation}
@@ -264,6 +298,7 @@ export class MediaEditor extends FFmpegBase {
    /**
     * Reverses the audio and/or video streams.
     *
+    * @param options Specifies which stream to reverse ('audio', 'video', or undefined for both).
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have an audio or video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#reverse FFmpeg reverse filter documentation}
@@ -358,10 +393,10 @@ export class MediaEditor extends FFmpegBase {
     * Applies a denoising filter to the audio and/or video streams.
     *
     * @param method - The denoising method.
-    *               - 'hqdn3d': High-quality 3D denoiser.
-    *               - 'nlmeans': Non-local means denoiser.
-    *               - 'atadenoise': Adaptive temporal averaging denoiser.
-    *               - 'afftdn': Adaptive frequency-domain temporal denoiser (audio only).
+    *               - **'hqdn3d'**: High-quality 3D denoiser.
+    *               - **'nlmeans'**: Non-local means denoiser.
+    *               - **'atadenoise'**: Adaptive temporal averaging denoiser.
+    *               - **'afftdn'**: Adaptive frequency-domain temporal denoiser (audio only).
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have an audio or video stream, depending on the method.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#hqdn3d FFmpeg hqdn3d filter documentation}
@@ -385,9 +420,19 @@ export class MediaEditor extends FFmpegBase {
    }
 
    /**
-    * Rotates the video stream.
+    * Rotates the input video by a fixed degree or dynamic expression.
+    * Supports static angles in degrees or animated rotations using FFmpeg expressions.
+    * You can also control the output dimensions and background fill color.
     *
-    * @param options - The rotation options.
+    * @param options - Rotation options:
+    *   - **degrees**: Static angle in degrees (-360 to 360).
+    *   - **expression**: Dynamic rotation in radians (e.g., `"t/5"` for time-based rotation).
+    *   - **outputWidth/outputHeight**: Output size expressions (e.g., `"rotw(a)"`, `"roth(a)"`).
+    *   - **emptyAreaColor**: Fill color for uncovered regions (e.g., `"black"`, `"white@0.5"`).
+    *
+    * If both `degrees` and `expression` are defined, `expression` takes precedence.
+    *
+    * For detailed property descriptions, see {@link RotateOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#rotate FFmpeg rotate filter documentation}
