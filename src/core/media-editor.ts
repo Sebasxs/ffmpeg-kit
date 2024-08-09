@@ -102,7 +102,13 @@ export class MediaEditor extends FFmpegBase {
     *
     * Targets integrated loudness (IL), loudness range (LRA), and true peak (TP).
     *
-    * @param options - Loudness normalization options.
+    * @param options - Options object with the following keys:
+    *   - **average**: Integrated loudness target in LUFS (e.g. -23.0).
+    *   - **range**: Target loudness range (LRA) in LU.
+    *   - **peak**: Maximum allowed true peak level in dBTP.
+    *
+    * For detailed descriptions of each property, see {@link LoudnormOptions}.
+    * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have an audio stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#loudnorm FFmpeg loudnorm filter documentation}
     */
