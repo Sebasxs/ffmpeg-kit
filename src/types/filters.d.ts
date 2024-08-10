@@ -513,12 +513,40 @@ export interface GrayscaleBuilder {
    (): RequiredFilterOutput<'videoFilter'>;
 }
 
-export type BrightnessOptions = AtLeastOne<{
+export interface BrightnessOptions {
+   /**
+    * Sets the brightness adjustment level.
+    * A value of 0 means no change; negative values darken the image, positive values brighten it.
+    *
+    * @range -1.0 to 1.0
+    * @default 0
+    */
    brightness?: number | string;
+   /**
+    * Sets the contrast adjustment level.
+    * A value of 1.0 means no change; lower values decrease contrast, higher values increase it.
+    *
+    * @range -1000.0 to 1000.0
+    * @default 1.0
+    */
    contrast?: number | string;
+   /**
+    * Sets the saturation adjustment level.
+    * A value of 1.0 means no change; lower values desaturate the image, higher values increase color intensity.
+    *
+    * @range 0.0 to 3.0
+    * @default 1.0
+    */
    saturation?: number | string;
+   /**
+    * Sets the gamma correction level.
+    * A value of 1.0 means no change; lower values darken midtones, higher values brighten them.
+    *
+    * @range 0.1 to 10.0
+    * @default 1.0
+    */
    gamma?: number | string;
-}>;
+}
 
 export interface BrightnessBuilder {
    (options: BrightnessOptions): RequiredFilterOutput<'videoFilter'>;

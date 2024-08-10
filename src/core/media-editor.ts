@@ -493,6 +493,7 @@ export class MediaEditor extends FFmpegBase {
 
    /**
     * Delays the audio and/or video streams.
+    *
     * @param seconds - The delay in seconds.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have an audio or video stream.
@@ -516,6 +517,7 @@ export class MediaEditor extends FFmpegBase {
 
    /**
     * Negates (inverts) the colors of the video stream.
+    *
     * @param alpha - If true, also negate the alpha channel.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
@@ -533,6 +535,7 @@ export class MediaEditor extends FFmpegBase {
 
    /**
     * Converts the video stream to grayscale.
+    *
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#format FFmpeg format filter documentation}
@@ -548,12 +551,16 @@ export class MediaEditor extends FFmpegBase {
    }
 
    /**
-    * Adjusts the brightness, contrast, saturation, and gamma of the video stream.
-    * @param options - The brightness adjustment options.
-    * @param options.brightness - The brightness adjustment value.
-    * @param options.contrast - The contrast adjustment value.
-    * @param options.saturation - The saturation adjustment value.
-    * @param options.gamma - The gamma adjustment value.
+    * Applies basic color adjustments to the input video, including brightness,
+    * contrast, saturation, and approximate gamma correction.
+    *
+    * @param options - Adjustment options with the following keys:
+    *   - **brightness**: Adjusts overall brightness (-1.0 to 1.0).
+    *   - **contrast**: Adjusts contrast level (-1000.0 to 1000.0).
+    *   - **saturation**: Adjusts color saturation (0.0 to 3.0).
+    *   - **gamma**: Adjusts gamma correction (0.1 to 10.0).
+    *
+    * For detailed property descriptions, see {@link BrightnessOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#eq FFmpeg eq filter documentation}
