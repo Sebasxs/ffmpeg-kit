@@ -577,11 +577,16 @@ export class MediaEditor extends FFmpegBase {
 
    /**
     * Adjusts the hue, saturation, and brightness of the video stream.
-    * @param options - The hue adjustment options.
-    * @param options.degrees - The hue rotation angle in degrees.
-    * @param options.expression - A string expression for dynamic hue rotation.
-    * @param options.saturation - The saturation adjustment value.
-    * @param options.brightness - The brightness adjustment value.
+    *
+    * @param options - Adjustment options with the following keys:
+    *   - **degrees**: Hue rotation angle in degrees (-360 to 360).
+    *   - **expression**: Hue rotation angle in radians (-π to π).
+    *   - **saturation**: Saturation multiplier (-10.0 to 10.0).
+    *   - **brightness**: Brightness adjustment level (-10.0 to 10.0).
+    *
+    * If both `degrees` and `expression` are defined, `expression` takes precedence.
+    *
+    * For detailed property descriptions, see {@link HueOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#hue FFmpeg hue filter documentation}
@@ -822,4 +827,5 @@ UNIONES EN:
 - crop (aspect ratio | h,w)
 - scale (percentage)
 - rotate (degrees | expression)
+- hue (degrees | expression)
 */

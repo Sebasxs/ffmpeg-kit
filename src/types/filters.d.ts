@@ -395,6 +395,8 @@ export interface RotateOptions {
     * Specifies the rotation angle in degrees.
     * Positive values rotate clockwise, negative values rotate counterclockwise.
     *
+    * Note: `degrees` and `expression` are mutually exclusive and cannot be specified together.
+    *
     * @range -360 to 360
     * @default 0
     */
@@ -404,6 +406,8 @@ export interface RotateOptions {
     * Evaluated per frame, allows dynamic rotation based on frame count or time.
     *
     * Supports expressions with constants like `n` (frame index), `t` (time in seconds), and functions like `rotw(a)` and `roth(a)` for calculating output size.
+    *
+    * Note: `degrees` and `expression` are mutually exclusive and cannot be specified together.
     *
     * @range Any float expression (e.g., "PI/4", "-t/10")
     * @default 0
@@ -552,19 +556,42 @@ export interface BrightnessBuilder {
    (options: BrightnessOptions): RequiredFilterOutput<'videoFilter'>;
 }
 
-export type HueOptions =
-   | {
-        degrees: number;
-        expression?: never;
-        saturation?: number | string;
-        brightness?: number | string;
-     }
-   | {
-        degrees?: never;
-        expression: string;
-        saturation?: number | string;
-        brightness?: number | string;
-     };
+export interface HueOptions {
+   /**
+    * Sets the hue rotation angle in degrees.
+    * Accepts an expression; positive values rotate hues clockwise on the color wheel.
+    * Note: `degrees` and `expression` are mutually exclusive and cannot be specified together.
+    *
+    * @range -360 to 360
+    * @default 0
+    */
+   degrees?: number;
+   /**
+    * Sets the hue rotation angle in radians.
+    * Accepts an expression; positive values rotate hues clockwise on the color wheel.
+    * Note: `degrees` and `expression` are mutually exclusive and cannot be specified together.
+    *
+    * @range -π to π (radians)
+    * @default 0
+    */
+   expression?: string;
+   /**
+    * Sets the saturation multiplier.
+    * Accepts an expression; values below 1.0 reduce saturation, above 1.0 increase it.
+    *
+    * @range -10.0 to 10.0
+    * @default 1.0
+    */
+   saturation?: number | string;
+   /**
+    * Sets the brightness adjustment level.
+    * Accepts an expression; positive values increase brightness, negative values decrease it.
+    *
+    * @range -10.0 to 10.0
+    * @default 0
+    */
+   brightness?: number | string;
+}
 
 export interface HueBuilder {
    (options: HueOptions): RequiredFilterOutput<'videoFilter'>;
