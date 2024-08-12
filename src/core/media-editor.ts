@@ -602,18 +602,18 @@ export class MediaEditor extends FFmpegBase {
    }
 
    /**
-    * Adjusts the color balance of the video stream.
-    * @param options - The color balance options.
-    * @param options.redShadows - The red shadows adjustment value.
-    * @param options.greenShadows - The green shadows adjustment value.
-    * @param options.blueShadows - The blue shadows adjustment value.
-    * @param options.redMidtones - The red midtones adjustment value.
-    * @param options.greenMidtones - The green midtones adjustment value.
-    * @param options.blueMidtones - The blue midtones adjustment value.
-    * @param options.redHighlights - The red highlights adjustment value.
-    * @param options.greenHighlights - The green highlights adjustment value.
-    * @param options.blueHighlights - The blue highlights adjustment value.
-    * @param options.preserveLightness - Preserve lightness (true/false).
+    * Adjusts the intensity balance of primary colors (red, green, blue) in input frames.
+    * You can independently control color balance in the shadows, midtones, and highlights
+    * for red-cyan, green-magenta, and blue-yellow channels.
+    * Positive values shift toward the primary color; negative values toward the complementary.
+    *
+    * @param options - The color balance options with the following keys:
+    *   - **redShadows**, **greenShadows**, **blueShadows**
+    *   - **redMidtones**, **greenMidtones**, **blueMidtones**
+    *   - **redHighlights**, **greenHighlights**, **blueHighlights**
+    *   - **preserveLightness**
+    *
+    * For detailed property descriptions, see {@link ColorBalanceOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#colorbalance FFmpeg colorbalance filter documentation}

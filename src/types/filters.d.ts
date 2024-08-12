@@ -597,17 +597,88 @@ export interface HueBuilder {
    (options: HueOptions): RequiredFilterOutput<'videoFilter'>;
 }
 
-export type ColorBalanceOptions = { preserveLightness?: boolean } & AtLeastOne<{
+export interface ColorBalanceOptions {
+   /**
+    * Adjusts the red balance in the shadows (darkest pixels).
+    * Positive values enhance red; negative values shift toward cyan.
+    *
+    * @range -1.0 to 1.0
+    * @default 0.0
+    */
    redShadows?: number;
+   /**
+    * Adjusts the green balance in the shadows (darkest pixels).
+    * Positive values enhance green; negative values shift toward magenta.
+    *
+    * @range -1.0 to 1.0
+    * @default 0.0
+    */
    greenShadows?: number;
+   /**
+    * Adjusts the blue balance in the shadows (darkest pixels).
+    * Positive values enhance blue; negative values shift toward yellow.
+    *
+    * @range -1.0 to 1.0
+    * @default 0.0
+    */
    blueShadows?: number;
+   /**
+    * Adjusts the red balance in the midtones (medium brightness pixels).
+    * Positive values enhance red; negative values shift toward cyan.
+    *
+    * @range -1.0 to 1.0
+    * @default 0.0
+    */
    redMidtones?: number;
+   /**
+    * Adjusts the green balance in the midtones (medium brightness pixels).
+    * Positive values enhance green; negative values shift toward magenta.
+    *
+    * @range -1.0 to 1.0
+    * @default 0.0
+    */
    greenMidtones?: number;
+   /**
+    * Adjusts the blue balance in the midtones (medium brightness pixels).
+    * Positive values enhance blue; negative values shift toward yellow.
+    *
+    * @range -1.0 to 1.0
+    * @default 0.0
+    */
    blueMidtones?: number;
+   /**
+    * Adjusts the red balance in the highlights (brightest pixels).
+    * Positive values enhance red; negative values shift toward cyan.
+    *
+    * @range -1.0 to 1.0
+    * @default 0.0
+    */
    redHighlights?: number;
+   /**
+    * Adjusts the green balance in the highlights (brightest pixels).
+    * Positive values enhance green; negative values shift toward magenta.
+    *
+    * @range -1.0 to 1.0
+    * @default 0.0
+    */
    greenHighlights?: number;
+   /**
+    * Adjusts the blue balance in the highlights (brightest pixels).
+    * Positive values enhance blue; negative values shift toward yellow.
+    *
+    * @range -1.0 to 1.0
+    * @default 0.0
+    */
    blueHighlights?: number;
-}>;
+   /**
+    * Preserves overall lightness when adjusting color balance.
+    * When enabled, color shifts are applied without altering perceived brightness.
+    *
+    * @range 0 (disabled), 1 (enabled)
+    * @default 0
+    */
+   preserveLightness?: boolean;
+}
 
 export interface ColorBalanceBuilder {
    (options: ColorBalanceOptions): RequiredFilterOutput<'videoFilter'>;
