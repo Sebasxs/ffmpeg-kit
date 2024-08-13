@@ -629,26 +629,29 @@ export class MediaEditor extends FFmpegBase {
    }
 
    /**
-    * Adjusts the color channel mixing of the video stream.
-    * @param options - The color channel mixer options.
-    * @param options.redInRed - The red channel contribution to the red output.
-    * @param options.redInGreen - The green channel contribution to the red output.
-    * @param options.redInBlue - The blue channel contribution to the red output.
-    * @param options.redInAlpha - The alpha channel contribution to the red output.
-    * @param options.greenInRed - The red channel contribution to the green output.
-    * @param options.greenInGreen - The green channel contribution to the green output.
-    * @param options.greenInBlue - The blue channel contribution to the green output.
-    * @param options.greenInAlpha - The alpha channel contribution to the green output.
-    * @param options.blueInRed - The red channel contribution to the blue output.
-    * @param options.blueInGreen - The green channel contribution to the blue output.
-    * @param options.blueInBlue - The blue channel contribution to the blue output.
-    * @param options.blueInAlpha - The alpha channel contribution to the blue output.
-    * @param options.alphaInRed - The red channel contribution to the alpha output.
-    * @param options.alphaInGreen - The green channel contribution to the alpha output.
-    * @param options.alphaInBlue - The blue channel contribution to the alpha output.
-    * @param options.alphaInAlpha - The alpha channel contribution to the alpha output.
-    * @param options.preserveColorMode - The color preservation mode.
-    * @param options.preserveColorAmount - The color preservation amount.
+    * Adjusts video frames by re-mixing color channels.
+    * Each output channel is a weighted sum of the input channels,
+    * allowing custom color transformations.
+    *
+    * @param options - The color channel mixer options. The available properties are:
+    *   - `redInRed`: Adjusts the red channel contribution to the output red channel.
+    *   - `redInGreen`: Adjusts the red channel contribution to the output green channel.
+    *   - `redInBlue`: Adjusts the red channel contribution to the output blue channel.
+    *   - `redInAlpha`: Adjusts the red channel contribution to the output alpha channel.
+    *   - `greenInRed`: Adjusts the green channel contribution to the output red channel.
+    *   - `greenInGreen`: Adjusts the green channel contribution to the output green channel.
+    *   - `greenInBlue`: Adjusts the green channel contribution to the output blue channel.
+    *   - `greenInAlpha`: Adjusts the green channel contribution to the output alpha channel.
+    *   - `blueInRed`: Adjusts the blue channel contribution to the output red channel.
+    *   - `blueInGreen`: Adjusts the blue channel contribution to the output green channel.
+    *   - `blueInBlue`: Adjusts the blue channel contribution to the output blue channel.
+    *   - `blueInAlpha`: Adjusts the blue channel contribution to the output alpha channel.
+    *   - `alphaInRed`: Adjusts the alpha channel contribution to the output red channel.
+    *   - `alphaInGreen`: Adjusts the alpha channel contribution to the output green channel.
+    *   - `alphaInBlue`: Adjusts the alpha channel contribution to the output blue channel.
+    *   - `alphaInAlpha`: Adjusts the alpha channel contribution to the output alpha channel.
+    *   - `preserveColorMode`: Defines how colors are preserved during processing. Options: 'none', 'lum', 'max', 'avg', 'sum', 'nrm', 'pwr'.
+    *   - `preserveColorAmount`: Sets the amount of color preservation (range: 0.0 to 1.0).
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#colorchannelmixer FFmpeg colorchannelmixer filter documentation}
@@ -828,4 +831,6 @@ UNIONES EN:
 - scale (percentage)
 - rotate (degrees | expression)
 - hue (degrees | expression)
+- colorbalance (atleastone)
+- colormixer (atleastone)
 */

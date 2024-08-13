@@ -686,27 +686,143 @@ export interface ColorBalanceBuilder {
 
 export type PreserveColorModeValues = 'none' | 'lum' | 'max' | 'avg' | 'sum' | 'nrm' | 'pwr';
 
-export type ColorChannelMixerOptions = {
-   preserveColorMode?: PreserveColorModeValues;
-   preserveColorAmount?: number;
-} & AtLeastOne<{
+export interface ColorChannelMixerOptions {
+   /**
+    * Adjusts the contribution of the input red channel to the output red channel.
+    *
+    * @range -2.0 to 2.0
+    * @default 1.0
+    */
    redInRed?: number;
+   /**
+    * Adjusts the contribution of the input red channel to the output green channel.
+    *
+    * @range -2.0 to 2.0
+    * @default 0.0
+    */
    redInGreen?: number;
+   /**
+    * Adjusts the contribution of the input red channel to the output blue channel.
+    *
+    * @range -2.0 to 2.0
+    * @default 0.0
+    */
    redInBlue?: number;
+   /**
+    * Adjusts the contribution of the input red channel to the output alpha channel.
+    *
+    * @range -2.0 to 2.0
+    * @default 0.0
+    */
    redInAlpha?: number;
+   /**
+    * Adjusts the contribution of the input green channel to the output red channel.
+    *
+    * @range -2.0 to 2.0
+    * @default 0.0
+    */
    greenInRed?: number;
+   /**
+    * Adjusts the contribution of the input green channel to the output green channel.
+    *
+    * @range -2.0 to 2.0
+    * @default 1.0
+    */
    greenInGreen?: number;
+   /**
+    * Adjusts the contribution of the input green channel to the output blue channel.
+    *
+    * @range -2.0 to 2.0
+    * @default 0.0
+    */
    greenInBlue?: number;
+   /**
+    * Adjusts the contribution of the input green channel to the output alpha channel.
+    *
+    * @range -2.0 to 2.0
+    * @default 0.0
+    */
    greenInAlpha?: number;
+   /**
+    * Adjusts the contribution of the input blue channel to the output red channel.
+    *
+    * @range -2.0 to 2.0
+    * @default 0.0
+    */
    blueInRed?: number;
+   /**
+    * Adjusts the contribution of the input blue channel to the output green channel.
+    *
+    * @range -2.0 to 2.0
+    * @default 0.0
+    */
    blueInGreen?: number;
+   /**
+    * Adjusts the contribution of the input blue channel to the output blue channel.
+    *
+    * @range -2.0 to 2.0
+    * @default 1.0
+    */
    blueInBlue?: number;
+   /**
+    * Adjusts the contribution of the input blue channel to the output alpha channel.
+    *
+    * @range -2.0 to 2.0
+    * @default 0.0
+    */
    blueInAlpha?: number;
+   /**
+    * Adjusts the contribution of the input alpha channel to the output red channel.
+    *
+    * @range -2.0 to 2.0
+    * @default 0.0
+    */
    alphaInRed?: number;
+   /**
+    * Adjusts the contribution of the input alpha channel to the output green channel.
+    *
+    * @range -2.0 to 2.0
+    * @default 0.0
+    */
    alphaInGreen?: number;
+   /**
+    * Adjusts the contribution of the input alpha channel to the output blue channel.
+    *
+    * @range -2.0 to 2.0
+    * @default 0.0
+    */
    alphaInBlue?: number;
+   /**
+    * Adjusts the contribution of the input alpha channel to the output alpha channel.
+    *
+    * @range -2.0 to 2.0
+    * @default 1.0
+    */
    alphaInAlpha?: number;
-}>;
+   /**
+    * Sets the preserve color mode, controlling how color values are retained during processing.
+    *
+    * - **'none'**: Disables color preservation. (default)
+    * - **'lum'**: Preserves luminance.
+    * - **'max'**: Preserves the maximum RGB component.
+    * - **'avg'**: Preserves the average of RGB components.
+    * - **'sum'**: Preserves the sum of RGB components.
+    * - **'nrm'**: Preserves the normalized value of RGB components.
+    * - **'pwr'**: Preserves the power value of RGB components.
+    *
+    * @range 'none' | 'lum' | 'max' | 'avg' | 'sum' | 'nrm' | 'pwr'
+    * @default 'none'
+    */
+   preserveColorMode?: PreserveColorModeValues;
+   /**
+    * Sets the amount of color preservation when altering colors.
+    * Higher values retain more of the original color characteristics.
+    *
+    * @range 0.0 to 1.0
+    * @default 0.0
+    */
+   preserveColorAmount?: number;
+}
 
 export interface ColorChannelMixerBuilder {
    (options: ColorChannelMixerOptions): RequiredFilterOutput<'videoFilter'>;
