@@ -668,18 +668,33 @@ export class MediaEditor extends FFmpegBase {
 
    /**
     * Applies a color preset (lookup table) to the video stream.
-    * @param options - The color preset name.
+    *
+    * Available presets:
+    * - `'sepia'`
+    * - `'golden hour'`
+    * - `'purple noir'`
+    * - `'grayscale'`
+    * - `'moonlight'`
+    * - `'teal & orange'`
+    * - `'vibrant'`
+    * - `'desaturated'`
+    * - `'negative'`
+    * - `'matrix code green'`
+    * - `'cyberpunk'`
+    * - `'vintage film'`
+    *
+    * @param preset - The name of the color preset to apply.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#lutrgb FFmpeg lutrgb filter documentation}
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#lutyuv FFmpeg lutyuv filter documentation}
     */
-   colorPreset(options: ColorPresetValues): this {
+   colorPreset(preset: ColorPresetValues): this {
       if (!this.hasVideoStream()) {
          throw new MissingStreamError('video', 'colorpreset[lutrgb]');
       }
 
-      const { videoFilter } = LutFilter(options);
+      const { videoFilter } = LutFilter(preset);
       this.addVideoFilter(videoFilter);
       return this;
    }
