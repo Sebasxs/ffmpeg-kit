@@ -698,14 +698,18 @@ export class MediaEditor extends FFmpegBase {
       this.addVideoFilter(videoFilter);
       return this;
    }
-
    /**
-    * Multiplies the color channels of the video stream.
-    * @param options - The color multiplier options.
-    * @param options.red - The red channel multiplier.
-    * @param options.green - The green channel multiplier.
-    * @param options.blue - The blue channel multiplier.
-    * @param options.alpha - The alpha channel multiplier.
+    * Apply a look-up table (LUT) to each RGB pixel component.
+    * Maps input values to output values using user-defined expressions.
+    * Useful for color grading and effects.
+    *
+    * Options can include:
+    * - `red`   → Expression or multiplier for red channel
+    * - `green` → Expression or multiplier for green channel
+    * - `blue`  → Expression or multiplier for blue channel
+    * - `alpha` → Expression or multiplier for alpha channel
+    *
+    * @param options - Channel expressions or multipliers.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#lutrgb FFmpeg lutrgb filter documentation}

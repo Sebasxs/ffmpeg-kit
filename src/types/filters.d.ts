@@ -834,12 +834,72 @@ export interface LookUpTableBuilder {
    (preset: ColorPresetValues): RequiredFilterOutput<'videoFilter'>;
 }
 
-export type ColorMultiplierOptions = AtLeastOne<{
-   red?: number;
-   green?: number;
-   blue?: number;
-   alpha?: number;
-}>;
+export interface ColorMultiplierOptions {
+   /**
+    * Red component transformation expression for RGB input.
+    * Accepts either a numeric multiplier (e.g. `1.2`) or a full expression string.
+    *
+    * - If a number is provided, it multiplies the red channel: `1.2` → `1.2 * r`
+    * - If a string is provided, it must be a valid FFmpeg expression.
+    *
+    * Available constants: `w`, `h`, `val`, `clipval`, `minval`, `maxval`, `negval`
+    * Available functions: `clip(val)`, `gammaval(gamma)`
+    *
+    * Only applies with the `lutrgb` filter (requires RGB input).
+    *
+    * @range For numbers: 0.0 to 10.0 (recommended). For strings: any valid expression.
+    * @default clipval
+    */
+   red?: number | string;
+   /**
+    * Green component transformation expression for RGB input.
+    * Accepts either a numeric multiplier (e.g. `1.2`) or a full expression string.
+    *
+    * - If a number is provided, it multiplies the green channel: `1.2` → `1.2 * g`
+    * - If a string is provided, it must be a valid FFmpeg expression.
+    *
+    * Available constants: `w`, `h`, `val`, `clipval`, `minval`, `maxval`, `negval`
+    * Available functions: `clip(val)`, `gammaval(gamma)`
+    *
+    * Only applies with the `lutrgb` filter (requires RGB input).
+    *
+    * @range For numbers: 0.0 to 10.0 (recommended). For strings: any valid expression.
+    * @default clipval
+    */
+   green?: number | string;
+   /**
+    * Blue component transformation expression for RGB input.
+    * Accepts either a numeric multiplier (e.g. `1.2`) or a full expression string.
+    *
+    * - If a number is provided, it multiplies the blue channel: `1.2` → `1.2 * b`
+    * - If a string is provided, it must be a valid FFmpeg expression.
+    *
+    * Available constants: `w`, `h`, `val`, `clipval`, `minval`, `maxval`, `negval`
+    * Available functions: `clip(val)`, `gammaval(gamma)`
+    *
+    * Only applies with the `lutrgb` filter (requires RGB input).
+    *
+    * @range For numbers: 0.0 to 10.0 (recommended). For strings: any valid expression.
+    * @default clipval
+    */
+   blue?: number | string;
+   /**
+    * Alpha component transformation expression for RGB input.
+    * Accepts either a numeric multiplier (e.g. `1.2`) or a full expression string.
+    *
+    * - If a number is provided, it multiplies the alpha channel: `1.2` → `1.2 * a`
+    * - If a string is provided, it must be a valid FFmpeg expression.
+    *
+    * Available constants: `w`, `h`, `val`, `clipval`, `minval`, `maxval`, `negval`
+    * Available functions: `clip(val)`, `gammaval(gamma)`
+    *
+    * Only applies with the `lutrgb` filter (requires RGB input).
+    *
+    * @range For numbers: 0.0 to 10.0 (recommended). For strings: any valid expression.
+    * @default clipval
+    */
+   alpha?: number | string;
+}
 
 export interface ColorMultiplierBuilder {
    (options: ColorMultiplierOptions): RequiredFilterOutput<'videoFilter'>;
