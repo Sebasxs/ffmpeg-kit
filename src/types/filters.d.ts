@@ -906,14 +906,71 @@ export interface ColorMultiplierBuilder {
 }
 
 export interface DeshakeOptions {
+   /**
+    * X coordinate of the top-left corner of the motion vector search area.
+    * Set to -1 to use the full frame.
+    * @range -1 to frame width
+    * @default -1
+    */
    x?: number;
+   /**
+    * Y coordinate of the top-left corner of the motion vector search area.
+    * Set to -1 to use the full frame.
+    * @range -1 to frame height
+    * @default -1
+    */
    y?: number;
+   /**
+    * Width of the motion vector search area.
+    * Set to -1 to use the full frame width.
+    * @range -1 to frame width
+    * @default -1
+    */
    width?: number;
+   /**
+    * Height of the motion vector search area.
+    * Set to -1 to use the full frame height.
+    * @range -1 to frame height
+    * @default -1
+    */
    height?: number;
+   /**
+    * Maximum horizontal motion search range in pixels.
+    * Limits how far the algorithm will search for horizontal shifts.
+    * @range 0 to 64
+    * @default 16
+    */
    rangeX?: number;
+   /**
+    * Maximum vertical motion search range in pixels.
+    * Limits how far the algorithm will search for vertical shifts.
+    * @range 0 to 64
+    * @default 16
+    */
    rangeY?: number;
-   edge?: 'blank' | 'clamp' | 'mirror' | 'smear';
+   /**
+    * Method used to fill blank areas at the edge of the frame after stabilization.
+    * - **'blank'** (0): Fill with black pixels.
+    * - **'original'** (1): Use pixels from the original unstable frame.
+    * - **'clamp'** (2): Extend edge pixels.
+    * - **'mirror'** (3): Mirror edge pixels.
+    * @range 0 (blank), 1 (original), 2 (clamp), 3 (mirror)
+    * @default 3 (mirror)
+    */
+   edge?: 'blank' | 'clamp' | 'mirror' | 'original' | 0 | 1 | 2 | 3;
+   /**
+    * Block size in pixels used for motion estimation.
+    * Affects accuracy and performance: smaller blocks increase precision but are slower.
+    * @range 4 to 128
+    * @default 8
+    */
    blocksize?: number;
+   /**
+    * Contrast threshold for block analysis.
+    * Only blocks with contrast above this value are considered for motion estimation.
+    * @range 1 to 255
+    * @default 125
+    */
    contrast?: number;
 }
 

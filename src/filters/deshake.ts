@@ -1,4 +1,5 @@
 import { DeshakeBuilder } from '@/types/filters';
+import { buildParam } from '@/utils/common';
 
 export const DeshakeFilter: DeshakeBuilder = (options) => {
    const { x, y, width, height, rangeX, rangeY, edge, blocksize, contrast } = options || {};
@@ -12,7 +13,7 @@ export const DeshakeFilter: DeshakeBuilder = (options) => {
    if (rangeX !== undefined) params.push(`rx=${rangeX}`);
    if (rangeY !== undefined) params.push(`ry=${rangeY}`);
    if (edge !== undefined) params.push(`edge=${edge}`);
-   if (blocksize !== undefined) params.push(`blocksize=${blocksize}`);
+   if (blocksize !== undefined) params.push(buildParam('blocksize', blocksize));
    if (contrast !== undefined) params.push(`contrast=${contrast}`);
 
    if (params.length) videoFilter += '=' + params.join(':');

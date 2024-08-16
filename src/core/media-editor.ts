@@ -725,17 +725,10 @@ export class MediaEditor extends FFmpegBase {
    }
 
    /**
-    * Applies a deshake filter to the video stream.
-    * @param options - The deshake options.
-    * @param options.x - The x-coordinate of the reference point.
-    * @param options.y - The y-coordinate of the reference point.
-    * @param options.width - The width of the search area.
-    * @param options.height - The height of the search area.
-    * @param options.rangeX - The maximum horizontal shift.
-    * @param options.rangeY - The maximum vertical shift.
-    * @param options.edge - The edge handling method.
-    * @param options.blocksize - The block size.
-    * @param options.contrast - The contrast threshold.
+    * Attempt to reduce small horizontal and/or vertical shifts caused by camera shake.
+    * Useful for stabilizing footage taken handheld, on a moving vehicle, or with an unstable tripod.
+    *
+    * @param options - Deshake options including region size (`width`, `height`), position (`x`, `y`), motion range (`rangeX`, `rangeY`), edge behavior, and tuning (`blocksize`, `contrast`).
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#deshake FFmpeg deshake filter documentation}
@@ -852,4 +845,5 @@ UNIONES EN:
 - hue (degrees | expression)
 - colorbalance (atleastone)
 - colormixer (atleastone)
+- colormultiplier (atleastone)
 */
