@@ -744,10 +744,13 @@ export class MediaEditor extends FFmpegBase {
    }
 
    /**
-    * Applies a pan filter to the audio stream.
-    * @param options - The pan options.
-    * @param options.layout - The output layout ('mono', 'stereo', '5.1', '7.1').
-    * @param options.channels - The channel mapping (e.g., ['c0', 'c1'] for stereo).
+    * Remap and mix input audio channels with custom gain levels into a specified output layout.
+    * Useful for channel remixing, downmixing, or upmixing audio streams.
+    * Accepts an output channel layout followed by individual channel mapping definitions.
+    *
+    * @param options - The pan options, including the output channel layout (`layout`) and channel mappings (`channels`).
+    * - `layout`: Defines the audio channel layout (e.g., 'mono', 'stereo', '5.1', '7.1').
+    * - `channels`: Array defining how channels are mapped and mixed, where each element is either a gain value (e.g., `0.5`) or a mapping expression (e.g., `"FL=c0+0.5c1"`).
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have an audio stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#pan FFmpeg pan filter documentation}

@@ -979,7 +979,28 @@ export interface DeshakeBuilder {
 }
 
 export interface PanOptions {
+   /**
+    * Sets the audio channel layout.
+    *
+    * @range 'mono' | 'stereo' | '5.1' | '7.1'
+    * @default 'stereo'
+    */
    layout: 'mono' | 'stereo' | '5.1' | '7.1';
+   /**
+    * Defines how audio channels are mapped and mixed.
+    * Each element of the array can either be a number (representing the gain for each channel in order, starting with channel c0 at index 0),
+    * or a mathematical expression in the form: `"out_name=[gain*]in_name[(+-)[gain*]in_name...]"`, with:
+    *
+    * - `out_name`: The output channel (e.g., 'FL', 'FR', 'c0', 'c1').
+    * - `gain`: An optional multiplier to adjust the volume of the input channel (default is 1).
+    * - `in_name`: The input channel to use for the mapping (e.g., 'c0', 'c1').
+    *
+    * If you use `<` instead of `=`, the gains will be automatically normalized to avoid clipping.
+    *
+    * @example
+    * [0.5, 1] // Maps `c0` with 0.5 gain and `c1` with 1 gain.
+    * ["FL=c0", "FR=c1+0.5c2"] // Maps `c0` to `FL`, and mixes `c1` with `0.5` gain and `c2` to `FR`.
+    */
    channels: (number | string)[];
 }
 
