@@ -766,36 +766,22 @@ export class MediaEditor extends FFmpegBase {
    }
 
    /**
-    * Draws text on the video stream.
-    * @param options - The drawtext options.
-    * @param options.text - The text to draw.
-    * @param options.textAlign - The text alignment.
-    * @param options.lineSpacing - The line spacing.
-    * @param options.fontFile - The path to the font file.
-    * @param options.fontSize - The font size.
-    * @param options.fontColor - The font color.
-    * @param options.x - The x-coordinate of the text. Can be a number or a string expression.
-    * @param options.y - The y-coordinate of the text. Can be a number or a string expression.
-    * @param options.box - If true, draw a box around the text.
-    * @param options.boxColor - The box color.
-    * @param options.boxBorderWidth - The box border width.
-    * @param options.alpha - The alpha value of the text (0 for fully transparent, 1 for fully opaque).
-    * @param options.enable - A string expression to enable/disable the text drawing dynamically.
-    * @param options.fixBounds - If true, fix the text bounds.
-    * @param options.reloadFonts - If true, reload the fonts.
-    * @param options.shadowX - The x-offset of the text shadow.
-    * @param options.shadowY - The y-offset of the text shadow.
-    * @param options.shadowColor - The color of the text shadow.
-    * @param options.shadowAlpha - The alpha value of the text shadow.
-    * @param options.borderW - The border width.
-    * @param options.borderColor - The border color.
-    * @param options.expansion - The expansion of the text.
-    * @param options.startNumber - The start number for the text.
-    * @param options.timecode - The timecode format.
-    * @param options.timecodeRate - The timecode rate.
-    * @param options.textfile - The path to the text file.
-    * @param options.textfileReload - If true, reload the text file.
-    * @param options.font - The font family.
+    * Draws a text string and overlays it onto the video using the libfreetype library.
+    * Useful for subtitles, watermarks, timestamps, or dynamic text rendering.
+    *
+    * @param options - The drawtext options, including:
+    * - `text`: The text to be drawn.
+    * - `textAlign`: Horizontal and vertical alignment of the text.
+    * - `lineSpacing`: Spacing between lines of text (for multi-line rendering).
+    * - `fontFile`: Path to the font file to be used.
+    * - `fontSize`: Font size (can be a number or string).
+    * - `fontColor`: Color used to render the text.
+    * - `x`, `y`: Position of the text on the video.
+    * - `borderWidth`, `borderColor`: Border width and color around the text.
+    * - `shadowX`, `shadowY`, `shadowColor`: Shadow offset and color.
+    * - `box`, `boxColor`: Enable or disable box around the text and its color.
+    * - `boxBorderWidth`: Set the width of the border around the text box.
+    * - `enable`: Condition to enable/disable drawing the text.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#drawtext FFmpeg drawtext filter documentation}

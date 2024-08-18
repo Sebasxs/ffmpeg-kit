@@ -1020,22 +1020,133 @@ export type TextAlign =
    | 'right+bottom';
 
 export interface DrawTextOptions {
+   /**
+    * Sets the text to be drawn on the video.
+    *
+    * @example
+    * 'Hello, World!'
+    */
    text: string;
+   /**
+    * Sets the horizontal and vertical alignment of the text within its bounding box.
+    * Combines one horizontal ('left', 'center', 'right') and one vertical ('top', 'middle', 'bottom') alignment.
+    *
+    * Note: Tab characters (`\t`) are only supported when horizontal alignment is set to `'left'`.
+    *
+    * @default 'left+top'
+    */
    textAlign?: TextAlign;
+   /**
+    * Sets the spacing in pixels between lines of text.
+    * Useful for multi-line text rendering.
+    * @range 0 and up
+    * @default 0
+    */
    lineSpacing?: number;
+   /**
+    * Path to the font file used for rendering the text.
+    * @default undefined
+    */
    fontFile?: string;
+   /**
+    * Font size in pixels used to render the text.
+    * @range Any positive number
+    * @default 16
+    */
    fontSize?: number | string;
+   /**
+    * Color used to render the text.
+    * Accepts any valid FFmpeg color string (e.g., "white", "red", "#RRGGBB", "0xRRGGBBAA").
+    * @default "black"
+    */
    fontColor?: (typeof FFmpegColor)[number] | (string & {});
+   /**
+    * Horizontal position (in pixels or expression) where the text will be drawn.
+    * Can be a number or an expression using frame properties and functions (e.g., `main_w-text_w-10` to align right with 10px padding).
+    *
+    * Available constants:
+    * `main_w`, `text_w`, `n`, `t`, `rand(min,max)`, `dar`, `sar`, etc.
+    * See FFmpeg drawtext docs for full list.
+    *
+    * @default "0"
+    * @example "main_w - text_w - 10"
+    */
    x?: number | string;
+   /**
+    * Vertical position (in pixels or expression) where the text will be drawn.
+    * Can be a number or an expression using frame properties and functions (e.g., `main_h-text_h-10` to align bottom with 10px padding).
+    *
+    * Available constants:
+    * `main_h`, `text_h`, `n`, `t`, `rand(min,max)`, `dar`, `sar`, etc.
+    * See FFmpeg drawtext docs for full list.
+    *
+    * @default "0"
+    * @example "main_h - text_h - 10"
+    */
    y?: number | string;
+   /**
+    * Width of the border (in pixels) drawn around the text.
+    * The border uses the `bordercolor` value.
+    * @range 0 and up
+    * @default 0
+    */
    borderWidth?: number;
+   /**
+    * Color used to draw the border around the text.
+    * Accepts any valid FFmpeg color string (e.g., "white", "red", "#RRGGBB", "0xRRGGBBAA").
+    * @default "black"
+    */
    borderColor?: (typeof FFmpegColor)[number] | (string & {});
+   /**
+    * Horizontal offset (in pixels) for the text shadow position relative to the text position.
+    * Can be a positive or negative value.
+    * @range Any integer value
+    * @default 0
+    */
    shadowX?: number;
+   /**
+    * Vertical offset (in pixels) for the text shadow position relative to the text position.
+    * Can be a positive or negative value.
+    * @range Any integer value
+    * @default 0
+    */
    shadowY?: number;
+   /**
+    * Color used to draw a shadow behind the text.
+    * Accepts any valid FFmpeg color string (e.g., "white", "red", "#RRGGBB", "0xRRGGBBAA").
+    * @default "black"
+    */
    shadowColor?: (typeof FFmpegColor)[number] | (string & {});
-   box?: boolean;
+   /**
+    * Enables or disables drawing a box around the text using the background color.
+    * Set to 1 to enable or 0 to disable.
+    * @default 0
+    * @range 0, 1
+    */
+   box?: boolean | 0 | 1;
+   /**
+    * Color used to draw the box around the text.
+    * Accepts any valid FFmpeg color string (e.g., "white", "red", "#RRGGBB", "0xRRGGBBAA").
+    * @default "white"
+    */
    boxColor?: (typeof FFmpegColor)[number] | (string & {});
+   /**
+    * Sets the width of the border around the box using the `boxcolor`.
+    * Can be specified in different formats for individual sides of the box:
+    * - `boxborderw=10` sets all borders to 10px.
+    * - `boxborderw=10|20` sets top/bottom borders to 10px, left/right to 20px.
+    * - `boxborderw=10|20|30` sets top to 10px, bottom to 30px, and left/right to 20px.
+    * - `boxborderw=10|20|30|40` sets top to 10px, right to 20px, bottom to 30px, and left to 40px.
+    *
+    * @default "0"
+    */
    boxBorderWidth?: number;
+   /**
+    * Enables or disables the drawing of the text based on the provided expression or value.
+    * The value can be a number or an expression. If the value evaluates to a non-zero number, the text will be drawn; otherwise, it will be disabled.
+    *
+    * @default 1 (enabled)
+    */
    enable?: string | number | boolean;
 }
 
