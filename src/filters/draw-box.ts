@@ -27,7 +27,7 @@ export const DrawBoxFilter: DrawBoxBuilder = (options) => {
       filters.push(`drawbox=${boxParams}:t=fill:${colorParam}`);
    }
    if (borderColor !== undefined || thickness !== undefined) {
-      const colorParam = buildParam('color', borderColor ?? "'gray@1'");
+      const colorParam = buildParam('color', borderColor ?? "'gray'");
       let borderFilter = `drawbox=${boxParams}:${colorParam}`;
       if (thickness !== undefined) borderFilter += `:t=${thickness}`;
       filters.push(borderFilter);

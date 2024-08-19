@@ -797,16 +797,19 @@ export class MediaEditor extends FFmpegBase {
    }
 
    /**
-    * Draws a box on the video stream.
-    * @param options - The drawbox options.
-    * @param options.x - The x-coordinate of the top-left corner of the box. Can be a number or a string expression.
-    * @param options.y - The y-coordinate of the top-left corner of the box. Can be a number or a string expression.
-    * @param options.width - The width of the box. Can be a number or a string expression.
-    * @param options.height - The height of the box. Can be a number or a string expression.
-    * @param options.color - The color of the box.
-    * @param options.thickness - The thickness of the box border.
-    * @param options.replace - If true, replace the pixels inside the box with the specified color.
-    * @param options.enable - A string expression to enable/disable the box drawing dynamically.
+    * Draws a colored box on the input video frame.
+    * Commonly used for highlighting regions, annotations, or visual markers in a video.
+    *
+    * @param options - The drawbox options, including:
+    * - `x`, `y`: Position of the top-left corner (can be number or expression).
+    * - `width`, `height`: Size of the box (can be number or expression).
+    * - `fillColor`: Background color of the box.
+    * - `borderColor`: Color of the box border.
+    * - `thickness`: Border thickness (set to `fillColor` fill when 0).
+    * - `enable`: Expression or flag to conditionally draw the box.
+    *
+    * Expressions can reference FFmpeg variables like `in_w`, `in_h`, `dar`, etc.
+    *
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#drawbox FFmpeg drawbox filter documentation}

@@ -1154,24 +1154,62 @@ export interface DrawTextBuilder {
    (options: DrawTextOptions): RequiredFilterOutput<'videoFilter'>;
 }
 
-export type DrawBoxOptions = {
+export interface DrawBoxOptions {
+   /**
+    * Number or expression to set the x-coordinate (horizontal position) of the top-left corner of the box.
+    * Supports variables like `in_w`, `in_h`, `dar`, `sar`, `x`, `y`, etc.
+    * @default 0
+    * @example
+    * `x=in_w/4`
+    */
    x: number | string;
+   /**
+    * Number or expression to set the y-coordinate (vertical position) of the top-left corner of the box.
+    * Supports variables like `in_w`, `in_h`, `dar`, `sar`, `x`, `y`, etc.
+    * @default 0
+    * @example
+    * `y=x/dar`
+    */
    y: number | string;
+   /**
+    * Number or expression to set the width of the box.
+    * Use `0` to match the input width.
+    * Supports variables like `in_w`, `in_h`, `dar`, `w`, `h`, etc.
+    * @default 0
+    */
    width: number | string;
+   /**
+    * Number or expression to set the height of the box.
+    * Use `0` to match the input height.
+    * Supports variables like `in_w`, `in_h`, `dar`, `w`, `h`, etc.
+    * @default 0
+    */
    height: number | string;
+   /**
+    * Specifies the color of the box.
+    * Accepts any valid FFmpeg color string (e.g., "white", "red", "#RRGGBB", "0xRRGGBBAA").
+    * @default black
+    */
+   fillColor: (typeof FFmpegColor)[number] | (string & {});
+   /**
+    * Specifies the color of the border.
+    * Accepts any valid FFmpeg color string (e.g., "white", "red", "#RRGGBB", "0xRRGGBBAA").
+    * @default gray
+    */
+   borderColor: (typeof FFmpegColor)[number] | (string & {});
+   /**
+    * Sets the thickness of the box edge.
+    * Supports expressions with variables like `in_w`, `in_h`, `dar`, `t`, etc.
+    * @default 3
+    */
+   thickness?: number;
+   /**
+    * Enables or disables the drawing of the text based on the provided expression or value.
+    * The value can be a number or an expression. If the value evaluates to a non-zero number, the text will be drawn; otherwise, it will be disabled.
+    * @default 1 (enabled)
+    */
    enable?: string | number | boolean;
-} & (
-   | {
-        fillColor: (typeof FFmpegColor)[number] | (string & {});
-        borderColor?: (typeof FFmpegColor)[number] | (string & {});
-        thickness?: never;
-     }
-   | {
-        borderColor: (typeof FFmpegColor)[number] | (string & {});
-        thickness?: number;
-        fillColor?: (typeof FFmpegColor)[number] | (string & {});
-     }
-);
+}
 
 export interface DrawBoxBuilder {
    (options: DrawBoxOptions): RequiredFilterOutput<'videoFilter'>;
