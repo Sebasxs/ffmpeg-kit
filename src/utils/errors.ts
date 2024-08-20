@@ -46,3 +46,10 @@ export class MetadataError extends FFmpegError {
       this.name = 'MetadataError';
    }
 }
+
+export class NoParametersError extends FFmpegError {
+   constructor(filterName: string) {
+      super(`No parameters provided for filter "${filterName}".`);
+      this.name = 'NoParametersError';
+   }
+}

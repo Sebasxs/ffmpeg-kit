@@ -1,5 +1,6 @@
 import { ColorChannelMixerBuilder } from '@/types/filters';
 import { buildParam } from '@/utils/common';
+import { NoParametersError } from '@/utils/errors';
 
 export const ColorChannelMixerFilter: ColorChannelMixerBuilder = (options) => {
    const {
@@ -42,6 +43,10 @@ export const ColorChannelMixerFilter: ColorChannelMixerBuilder = (options) => {
    if (alphaInAlpha !== undefined) params.push(buildParam('aa', alphaInAlpha));
    if (preserveColorMode !== undefined) params.push(buildParam('pc', preserveColorMode));
    if (preserveColorAmount !== undefined) params.push(buildParam('pa', preserveColorAmount));
+
+   if (!params.length) {
+      throw new NoParametersError('colorchannelmixer');
+   }
 
    return { videoFilter: `colorchannelmixer=${params.join(':')}` };
 };

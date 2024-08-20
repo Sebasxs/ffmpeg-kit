@@ -1,5 +1,5 @@
 import { ColorMultiplierBuilder } from '@/types/filters';
-import { buildParam } from '@/utils/common';
+import { NoParametersError } from '@/utils/errors';
 
 export const ColorMultiplierFilter: ColorMultiplierBuilder = (options) => {
    const { red, green, blue, alpha } = options;
@@ -25,5 +25,6 @@ export const ColorMultiplierFilter: ColorMultiplierBuilder = (options) => {
    let videoFilter = `lutrgb=${params.join(':')}`;
    if (alpha !== undefined) videoFilter = 'format=rgba,' + videoFilter;
 
+   if (!params.length) throw new NoParametersError('lutrgb');
    return { videoFilter };
 };

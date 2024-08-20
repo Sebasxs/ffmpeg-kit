@@ -8,7 +8,7 @@ export const TrimFilter: TrimBuilder = (options) => {
    const filterParams = [];
    if (start !== undefined) filterParams.push(buildParam('start', start));
    if (end !== undefined) filterParams.push(buildParam('end', end));
-   if (duration !== undefined) filterParams.push(buildParam('duration', duration));
+   else if (duration !== undefined) filterParams.push(buildParam('duration', duration));
 
    const params = filterParams.join(',');
    filter.audioFilter += params + ',asetpts=PTS-STARTPTS';

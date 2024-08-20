@@ -814,17 +814,6 @@ export class MediaEditor extends FFmpegBase {
 }
 
 /*
-UNIONES EN:
-
-- trim (duration | end)
-- crop (aspect ratio | h,w)
-- scale (percentage)
-- rotate (degrees | expression)
-- hue (degrees | expression)
-- colorbalance (atleastone)
-- colormixer (atleastone)
-- colormultiplier (atleastone)
-
 
 //    subtitles
 //    alphamerge
@@ -832,13 +821,10 @@ UNIONES EN:
 //    blend
 //    stack
 
-
-
 export interface OverlayOptions {
    x: string | number;
    y: string | number;
    enable?: string | number | boolean;
 }
-
 
 */

@@ -1,5 +1,6 @@
 import { ColorBalanceBuilder } from '@/types/filters';
 import { buildParam } from '@/utils/common';
+import { NoParametersError } from '@/utils/errors';
 
 export const ColorBalanceFilter: ColorBalanceBuilder = (options) => {
    const {
@@ -26,6 +27,10 @@ export const ColorBalanceFilter: ColorBalanceBuilder = (options) => {
    if (greenHighlights !== undefined) params.push(buildParam('gh', greenHighlights));
    if (blueHighlights !== undefined) params.push(buildParam('bh', blueHighlights));
    if (preserveLightness !== undefined) params.push(buildParam('pl', Number(preserveLightness)));
+
+   if (!params.length) {
+      throw new NoParametersError('colorbalance');
+   }
 
    return {
       videoFilter: `colorbalance=${params.join(':')}`,
