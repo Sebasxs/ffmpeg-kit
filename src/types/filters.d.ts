@@ -1,9 +1,5 @@
 import { FFmpegColor, AspectRatios, Curves, ColorPresets } from '@/utils/constants.ts';
 
-type AtLeastOne<T, K extends keyof T = keyof T> = {
-   [P in K]-?: Required<Pick<T, P>> & Partial<Omit<T, P>>;
-}[K];
-
 interface FilterOutput {
    audioFilter?: string;
    videoFilter?: string;
@@ -1213,16 +1209,4 @@ export interface DrawBoxOptions {
 
 export interface DrawBoxBuilder {
    (options: DrawBoxOptions): RequiredFilterOutput<'videoFilter'>;
-}
-
-//    subtitles
-//    alphamerge
-//    overlay
-//    blend
-//    stack
-
-export interface OverlayOptions {
-   x: string | number;
-   y: string | number;
-   enable?: string | number | boolean;
 }

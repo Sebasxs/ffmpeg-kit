@@ -82,7 +82,6 @@ export class MediaEditor extends FFmpegBase {
     *   - **volume**: Volume level or expression to apply.
     *   - **_eval**: Evaluation mode (`once` or `frame`) to control how often the volume is recalculated.
     *
-    * For detailed descriptions of each property, see {@link VolumeOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have an audio stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#volume FFmpeg volume filter documentation}
@@ -107,7 +106,6 @@ export class MediaEditor extends FFmpegBase {
     *   - **range**: Target loudness range (LRA) in LU.
     *   - **peak**: Maximum allowed true peak level in dBTP.
     *
-    * For detailed descriptions of each property, see {@link LoudnormOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have an audio stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#loudnorm FFmpeg loudnorm filter documentation}
@@ -139,7 +137,6 @@ export class MediaEditor extends FFmpegBase {
     *   - **compress**: Compression factor before normalization.
     *   - **threshold**: Minimum input magnitude to normalize.
     *
-    * For detailed descriptions of each property, see {@link DynaudnormOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have an audio stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#dynaudnorm FFmpeg dynaudnorm filter documentation}
@@ -192,7 +189,6 @@ export class MediaEditor extends FFmpegBase {
     *   - **end**: Timestamp to stop output (optional).
     *   - **duration**: Max segment duration starting from `start` (optional).
     *
-    * For detailed descriptions of each property, see {@link TrimOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have an audio or video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#trim FFmpeg trim filter documentation}
@@ -223,7 +219,6 @@ export class MediaEditor extends FFmpegBase {
     *   - **color**: (Video) Color used during fade out (e.g., 'black', '#000000').
     *   - **stream**: Which stream to apply the fade ('audio' | 'video').
     *
-    * For detailed descriptions of each property, see {@link FadeOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have an audio or video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#afade FFmpeg afade filter documentation}
@@ -253,7 +248,6 @@ export class MediaEditor extends FFmpegBase {
     *   - **y**: Vertical offset of the cropped region (e.g., 50 or "(in_h-out_h)/2").
     *   - **aspectRatio**: Optional aspect ratio (e.g., "16:9", "4:3") to enforce.
     *
-    * For detailed descriptions of each property, see {@link CropOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#crop FFmpeg crop filter documentation}
@@ -280,7 +274,6 @@ export class MediaEditor extends FFmpegBase {
     *   - **forceAspectRatio**: Ensures aspect ratio is preserved ("increase", "decrease", or "disable").
     *   - **flags**: Sets the scaling algorithm (e.g., "bicubic", "lanczos").
     *
-    * For detailed descriptions of each property, see {@link ScaleOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#scale FFmpeg scale filter documentation}
@@ -432,7 +425,6 @@ export class MediaEditor extends FFmpegBase {
     *
     * If both `degrees` and `expression` are defined, `expression` takes precedence.
     *
-    * For detailed property descriptions, see {@link RotateOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#rotate FFmpeg rotate filter documentation}
@@ -476,7 +468,6 @@ export class MediaEditor extends FFmpegBase {
     *   - **x**: Horizontal offset for placing the input image.
     *   - **y**: Vertical offset for placing the input image.
     *
-    * For detailed descriptions of each property, see {@link PadOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#pad FFmpeg pad filter documentation}
@@ -560,7 +551,6 @@ export class MediaEditor extends FFmpegBase {
     *   - **saturation**: Adjusts color saturation (0.0 to 3.0).
     *   - **gamma**: Adjusts gamma correction (0.1 to 10.0).
     *
-    * For detailed property descriptions, see {@link BrightnessOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#eq FFmpeg eq filter documentation}
@@ -586,7 +576,6 @@ export class MediaEditor extends FFmpegBase {
     *
     * If both `degrees` and `expression` are defined, `expression` takes precedence.
     *
-    * For detailed property descriptions, see {@link HueOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#hue FFmpeg hue filter documentation}
@@ -613,7 +602,6 @@ export class MediaEditor extends FFmpegBase {
     *   - **redHighlights**, **greenHighlights**, **blueHighlights**
     *   - **preserveLightness**
     *
-    * For detailed property descriptions, see {@link ColorBalanceOptions}.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#colorbalance FFmpeg colorbalance filter documentation}
@@ -825,8 +813,6 @@ export class MediaEditor extends FFmpegBase {
    }
 }
 
-new MediaEditor('');
-
 /*
 UNIONES EN:
 
@@ -838,4 +824,21 @@ UNIONES EN:
 - colorbalance (atleastone)
 - colormixer (atleastone)
 - colormultiplier (atleastone)
+
+
+//    subtitles
+//    alphamerge
+//    overlay
+//    blend
+//    stack
+
+
+
+export interface OverlayOptions {
+   x: string | number;
+   y: string | number;
+   enable?: string | number | boolean;
+}
+
+
 */
