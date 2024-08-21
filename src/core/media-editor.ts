@@ -1,4 +1,5 @@
 import { FFmpegBase } from '@/core/ffmpeg-base';
+import { z, prettifyError } from 'zod';
 
 // @filters
 import {
@@ -60,8 +61,8 @@ import {
 } from '@/types/filters';
 
 // @utils
-import { MissingStreamError } from '@/utils/errors';
-
+import { MissingStreamError, NoParametersError } from '@/lib/errors';
+import { VolumeSchema } from '@/lib/validations';
 /**
  * MediaEditor class provides a fluent interface for applying various audio and video filters to media files using FFmpeg.
  * It extends FFmpegBase, which handles the underlying FFmpeg command execution.
@@ -89,6 +90,12 @@ export class MediaEditor extends FFmpegBase {
    volume(options: VolumeOptions): this {
       if (!this.hasAudioStream()) {
          throw new MissingStreamError('audio', 'volume');
+      }
+
+      const result = VolumeSchema.safeParse(options);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
       }
 
       const { audioFilter } = VolumeFilter(options);
@@ -604,6 +611,7 @@ export class MediaEditor extends FFmpegBase {
     *
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
+    * @throws {NoParametersError} If no parameters are provided.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#colorbalance FFmpeg colorbalance filter documentation}
     */
    colorBalance(options: ColorBalanceOptions): this {
@@ -642,6 +650,7 @@ export class MediaEditor extends FFmpegBase {
     *   - `preserveColorAmount`: Sets the amount of color preservation (range: 0.0 to 1.0).
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
+    * @throws {NoParametersError} If no parameters are provided.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#colorchannelmixer FFmpeg colorchannelmixer filter documentation}
     */
    colorMixer(options: ColorChannelMixerOptions): this {
@@ -700,6 +709,7 @@ export class MediaEditor extends FFmpegBase {
     * @param options - Channel expressions or multipliers.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
+    * @throws {NoParametersError} If no parameters are provided.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#lutrgb FFmpeg lutrgb filter documentation}
     */
    colorMultiplier(options: ColorMultiplierOptions): this {
@@ -820,6 +830,11 @@ export class MediaEditor extends FFmpegBase {
 //    overlay
 //    blend
 //    stack
+//    amerge
+//    amix
+//    concat
+//    crossfade
+
 
 export interface OverlayOptions {
    x: string | number;
