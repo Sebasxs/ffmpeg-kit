@@ -1,5 +1,5 @@
 import { HueBuilder } from '@/types/filters';
-import { buildParam } from '@/utils/common';
+import { buildParam } from '@/lib/common';
 
 export const HueFilter: HueBuilder = (options) => {
    const { degrees, expression, saturation, brightness } = options;

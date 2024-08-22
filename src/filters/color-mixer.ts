@@ -1,6 +1,6 @@
 import { ColorChannelMixerBuilder } from '@/types/filters';
-import { buildParam } from '@/utils/common';
-import { NoParametersError } from '@/utils/errors';
+import { buildParam } from '@/lib/common';
+import { NoParametersError } from '@/lib/errors';
 
 export const ColorChannelMixerFilter: ColorChannelMixerBuilder = (options) => {
    const {

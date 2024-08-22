@@ -1,4 +1,4 @@
-import { FFmpegColor, AspectRatios, Curves, ColorPresets } from '@/utils/constants.ts';
+import { FFmpegColor, AspectRatios, Curves, ColorPresets } from '@/lib/constants';
 
 interface FilterOutput {
    audioFilter?: string;

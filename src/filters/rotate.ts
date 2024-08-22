@@ -1,5 +1,5 @@
 import { RotateBuilder } from '@/types/filters';
-import { buildParam } from '@/utils/common';
+import { buildParam } from '@/lib/common';
 
 export const RotateFilter: RotateBuilder = (options) => {
    const { degrees, expression, outputWidth, outputHeight, emptyAreaColor = 'black@0' } = options;

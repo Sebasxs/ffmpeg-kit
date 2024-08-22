@@ -1,5 +1,5 @@
 import { DrawTextBuilder } from '@/types/filters';
-import { buildParam } from '@/utils/common';
+import { buildParam } from '@/lib/common';
 
 export const DrawTextFilter: DrawTextBuilder = (options) => {
    const {

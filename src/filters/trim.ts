@@ -1,5 +1,5 @@
 import { TrimBuilder } from '@/types/filters';
-import { buildParam } from '@/utils/common';
+import { buildParam } from '@/lib/common';
 
 export const TrimFilter: TrimBuilder = (options) => {
    const { start, end, duration } = options;

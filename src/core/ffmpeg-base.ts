@@ -19,14 +19,14 @@ import {
 } from '@/types/ffmpeg';
 
 // @utils
-import { getFileMetadata } from '@/utils/ffprobe';
+import { getFileMetadata } from '@/lib/ffprobe';
 import {
    FFmpegCommandError,
    FFmpegError,
    InvalidFileExtensionError,
    InvalidMimeTypeError,
    InvalidOutputPathError,
-} from '@/utils/errors';
+} from '@/lib/errors';
 
 export class FFmpegBase {
    private _hash: string;

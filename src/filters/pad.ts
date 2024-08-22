@@ -1,5 +1,5 @@
 import { PadBuilder } from '@/types/filters';
-import { buildParam } from '@/utils/common';
+import { buildParam } from '@/lib/common';
 
 export const PadFilter: PadBuilder = (options) => {
    const { width, height, x, y, color } = options;

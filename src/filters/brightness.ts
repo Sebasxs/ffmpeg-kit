@@ -1,5 +1,5 @@
 import { BrightnessBuilder } from '@/types/filters';
-import { buildParam } from '@/utils/common';
+import { buildParam } from '@/lib/common';
 
 export const BrightnessFilter: BrightnessBuilder = (options) => {
    const { brightness, contrast, saturation, gamma } = options;
