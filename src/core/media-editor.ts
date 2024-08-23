@@ -62,7 +62,7 @@ import {
 
 // @utils
 import { MissingStreamError, NoParametersError } from '@/lib/errors';
-import { VolumeSchema } from '@/lib/validations';
+import { LoudnormSchema, VolumeSchema } from '@/lib/validations';
 /**
  * MediaEditor class provides a fluent interface for applying various audio and video filters to media files using FFmpeg.
  * It extends FFmpegBase, which handles the underlying FFmpeg command execution.
@@ -98,7 +98,7 @@ export class MediaEditor extends FFmpegBase {
          throw new Error(pretty);
       }
 
-      const { audioFilter } = VolumeFilter(options);
+      const { audioFilter } = VolumeFilter(result.data);
       this.addAudioFilter(audioFilter);
       return this;
    }
@@ -117,12 +117,18 @@ export class MediaEditor extends FFmpegBase {
     * @throws {MissingStreamError} If the input media does not have an audio stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#loudnorm FFmpeg loudnorm filter documentation}
     */
-   loudnorm(options: LoudnormOptions = { average: -23, range: 9, peak: -1 }): this {
+   loudnorm(options: LoudnormOptions): this {
       if (!this.hasAudioStream()) {
          throw new MissingStreamError('audio', 'loudnorm');
       }
 
-      const { audioFilter } = LoudnormFilter(options);
+      const result = LoudnormSchema.safeParse(options);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { audioFilter } = LoudnormFilter(result.data);
       this.addAudioFilter(audioFilter);
       return this;
    }

@@ -44,7 +44,7 @@ export interface LoudnormOptions {
     * @range -70.0 to -5.0
     * @default -23.0
     */
-   average: number;
+   average?: number;
    /**
     * Sets the target loudness range (LRA) in LU (Loudness Units).
     *
@@ -54,7 +54,7 @@ export interface LoudnormOptions {
     * @range 1.0 to 50.0
     * @default 9.0
     */
-   range: number;
+   range?: number;
    /**
     * Sets the maximum allowed true peak level in dBTP (decibels True Peak).
     *
@@ -64,7 +64,7 @@ export interface LoudnormOptions {
     * @range -9.0 to 0.0
     * @default -1.0
     */
-   peak: number;
+   peak?: number;
 }
 
 export interface LoudnormBuilder {
