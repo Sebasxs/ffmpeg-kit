@@ -1,5 +1,5 @@
 import { z, ZodType } from 'zod';
-import { LoudnormOptions, VolumeOptions } from '@/types/filters';
+import { DynaudnormOptions, LoudnormOptions, VolumeOptions } from '@/types/filters';
 
 export const VolumeSchema = z.object({
    volume: z.union([z.number(), z.string()]),
@@ -7,7 +7,22 @@ export const VolumeSchema = z.object({
 }) satisfies ZodType<VolumeOptions>;
 
 export const LoudnormSchema = z.object({
-   average: z.number().min(-70).max(-5).default(-23).optional(),
-   range: z.number().min(1).max(50).default(9).optional(),
-   peak: z.number().min(-9).max(0).default(-1).optional(),
+   average: z.number().gte(-70).lte(-5).default(-23).optional(),
+   range: z.number().gte(1).lte(50).default(9).optional(),
+   peak: z.number().gte(-9).lte(0).default(-1).optional(),
 }) satisfies ZodType<LoudnormOptions>;
+
+export const DynaudnormSchema = z.object({
+   frameLength: z.number().gte(10).lte(8000).default(200).optional(),
+   gaussSize: z
+      .number()
+      .gte(3)
+      .lte(301)
+      .refine((val) => val % 2 !== 0, { error: 'Gauss size must be an odd number' })
+      .optional(),
+   peak: z.number().gte(0).lte(1).default(0.9).optional(),
+   lteGain: z.number().gte(1).lte(100).optional(),
+   rms: z.number().gte(0).lte(1).optional(),
+   compress: z.number().gte(1).lte(30).optional(),
+   threshold: z.number().gte(0).lte(1).optional(),
+}) satisfies ZodType<DynaudnormOptions>;

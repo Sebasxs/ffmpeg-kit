@@ -62,7 +62,7 @@ import {
 
 // @utils
 import { MissingStreamError, NoParametersError } from '@/lib/errors';
-import { LoudnormSchema, VolumeSchema } from '@/lib/validations';
+import { LoudnormSchema, VolumeSchema, DynaudnormSchema } from '@/lib/validations';
 /**
  * MediaEditor class provides a fluent interface for applying various audio and video filters to media files using FFmpeg.
  * It extends FFmpegBase, which handles the underlying FFmpeg command execution.
@@ -154,12 +154,18 @@ export class MediaEditor extends FFmpegBase {
     * @throws {MissingStreamError} If the input media does not have an audio stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#dynaudnorm FFmpeg dynaudnorm filter documentation}
     */
-   dynaudnorm(options: DynaudnormOptions = { frameLength: 200, peak: 0.9 }): this {
+   dynaudnorm(options: DynaudnormOptions): this {
       if (!this.hasAudioStream()) {
          throw new MissingStreamError('audio', 'dynaudnorm');
       }
 
-      const { audioFilter } = DynaudnormFilter(options);
+      const result = DynaudnormSchema.safeParse(options);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { audioFilter } = DynaudnormFilter(result.data);
       this.addAudioFilter(audioFilter);
       return this;
    }
