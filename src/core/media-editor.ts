@@ -62,7 +62,7 @@ import {
 
 // @utils
 import { MissingStreamError, NoParametersError } from '@/lib/errors';
-import { LoudnormSchema, VolumeSchema, DynaudnormSchema } from '@/lib/validations';
+import { LoudnormSchema, VolumeSchema, DynaudnormSchema, PitchSchema } from '@/lib/validations';
 /**
  * MediaEditor class provides a fluent interface for applying various audio and video filters to media files using FFmpeg.
  * It extends FFmpegBase, which handles the underlying FFmpeg command execution.
@@ -176,6 +176,7 @@ export class MediaEditor extends FFmpegBase {
     * and compensates playback speed to maintain original timing.
     *
     * @param factor Pitch shift multiplier. Values >1 increase pitch, <1 decrease it.
+    * @range 0.125 to 8.0
     *
     * @example
     * pitch(1.2) // raises pitch by 20%
@@ -191,9 +192,15 @@ export class MediaEditor extends FFmpegBase {
          throw new MissingStreamError('audio', 'pitch');
       }
 
+      const result = PitchSchema.safeParse(factor);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
       const { summary } = this.getMetadata();
       const sampleRate = summary.audioSampleRate || 44100;
-      const { audioFilter } = PitchFilter(factor, sampleRate);
+      const { audioFilter } = PitchFilter(result.data, sampleRate);
       this.addAudioFilter(audioFilter);
       return this;
    }

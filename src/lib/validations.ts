@@ -26,3 +26,5 @@ export const DynaudnormSchema = z.object({
    compress: z.number().gte(1).lte(30).optional(),
    threshold: z.number().gte(0).lte(1).optional(),
 }) satisfies ZodType<DynaudnormOptions>;
+
+export const PitchSchema = z.number().gte(0.125).lte(8);
