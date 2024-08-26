@@ -62,7 +62,13 @@ import {
 
 // @utils
 import { MissingStreamError, NoParametersError } from '@/lib/errors';
-import { LoudnormSchema, VolumeSchema, DynaudnormSchema, PitchSchema } from '@/lib/validations';
+import {
+   LoudnormSchema,
+   VolumeSchema,
+   DynaudnormSchema,
+   PitchSchema,
+   TrimSchema,
+} from '@/lib/validations';
 /**
  * MediaEditor class provides a fluent interface for applying various audio and video filters to media files using FFmpeg.
  * It extends FFmpegBase, which handles the underlying FFmpeg command execution.
@@ -221,7 +227,13 @@ export class MediaEditor extends FFmpegBase {
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#atrim FFmpeg atrim filter documentation}
     */
    trim({ stream, ...options }: TrimOptions): this {
-      const { audioFilter, videoFilter } = TrimFilter(options);
+      const result = TrimSchema.safeParse(options);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { audioFilter, videoFilter } = TrimFilter(result.data);
       const hasAudioStream = this.hasAudioStream();
       const hasVideoStream = this.hasVideoStream();
 

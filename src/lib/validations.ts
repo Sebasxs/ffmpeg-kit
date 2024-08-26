@@ -1,5 +1,5 @@
 import { z, ZodType } from 'zod';
-import { DynaudnormOptions, LoudnormOptions, VolumeOptions } from '@/types/filters';
+import { DynaudnormOptions, LoudnormOptions, TrimOptions, VolumeOptions } from '@/types/filters';
 
 export const VolumeSchema = z.object({
    volume: z.union([z.number(), z.string()]),
@@ -28,3 +28,10 @@ export const DynaudnormSchema = z.object({
 }) satisfies ZodType<DynaudnormOptions>;
 
 export const PitchSchema = z.number().gte(0.125).lte(8);
+
+export const TrimSchema = z.object({
+   stream: z.enum(['audio', 'video']).optional(),
+   start: z.union([z.number().gte(0), z.string()]),
+   end: z.union([z.number().gt(0), z.string()]).optional(),
+   duration: z.union([z.number().gt(0), z.string()]).optional(),
+}) satisfies ZodType<TrimOptions>;
