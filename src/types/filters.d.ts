@@ -221,7 +221,7 @@ export interface FadeOptions {
     * @example
     * 'quadratic' // applies a quadratic easing to the fade
     */
-   curve?: (typeof Curves)[number] | (string & {});
+   curve?: (typeof Curves)[number];
    /**
     * **Video**
     *

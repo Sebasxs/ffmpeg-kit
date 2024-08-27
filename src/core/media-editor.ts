@@ -68,6 +68,7 @@ import {
    DynaudnormSchema,
    PitchSchema,
    TrimSchema,
+   FadeSchema,
 } from '@/lib/validations';
 /**
  * MediaEditor class provides a fluent interface for applying various audio and video filters to media files using FFmpeg.
@@ -263,7 +264,13 @@ export class MediaEditor extends FFmpegBase {
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#fade FFmpeg fade filter documentation}
     */
    fade({ stream, ...options }: FadeOptions): this {
-      const { audioFilter, videoFilter } = FadeFilter(options);
+      const result = FadeSchema.safeParse(options);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { audioFilter, videoFilter } = FadeFilter(result.data);
       const hasAudioStream = this.hasAudioStream();
       const hasVideoStream = this.hasVideoStream();
 

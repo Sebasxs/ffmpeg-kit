@@ -1,5 +1,17 @@
+// @packages
 import { z, ZodType } from 'zod';
-import { DynaudnormOptions, LoudnormOptions, TrimOptions, VolumeOptions } from '@/types/filters';
+
+// @types
+import {
+   DynaudnormOptions,
+   FadeOptions,
+   LoudnormOptions,
+   TrimOptions,
+   VolumeOptions,
+} from '@/types/filters';
+
+// @utils
+import { Curves } from './constants';
 
 export const VolumeSchema = z.object({
    volume: z.union([z.number(), z.string()]),
@@ -35,3 +47,12 @@ export const TrimSchema = z.object({
    end: z.union([z.number().gt(0), z.string()]).optional(),
    duration: z.union([z.number().gt(0), z.string()]).optional(),
 }) satisfies ZodType<TrimOptions>;
+
+export const FadeSchema = z.object({
+   type: z.enum(['in', 'out']),
+   duration: z.number().gte(0.1),
+   start: z.number().gte(0),
+   curve: z.enum(Curves).optional(),
+   color: z.string().optional(),
+   stream: z.enum(['audio', 'video']).optional(),
+}) satisfies ZodType<FadeOptions>;
