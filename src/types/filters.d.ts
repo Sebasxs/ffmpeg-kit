@@ -253,7 +253,7 @@ export interface CropOptions {
     * @range Any positive integer or expression (e.g., "iw/2")
     * @default iw
     */
-   width: string | number;
+   width?: string | number;
    /**
     * Sets the output video height.
     * Evaluated once during filter initialization or when updated via command.
@@ -261,7 +261,7 @@ export interface CropOptions {
     * @range Any positive integer or expression (e.g., "ih/2")
     * @default ih
     */
-   height: string | number;
+   height?: string | number;
    /**
     * Horizontal position of the left edge of the output within the input.
     * Evaluated per frame.
@@ -269,7 +269,7 @@ export interface CropOptions {
     * @range Any integer or expression (e.g., "(in_w-out_w)/2")
     * @default (in_w-out_w)/2
     */
-   x: string | number;
+   x?: string | number;
    /**
     * Vertical position of the top edge of the output within the input.
     * Evaluated per frame.
@@ -277,7 +277,7 @@ export interface CropOptions {
     * @range Any integer or expression (e.g., "(in_h-out_h)/2")
     * @default (in_h-out_h)/2
     */
-   y: string | number;
+   y?: string | number;
    /**
     * Sets the aspect ratio of the output video.
     * If set, the filter will adjust the output dimensions to match the specified aspect ratio.
@@ -286,7 +286,7 @@ export interface CropOptions {
     * '16:9' // sets the aspect ratio to 16:9
     * '4:3' // sets the aspect ratio to 4:3
     */
-   aspectRatio: (typeof AspectRatios)[number] | (string & {});
+   aspectRatio?: (typeof AspectRatios)[number] | (string & {});
 }
 
 export interface CropBuilder {

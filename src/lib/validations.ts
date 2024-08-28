@@ -3,6 +3,7 @@ import { z, ZodType } from 'zod';
 
 // @types
 import {
+   CropOptions,
    DynaudnormOptions,
    FadeOptions,
    LoudnormOptions,
@@ -56,3 +57,18 @@ export const FadeSchema = z.object({
    color: z.string().optional(),
    stream: z.enum(['audio', 'video']).optional(),
 }) satisfies ZodType<FadeOptions>;
+
+export const CropSchema = z.union([
+   z.object({
+      fas: z.boolean(),
+      width: z.union([z.string(), z.number().gt(10)]),
+      height: z.union([z.string(), z.number().gt(10)]),
+      x: z.union([z.string(), z.number()]).optional(),
+      y: z.union([z.string(), z.number()]).optional(),
+   }),
+   z.object({
+      aspectRatio: z.string().refine((val) => /^\d+:\d+$/.test(val), {
+         error: 'Invalid aspect ratio',
+      }),
+   }),
+]) satisfies ZodType<CropOptions>;

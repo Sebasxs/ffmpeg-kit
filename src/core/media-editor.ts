@@ -1,5 +1,6 @@
+// @packages
 import { FFmpegBase } from '@/core/ffmpeg-base';
-import { z, prettifyError } from 'zod';
+import { prettifyError } from 'zod';
 
 // @filters
 import {
@@ -61,7 +62,7 @@ import {
 } from '@/types/filters';
 
 // @utils
-import { MissingStreamError, NoParametersError } from '@/lib/errors';
+import { MissingStreamError } from '@/lib/errors';
 import {
    LoudnormSchema,
    VolumeSchema,
@@ -69,7 +70,9 @@ import {
    PitchSchema,
    TrimSchema,
    FadeSchema,
+   CropSchema,
 } from '@/lib/validations';
+
 /**
  * MediaEditor class provides a fluent interface for applying various audio and video filters to media files using FFmpeg.
  * It extends FFmpegBase, which handles the underlying FFmpeg command execution.
@@ -304,7 +307,14 @@ export class MediaEditor extends FFmpegBase {
 
       const { summary } = this.getMetadata();
       const { width, height } = summary;
-      const { videoFilter } = CropFilter(options, width, height);
+
+      const result = CropSchema.safeParse(options);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { videoFilter } = CropFilter(result.data, width, height);
       this.addVideoFilter(videoFilter);
       return this;
    }
