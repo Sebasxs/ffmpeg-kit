@@ -71,6 +71,7 @@ import {
    TrimSchema,
    FadeSchema,
    CropSchema,
+   ScaleSchema,
 } from '@/lib/validations';
 
 /**
@@ -338,7 +339,13 @@ export class MediaEditor extends FFmpegBase {
          throw new MissingStreamError('video', 'scale');
       }
 
-      const { videoFilter } = ScaleFilter(options);
+      const result = ScaleSchema.safeParse(options);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { videoFilter } = ScaleFilter(result.data);
       this.addVideoFilter(videoFilter);
       return this;
    }
