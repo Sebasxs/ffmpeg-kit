@@ -7,12 +7,13 @@ import {
    DynaudnormOptions,
    FadeOptions,
    LoudnormOptions,
+   ScaleOptions,
    TrimOptions,
    VolumeOptions,
 } from '@/types/filters';
 
 // @utils
-import { Curves } from './constants';
+import { Curves, ScaleFlags } from './constants';
 
 export const VolumeSchema = z.object({
    volume: z.union([z.number(), z.string()]),
@@ -72,3 +73,22 @@ export const CropSchema = z.union([
       }),
    }),
 ]) satisfies ZodType<CropOptions>;
+
+export const ScaleSchema = z.discriminatedUnion([
+   z.object({
+      flags: z.enum(ScaleFlags).optional(),
+      percentage: z.number().gte(10).lte(200),
+   }),
+   z.object({
+      flags: z.enum(ScaleFlags).optional(),
+      width: z.union([z.string(), z.number().gt(10)]),
+      height: z.union([z.string(), z.number().gt(10)]).optional(),
+      forceAspectRatio: z.enum(['increase', 'decrease', 'disable']).optional(),
+   }),
+   z.object({
+      flags: z.enum(ScaleFlags).optional(),
+      width: z.union([z.string(), z.number().gt(10)]).optional(),
+      height: z.union([z.string(), z.number().gt(10)]),
+      forceAspectRatio: z.enum(['increase', 'decrease', 'disable']).optional(),
+   }),
+]) satisfies ZodType<ScaleOptions>;

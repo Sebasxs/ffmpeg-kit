@@ -202,3 +202,5 @@ export const AspectRatios = [
    '21:9',
    '32:9',
 ] as const;
+
+export const ScaleFlags = ['bilinear', 'bicubic', 'lanczos', 'gaussian'];

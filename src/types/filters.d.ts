@@ -1,4 +1,4 @@
-import { FFmpegColor, AspectRatios, Curves, ColorPresets } from '@/lib/constants';
+import { FFmpegColor, AspectRatios, Curves, ColorPresets, ScaleFlags } from '@/lib/constants';
 
 interface FilterOutput {
    audioFilter?: string;
@@ -348,7 +348,7 @@ export interface ScaleOptions {
     *
     * @default bicubic
     */
-   flags?: 'bilinear' | 'bicubic' | 'lanczos' | 'gaussian';
+   flags?: (typeof ScaleFlags)[number];
 }
 
 export interface ScaleBuilder {
