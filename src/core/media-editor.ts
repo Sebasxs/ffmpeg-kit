@@ -72,6 +72,7 @@ import {
    FadeSchema,
    CropSchema,
    ScaleSchema,
+   SpeedSchema,
 } from '@/lib/validations';
 
 /**
@@ -381,17 +382,22 @@ export class MediaEditor extends FFmpegBase {
     * @param factor - The speed factor.
     *               - `1`: No change.
     *               - `>1`: Faster.
-    *               - `<1`: Slower.
-    *               - `<0`: Reverse and change speed.
-    *               - `0`: throws an error.
+    *               - `<1`: Slower.    *
+    * @range 0.5 to 100, for lower or higher values chain multiple speed filters.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have an audio or video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#setpts FFmpeg setpts filter documentation}
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#atempo FFmpeg atempo filter documentation}
     */
    speed(factor: number): this {
-      if (factor < 0) this.reverse();
-      if (Math.abs(factor) === 1) return this;
+      const result = SpeedSchema.safeParse(factor);
+
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      if (factor === 1) return this;
 
       const hasAudioStream = this.hasAudioStream();
       const hasVideoStream = this.hasVideoStream();

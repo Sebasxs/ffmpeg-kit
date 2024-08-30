@@ -92,3 +92,5 @@ export const ScaleSchema = z.discriminatedUnion([
       forceAspectRatio: z.enum(['increase', 'decrease', 'disable']).optional(),
    }),
 ]) satisfies ZodType<ScaleOptions>;
+
+export const SpeedSchema = z.number().gte(0.5).lte(100);
