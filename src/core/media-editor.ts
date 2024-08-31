@@ -73,6 +73,7 @@ import {
    CropSchema,
    ScaleSchema,
    SpeedSchema,
+   BlurSchema,
 } from '@/lib/validations';
 
 /**
@@ -406,7 +407,7 @@ export class MediaEditor extends FFmpegBase {
          throw new MissingStreamError('audio/video', 'speed');
       }
 
-      const { audioFilter, videoFilter } = SpeedFilter(Math.abs(factor));
+      const { audioFilter, videoFilter } = SpeedFilter(result.data);
       if (hasAudioStream) this.addAudioFilter(audioFilter);
       if (hasVideoStream) this.addVideoFilter(videoFilter);
       return this;
@@ -416,17 +417,24 @@ export class MediaEditor extends FFmpegBase {
     * Applies a Gaussian blur to the video stream.
     *
     * @param radius - The blur radius (sigma). Higher values mean more blur.
+    * @range 0.1 to 50
     * @default 3
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#gblur FFmpeg gblur filter documentation}
     */
-   blur(radius: number = 3): this {
+   blur(radius: number): this {
       if (!this.hasVideoStream()) {
          throw new MissingStreamError('video', 'blur');
       }
 
-      const { videoFilter } = BlurFilter(radius);
+      const result = BlurSchema.safeParse(radius);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { videoFilter } = BlurFilter(result.data);
       this.addVideoFilter(videoFilter);
       return this;
    }

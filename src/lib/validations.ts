@@ -94,3 +94,5 @@ export const ScaleSchema = z.discriminatedUnion([
 ]) satisfies ZodType<ScaleOptions>;
 
 export const SpeedSchema = z.number().gte(0.5).lte(100);
+
+export const BlurSchema = z.number().gte(0.1).lte(50);
