@@ -96,3 +96,5 @@ export const ScaleSchema = z.discriminatedUnion([
 export const SpeedSchema = z.number().gte(0.5).lte(100);
 
 export const BlurSchema = z.number().gte(0.1).lte(50);
+
+export const FlipSchema = z.enum(['horizontal', 'vertical', 'both']);

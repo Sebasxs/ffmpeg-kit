@@ -74,6 +74,7 @@ import {
    ScaleSchema,
    SpeedSchema,
    BlurSchema,
+   FlipSchema,
 } from '@/lib/validations';
 
 /**
@@ -453,7 +454,13 @@ export class MediaEditor extends FFmpegBase {
          throw new MissingStreamError('video', 'flip');
       }
 
-      const { videoFilter } = FlipFilter(axis);
+      const result = FlipSchema.safeParse(axis);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { videoFilter } = FlipFilter(result.data);
       this.addVideoFilter(videoFilter);
       return this;
    }
