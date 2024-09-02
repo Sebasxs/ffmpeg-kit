@@ -75,6 +75,7 @@ import {
    SpeedSchema,
    BlurSchema,
    FlipSchema,
+   DenoiseSchema,
 } from '@/lib/validations';
 
 /**
@@ -489,7 +490,13 @@ export class MediaEditor extends FFmpegBase {
          throw new MissingStreamError('video', 'denoise[!afftdn]');
       }
 
-      const { audioFilter, videoFilter } = DenoiseFilter(method);
+      const result = DenoiseSchema.safeParse(method);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { audioFilter, videoFilter } = DenoiseFilter(result.data);
       if (audioFilter) this.addAudioFilter(audioFilter);
       if (videoFilter) this.addVideoFilter(videoFilter);
       return this;
