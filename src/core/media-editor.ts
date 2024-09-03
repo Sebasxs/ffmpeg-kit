@@ -76,6 +76,7 @@ import {
    BlurSchema,
    FlipSchema,
    DenoiseSchema,
+   RotateSchema,
 } from '@/lib/validations';
 
 /**
@@ -524,7 +525,13 @@ export class MediaEditor extends FFmpegBase {
          throw new MissingStreamError('video', 'rotate');
       }
 
-      const { videoFilter } = RotateFilter(options);
+      const result = RotateSchema.safeParse(options);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { videoFilter } = RotateFilter(result.data);
       this.addVideoFilter(videoFilter);
       return this;
    }

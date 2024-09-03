@@ -7,6 +7,7 @@ import {
    DynaudnormOptions,
    FadeOptions,
    LoudnormOptions,
+   RotateOptions,
    ScaleOptions,
    TrimOptions,
    VolumeOptions,
@@ -100,3 +101,18 @@ export const BlurSchema = z.number().gte(0.1).lte(50);
 export const FlipSchema = z.enum(['horizontal', 'vertical', 'both']);
 
 export const DenoiseSchema = z.enum(['hqdn3d', 'nlmeans', 'atadenoise', 'afftdn']);
+
+export const RotateSchema = z.union([
+   z.object({
+      degrees: z.number().gte(-360).lte(360),
+      outputWidth: z.union([z.number().positive(), z.string()]).optional(),
+      outputHeight: z.union([z.number().positive(), z.string()]).optional(),
+      emptyAreaColor: z.string().default('black@0').optional(),
+   }),
+   z.object({
+      expression: z.string(),
+      outputWidth: z.union([z.number().positive(), z.string()]).optional(),
+      outputHeight: z.union([z.number().positive(), z.string()]).optional(),
+      emptyAreaColor: z.string().default('black@0').optional(),
+   }),
+]) satisfies ZodType<RotateOptions>;

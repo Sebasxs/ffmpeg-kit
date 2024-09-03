@@ -2,7 +2,7 @@ import { RotateBuilder } from '@/types/filters';
 import { buildParam } from '@/lib/common';
 
 export const RotateFilter: RotateBuilder = (options) => {
-   const { degrees, expression, outputWidth, outputHeight, emptyAreaColor = 'black@0' } = options;
+   const { degrees, expression, outputWidth, outputHeight, emptyAreaColor } = options;
 
    const angle = expression ? expression : `${degrees}*PI/180`;
    let videoFilter = `format=yuva420p,rotate='${angle}':c='${emptyAreaColor}'`;
