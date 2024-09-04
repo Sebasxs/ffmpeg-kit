@@ -116,3 +116,5 @@ export const RotateSchema = z.union([
       emptyAreaColor: z.string().default('black@0').optional(),
    }),
 ]) satisfies ZodType<RotateOptions>;
+
+export const AlphaSchema = z.number().gte(0).lte(1);

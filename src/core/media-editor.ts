@@ -77,6 +77,7 @@ import {
    FlipSchema,
    DenoiseSchema,
    RotateSchema,
+   AlphaSchema,
 } from '@/lib/validations';
 
 /**
@@ -549,7 +550,13 @@ export class MediaEditor extends FFmpegBase {
          throw new MissingStreamError('video', 'alpha');
       }
 
-      const { videoFilter } = AlphaFilter(value);
+      const result = AlphaSchema.safeParse(value);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { videoFilter } = AlphaFilter(result.data);
       this.addVideoFilter(videoFilter);
       return this;
    }
