@@ -7,6 +7,7 @@ import {
    DynaudnormOptions,
    FadeOptions,
    LoudnormOptions,
+   PadOptions,
    RotateOptions,
    ScaleOptions,
    TrimOptions,
@@ -22,20 +23,20 @@ export const VolumeSchema = z.object({
 }) satisfies ZodType<VolumeOptions>;
 
 export const LoudnormSchema = z.object({
-   average: z.number().gte(-70).lte(-5).default(-23).optional(),
+   average: z.number().gte(-70).lte(-5).default(-23),
    range: z.number().gte(1).lte(50).default(9).optional(),
    peak: z.number().gte(-9).lte(0).default(-1).optional(),
 }) satisfies ZodType<LoudnormOptions>;
 
 export const DynaudnormSchema = z.object({
-   frameLength: z.number().gte(10).lte(8000).default(200).optional(),
+   frameLength: z.number().gte(10).lte(8000).default(200),
    gaussSize: z
       .number()
       .gte(3)
       .lte(301)
       .refine((val) => val % 2 !== 0, { error: 'Gauss size must be an odd number' })
       .optional(),
-   peak: z.number().gte(0).lte(1).default(0.9).optional(),
+   peak: z.number().gte(0).lte(1).default(0.9),
    lteGain: z.number().gte(1).lte(100).optional(),
    rms: z.number().gte(0).lte(1).optional(),
    compress: z.number().gte(1).lte(30).optional(),
@@ -107,14 +108,22 @@ export const RotateSchema = z.union([
       degrees: z.number().gte(-360).lte(360),
       outputWidth: z.union([z.number().positive(), z.string()]).optional(),
       outputHeight: z.union([z.number().positive(), z.string()]).optional(),
-      emptyAreaColor: z.string().default('black@0').optional(),
+      emptyAreaColor: z.string().default('black@0'),
    }),
    z.object({
       expression: z.string(),
       outputWidth: z.union([z.number().positive(), z.string()]).optional(),
       outputHeight: z.union([z.number().positive(), z.string()]).optional(),
-      emptyAreaColor: z.string().default('black@0').optional(),
+      emptyAreaColor: z.string().default('black@0'),
    }),
 ]) satisfies ZodType<RotateOptions>;
 
 export const AlphaSchema = z.number().gte(0).lte(1);
+
+export const PadSchema = z.object({
+   width: z.union([z.number().positive(), z.string()]),
+   height: z.union([z.number().positive(), z.string()]),
+   x: z.union([z.number().positive(), z.string()]).optional(),
+   y: z.union([z.number().positive(), z.string()]).optional(),
+   color: z.string().default('black'),
+}) satisfies ZodType<PadOptions>;

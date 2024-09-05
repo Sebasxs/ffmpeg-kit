@@ -78,6 +78,7 @@ import {
    DenoiseSchema,
    RotateSchema,
    AlphaSchema,
+   PadSchema,
 } from '@/lib/validations';
 
 /**
@@ -581,7 +582,13 @@ export class MediaEditor extends FFmpegBase {
          throw new MissingStreamError('video', 'pad');
       }
 
-      const { videoFilter } = PadFilter(options);
+      const result = PadSchema.safeParse(options);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { videoFilter } = PadFilter(result.data);
       this.addVideoFilter(videoFilter);
       return this;
    }
