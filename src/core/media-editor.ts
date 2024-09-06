@@ -79,6 +79,7 @@ import {
    RotateSchema,
    AlphaSchema,
    PadSchema,
+   DelaySchema,
 } from '@/lib/validations';
 
 /**
@@ -603,7 +604,13 @@ export class MediaEditor extends FFmpegBase {
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#setpts FFmpeg setpts filter documentation}
     */
    delay(seconds: number): this {
-      const { audioFilter, videoFilter } = DelayFilter(seconds);
+      const result = DelaySchema.safeParse(seconds);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { audioFilter, videoFilter } = DelayFilter(result.data);
 
       const hasAudioStream = this.hasAudioStream();
       const hasVideoStream = this.hasVideoStream();

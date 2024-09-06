@@ -127,3 +127,5 @@ export const PadSchema = z.object({
    y: z.union([z.number().positive(), z.string()]).optional(),
    color: z.string().default('black'),
 }) satisfies ZodType<PadOptions>;
+
+export const DelaySchema = z.number().gt(0);
