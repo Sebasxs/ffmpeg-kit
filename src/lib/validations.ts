@@ -129,3 +129,5 @@ export const PadSchema = z.object({
 }) satisfies ZodType<PadOptions>;
 
 export const DelaySchema = z.number().gt(0);
+
+export const NegateSchema = z.boolean().default(false);

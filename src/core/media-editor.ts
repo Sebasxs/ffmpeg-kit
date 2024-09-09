@@ -80,6 +80,7 @@ import {
    AlphaSchema,
    PadSchema,
    DelaySchema,
+   NegateSchema,
 } from '@/lib/validations';
 
 /**
@@ -632,12 +633,18 @@ export class MediaEditor extends FFmpegBase {
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#negate FFmpeg negate filter documentation}
     */
-   negate(alpha: boolean = false): this {
+   negate(alpha: boolean): this {
       if (!this.hasVideoStream()) {
          throw new MissingStreamError('video', 'negate');
       }
 
-      const { videoFilter } = NegateFilter(alpha);
+      const result = NegateSchema.safeParse(alpha);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { videoFilter } = NegateFilter(result.data);
       this.addVideoFilter(videoFilter);
       return this;
    }
