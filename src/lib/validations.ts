@@ -3,6 +3,7 @@ import { z, ZodType } from 'zod';
 
 // @types
 import {
+   BrightnessOptions,
    CropOptions,
    DynaudnormOptions,
    FadeOptions,
@@ -131,3 +132,15 @@ export const PadSchema = z.object({
 export const DelaySchema = z.number().gt(0);
 
 export const NegateSchema = z.boolean().default(false);
+
+export const BrightnessSchema = z
+   .object({
+      brightness: z.union([z.number().gte(-1).lte(1), z.string()]),
+      contrast: z.union([z.number().gte(-1000).lte(1000), z.string()]),
+      saturation: z.union([z.number().gte(0).lte(3), z.string()]),
+      gamma: z.union([z.number().gte(0.1).lte(10), z.string()]),
+   })
+   .partial()
+   .refine((data) => Object.keys(data).length > 0, {
+      error: 'At least one of brightness, contrast, saturation or gamma must be provided',
+   }) satisfies ZodType<BrightnessOptions>;

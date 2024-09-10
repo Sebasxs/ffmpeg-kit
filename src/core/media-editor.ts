@@ -81,6 +81,7 @@ import {
    PadSchema,
    DelaySchema,
    NegateSchema,
+   BrightnessSchema,
 } from '@/lib/validations';
 
 /**
@@ -685,7 +686,13 @@ export class MediaEditor extends FFmpegBase {
          throw new MissingStreamError('video', 'brightness');
       }
 
-      const { videoFilter } = BrightnessFilter(options);
+      const result = BrightnessSchema.safeParse(options);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { videoFilter } = BrightnessFilter(result.data);
       this.addVideoFilter(videoFilter);
       return this;
    }
