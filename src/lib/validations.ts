@@ -7,6 +7,7 @@ import {
    CropOptions,
    DynaudnormOptions,
    FadeOptions,
+   HueOptions,
    LoudnormOptions,
    PadOptions,
    RotateOptions,
@@ -144,3 +145,16 @@ export const BrightnessSchema = z
    .refine((data) => Object.keys(data).length > 0, {
       error: 'At least one of brightness, contrast, saturation or gamma must be provided',
    }) satisfies ZodType<BrightnessOptions>;
+
+export const HueSchema = z.union([
+   z.object({
+      degrees: z.number().gte(-360).lte(360),
+      saturation: z.union([z.number().gte(-10).lte(10), z.string()]),
+      brightness: z.union([z.number().gte(-10).lte(10), z.string()]),
+   }),
+   z.object({
+      expression: z.string(),
+      saturation: z.union([z.number().gte(-10).lte(10), z.string()]),
+      brightness: z.union([z.number().gte(-10).lte(10), z.string()]),
+   }),
+]) satisfies ZodType<HueOptions>;

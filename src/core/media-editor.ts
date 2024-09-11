@@ -82,6 +82,7 @@ import {
    DelaySchema,
    NegateSchema,
    BrightnessSchema,
+   HueSchema,
 } from '@/lib/validations';
 
 /**
@@ -717,7 +718,13 @@ export class MediaEditor extends FFmpegBase {
          throw new MissingStreamError('video', 'hue');
       }
 
-      const { videoFilter } = HueFilter(options);
+      const result = HueSchema.safeParse(options);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { videoFilter } = HueFilter(result.data);
       this.addVideoFilter(videoFilter);
       return this;
    }
