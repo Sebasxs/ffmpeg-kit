@@ -4,6 +4,7 @@ import { z, ZodType } from 'zod';
 // @types
 import {
    BrightnessOptions,
+   ColorBalanceOptions,
    CropOptions,
    DynaudnormOptions,
    FadeOptions,
@@ -65,7 +66,6 @@ export const FadeSchema = z.object({
 
 export const CropSchema = z.union([
    z.object({
-      fas: z.boolean(),
       width: z.union([z.string(), z.number().gt(10)]),
       height: z.union([z.string(), z.number().gt(10)]),
       x: z.union([z.string(), z.number()]).optional(),
@@ -158,3 +158,21 @@ export const HueSchema = z.union([
       brightness: z.union([z.number().gte(-10).lte(10), z.string()]),
    }),
 ]) satisfies ZodType<HueOptions>;
+
+export const ColorBalanceSchema = z
+   .object({
+      redShadows: z.number().gte(-1).lte(1),
+      greenShadows: z.number().gte(-1).lte(1),
+      blueShadows: z.number().gte(-1).lte(1),
+      redMidtones: z.number().gte(-1).lte(1),
+      greenMidtones: z.number().gte(-1).lte(1),
+      blueMidtones: z.number().gte(-1).lte(1),
+      redHighlights: z.number().gte(-1).lte(1),
+      greenHighlights: z.number().gte(-1).lte(1),
+      blueHighlights: z.number().gte(-1).lte(1),
+      preserveLightness: z.boolean(),
+   })
+   .partial()
+   .refine((data) => Object.keys(data).length > 0, {
+      error: 'At least one of redShadows, greenShadows, blueShadows, redMidtones, greenMidtones, blueMidtones',
+   }) satisfies ZodType<ColorBalanceOptions>;

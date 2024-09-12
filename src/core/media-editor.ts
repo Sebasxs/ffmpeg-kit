@@ -83,6 +83,7 @@ import {
    NegateSchema,
    BrightnessSchema,
    HueSchema,
+   ColorBalanceSchema,
 } from '@/lib/validations';
 
 /**
@@ -751,7 +752,13 @@ export class MediaEditor extends FFmpegBase {
          throw new MissingStreamError('video', 'colorbalance');
       }
 
-      const { videoFilter } = ColorBalanceFilter(options);
+      const result = ColorBalanceSchema.safeParse(options);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { videoFilter } = ColorBalanceFilter(result.data);
       this.addVideoFilter(videoFilter);
       return this;
    }
