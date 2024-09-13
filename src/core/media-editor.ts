@@ -84,6 +84,7 @@ import {
    BrightnessSchema,
    HueSchema,
    ColorBalanceSchema,
+   ColorMixerSchema,
 } from '@/lib/validations';
 
 /**
@@ -797,7 +798,13 @@ export class MediaEditor extends FFmpegBase {
          throw new MissingStreamError('video', 'colorchannelmixer');
       }
 
-      const { videoFilter } = ColorChannelMixerFilter(options);
+      const result = ColorMixerSchema.safeParse(options);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { videoFilter } = ColorChannelMixerFilter(result.data);
       this.addVideoFilter(videoFilter);
       return this;
    }

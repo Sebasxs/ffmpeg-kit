@@ -5,6 +5,7 @@ import { z, ZodType } from 'zod';
 import {
    BrightnessOptions,
    ColorBalanceOptions,
+   ColorChannelMixerOptions,
    CropOptions,
    DynaudnormOptions,
    FadeOptions,
@@ -176,3 +177,29 @@ export const ColorBalanceSchema = z
    .refine((data) => Object.keys(data).length > 0, {
       error: 'At least one of redShadows, greenShadows, blueShadows, redMidtones, greenMidtones, blueMidtones',
    }) satisfies ZodType<ColorBalanceOptions>;
+
+export const ColorMixerSchema = z
+   .object({
+      redInRed: z.number().gte(-2).lte(2),
+      redInGreen: z.number().gte(-2).lte(2),
+      redInBlue: z.number().gte(-2).lte(2),
+      redInAlpha: z.number().gte(-2).lte(2),
+      greenInRed: z.number().gte(-2).lte(2),
+      greenInGreen: z.number().gte(-2).lte(2),
+      greenInBlue: z.number().gte(-2).lte(2),
+      greenInAlpha: z.number().gte(-2).lte(2),
+      blueInRed: z.number().gte(-2).lte(2),
+      blueInGreen: z.number().gte(-2).lte(2),
+      blueInBlue: z.number().gte(-2).lte(2),
+      blueInAlpha: z.number().gte(-2).lte(2),
+      alphaInRed: z.number().gte(-2).lte(2),
+      alphaInGreen: z.number().gte(-2).lte(2),
+      alphaInBlue: z.number().gte(-2).lte(2),
+      alphaInAlpha: z.number().gte(-2).lte(2),
+      preserveColorMode: z.enum(['none', 'lum', 'max', 'avg', 'sum', 'nrm', 'pwr']),
+      preserveColorAmount: z.number().gte(0).lte(1),
+   })
+   .partial()
+   .refine((data) => Object.keys(data).length > 0, {
+      error: 'At least one value in ColorMixer must be provided',
+   }) satisfies ZodType<ColorChannelMixerOptions>;
