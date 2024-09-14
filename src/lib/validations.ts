@@ -19,7 +19,7 @@ import {
 } from '@/types/filters';
 
 // @utils
-import { Curves, ScaleFlags } from './constants';
+import { ColorPresets, Curves, ScaleFlags } from './constants';
 
 export const VolumeSchema = z.object({
    volume: z.union([z.number(), z.string()]),
@@ -203,3 +203,5 @@ export const ColorMixerSchema = z
    .refine((data) => Object.keys(data).length > 0, {
       error: 'At least one value in ColorMixer must be provided',
    }) satisfies ZodType<ColorChannelMixerOptions>;
+
+export const ColorPresetSchema = z.enum(ColorPresets);

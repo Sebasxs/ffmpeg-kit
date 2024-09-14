@@ -85,6 +85,7 @@ import {
    HueSchema,
    ColorBalanceSchema,
    ColorMixerSchema,
+   ColorPresetSchema,
 } from '@/lib/validations';
 
 /**
@@ -837,7 +838,13 @@ export class MediaEditor extends FFmpegBase {
          throw new MissingStreamError('video', 'colorpreset[lutrgb]');
       }
 
-      const { videoFilter } = LutFilter(preset);
+      const result = ColorPresetSchema.safeParse(preset);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { videoFilter } = LutFilter(result.data);
       this.addVideoFilter(videoFilter);
       return this;
    }
