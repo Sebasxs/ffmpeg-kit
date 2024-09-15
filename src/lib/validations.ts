@@ -6,6 +6,7 @@ import {
    BrightnessOptions,
    ColorBalanceOptions,
    ColorChannelMixerOptions,
+   ColorMultiplierOptions,
    CropOptions,
    DynaudnormOptions,
    FadeOptions,
@@ -205,3 +206,15 @@ export const ColorMixerSchema = z
    }) satisfies ZodType<ColorChannelMixerOptions>;
 
 export const ColorPresetSchema = z.enum(ColorPresets);
+
+export const ColorMultiplierSchema = z
+   .object({
+      red: z.union([z.number().gte(0).lte(10), z.string()]),
+      green: z.union([z.number().gte(0).lte(10), z.string()]),
+      blue: z.union([z.number().gte(0).lte(10), z.string()]),
+      alpha: z.union([z.number().gte(0).lte(10), z.string()]),
+   })
+   .partial()
+   .refine((data) => Object.keys(data).length > 0, {
+      error: 'At least one value in ColorMixer must be provided',
+   }) satisfies ZodType<ColorMultiplierOptions>;

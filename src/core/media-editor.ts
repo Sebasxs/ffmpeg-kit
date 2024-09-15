@@ -86,6 +86,7 @@ import {
    ColorBalanceSchema,
    ColorMixerSchema,
    ColorPresetSchema,
+   ColorMultiplierSchema,
 } from '@/lib/validations';
 
 /**
@@ -870,7 +871,13 @@ export class MediaEditor extends FFmpegBase {
          throw new MissingStreamError('video', 'colormultiplier[lutrgb]');
       }
 
-      const { videoFilter } = ColorMultiplierFilter(options);
+      const result = ColorMultiplierSchema.safeParse(options);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { videoFilter } = ColorMultiplierFilter(result.data);
       this.addVideoFilter(videoFilter);
       return this;
    }
