@@ -87,6 +87,7 @@ import {
    ColorMixerSchema,
    ColorPresetSchema,
    ColorMultiplierSchema,
+   DeshakeSchema,
 } from '@/lib/validations';
 
 /**
@@ -891,12 +892,18 @@ export class MediaEditor extends FFmpegBase {
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#deshake FFmpeg deshake filter documentation}
     */
-   deshake(options?: DeshakeOptions): this {
+   deshake(options: DeshakeOptions = {}): this {
       if (!this.hasVideoStream()) {
          throw new MissingStreamError('video', 'deshake');
       }
 
-      const { videoFilter } = DeshakeFilter(options);
+      const result = DeshakeSchema.safeParse(options);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { videoFilter } = DeshakeFilter(result.data);
       this.addVideoFilter(videoFilter);
       return this;
    }

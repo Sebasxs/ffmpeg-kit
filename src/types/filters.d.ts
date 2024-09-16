@@ -936,24 +936,24 @@ export interface DeshakeOptions {
     * @range 0 to 64
     * @default 16
     */
-   rangeX?: number;
+   motionRangeX?: number;
    /**
     * Maximum vertical motion search range in pixels.
     * Limits how far the algorithm will search for vertical shifts.
     * @range 0 to 64
     * @default 16
     */
-   rangeY?: number;
+   motionRangeY?: number;
    /**
     * Method used to fill blank areas at the edge of the frame after stabilization.
-    * - **'blank'** (0): Fill with black pixels.
-    * - **'original'** (1): Use pixels from the original unstable frame.
-    * - **'clamp'** (2): Extend edge pixels.
-    * - **'mirror'** (3): Mirror edge pixels.
-    * @range 0 (blank), 1 (original), 2 (clamp), 3 (mirror)
-    * @default 3 (mirror)
+    * - **'blank'**: Fill with black pixels.
+    * - **'original'**: Use pixels from the original unstable frame.
+    * - **'clamp'**: Extend edge pixels.
+    * - **'mirror'**: Mirror edge pixels.
+    * @range blank, original, clamp, mirror
+    * @default mirror
     */
-   edge?: 'blank' | 'clamp' | 'mirror' | 'original' | 0 | 1 | 2 | 3;
+   edge?: 'blank' | 'clamp' | 'mirror' | 'original';
    /**
     * Block size in pixels used for motion estimation.
     * Affects accuracy and performance: smaller blocks increase precision but are slower.
@@ -971,7 +971,7 @@ export interface DeshakeOptions {
 }
 
 export interface DeshakeBuilder {
-   (options?: DeshakeOptions): RequiredFilterOutput<'videoFilter'>;
+   (options: DeshakeOptions): RequiredFilterOutput<'videoFilter'>;
 }
 
 export interface PanOptions {
