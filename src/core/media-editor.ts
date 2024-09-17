@@ -88,6 +88,7 @@ import {
    ColorPresetSchema,
    ColorMultiplierSchema,
    DeshakeSchema,
+   PanSchema,
 } from '@/lib/validations';
 
 /**
@@ -925,7 +926,13 @@ export class MediaEditor extends FFmpegBase {
          throw new MissingStreamError('audio', 'pan');
       }
 
-      const { audioFilter } = PanFilter(options);
+      const result = PanSchema.safeParse(options);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { audioFilter } = PanFilter(result.data);
       this.addAudioFilter(audioFilter);
       return this;
    }

@@ -14,6 +14,7 @@ import {
    HueOptions,
    LoudnormOptions,
    PadOptions,
+   PanOptions,
    RotateOptions,
    ScaleOptions,
    TrimOptions,
@@ -233,3 +234,8 @@ export const DeshakeSchema = z
       contrast: z.int().gte(1).lte(265),
    })
    .partial() satisfies ZodType<DeshakeOptions>;
+
+export const PanSchema = z.object({
+   layout: z.enum(['mono', 'stereo', '5.1', '7.1']),
+   channels: z.union([z.number(), z.string()]).array(),
+}) satisfies ZodType<PanOptions>;
