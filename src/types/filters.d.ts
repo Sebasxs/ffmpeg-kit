@@ -1,4 +1,11 @@
-import { FFmpegColor, AspectRatios, Curves, ColorPresets, ScaleFlags } from '@/lib/constants';
+import {
+   FFmpegColor,
+   AspectRatios,
+   Curves,
+   ColorPresets,
+   ScaleFlags,
+   TextAlign,
+} from '@/lib/constants';
 
 interface FilterOutput {
    audioFilter?: string;
@@ -1004,17 +1011,6 @@ export interface PanBuilder {
    (options: PanOptions): RequiredFilterOutput<'audioFilter'>;
 }
 
-export type TextAlign =
-   | 'left+top'
-   | 'left+middle'
-   | 'left+bottom'
-   | 'center+top'
-   | 'center+middle'
-   | 'center+bottom'
-   | 'right+top'
-   | 'right+middle'
-   | 'right+bottom';
-
 export interface DrawTextOptions {
    /**
     * Sets the text to be drawn on the video.
@@ -1031,7 +1027,7 @@ export interface DrawTextOptions {
     *
     * @default 'left+top'
     */
-   textAlign?: TextAlign;
+   textAlign?: (typeof TextAlign)[number];
    /**
     * Sets the spacing in pixels between lines of text.
     * Useful for multi-line text rendering.
@@ -1119,7 +1115,7 @@ export interface DrawTextOptions {
     * @default 0
     * @range 0, 1
     */
-   box?: boolean | 0 | 1;
+   box?: boolean;
    /**
     * Color used to draw the box around the text.
     * Accepts any valid FFmpeg color string (e.g., "white", "red", "#RRGGBB", "0xRRGGBBAA").
@@ -1129,21 +1125,21 @@ export interface DrawTextOptions {
    /**
     * Sets the width of the border around the box using the `boxcolor`.
     * Can be specified in different formats for individual sides of the box:
-    * - `boxborderw=10` sets all borders to 10px.
-    * - `boxborderw=10|20` sets top/bottom borders to 10px, left/right to 20px.
-    * - `boxborderw=10|20|30` sets top to 10px, bottom to 30px, and left/right to 20px.
-    * - `boxborderw=10|20|30|40` sets top to 10px, right to 20px, bottom to 30px, and left to 40px.
+    * - `0` sets all borders to 10px.
+    * - `0|20` sets top/bottom borders to 10px, left/right to 20px.
+    * - `10|20|30` sets top to 10px, bottom to 30px, and left/right to 20px.
+    * - `10|20|30|40` sets top to 10px, right to 20px, bottom to 30px, and left to 40px.
     *
     * @default "0"
     */
-   boxBorderWidth?: number;
+   boxBorderWidth?: number[];
    /**
     * Enables or disables the drawing of the text based on the provided expression or value.
     * The value can be a number or an expression. If the value evaluates to a non-zero number, the text will be drawn; otherwise, it will be disabled.
     *
     * @default 1 (enabled)
     */
-   enable?: string | number | boolean;
+   enable?: string | boolean;
 }
 
 export interface DrawTextBuilder {

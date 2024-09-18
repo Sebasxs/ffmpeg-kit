@@ -36,7 +36,9 @@ export const DrawTextFilter: DrawTextBuilder = (options) => {
    if (shadowColor !== undefined) params.push(buildParam('shadowcolor', shadowColor));
    if (box !== undefined) params.push(buildParam('box', Number(box)));
    if (boxColor !== undefined) params.push(buildParam('boxcolor', boxColor));
-   if (boxBorderWidth !== undefined) params.push(buildParam('boxborderw', boxBorderWidth));
+   if (boxBorderWidth !== undefined) {
+      params.push(buildParam('boxborderw', boxBorderWidth.join('|')));
+   }
    if (textAlign !== undefined) params.push(buildParam('textalign', textAlign));
    if (lineSpacing !== undefined) params.push(buildParam('linespacing', lineSpacing));
    if (enable !== undefined) {

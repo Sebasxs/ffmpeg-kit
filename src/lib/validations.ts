@@ -9,6 +9,7 @@ import {
    ColorMultiplierOptions,
    CropOptions,
    DeshakeOptions,
+   DrawTextOptions,
    DynaudnormOptions,
    FadeOptions,
    HueOptions,
@@ -22,7 +23,7 @@ import {
 } from '@/types/filters';
 
 // @utils
-import { ColorPresets, Curves, ScaleFlags } from './constants';
+import { ColorPresets, Curves, ScaleFlags, TextAlign } from './constants';
 
 export const VolumeSchema = z.object({
    volume: z.union([z.number(), z.string()]),
@@ -239,3 +240,23 @@ export const PanSchema = z.object({
    layout: z.enum(['mono', 'stereo', '5.1', '7.1']),
    channels: z.union([z.number(), z.string()]).array(),
 }) satisfies ZodType<PanOptions>;
+
+export const DrawTextSchema = z.object({
+   text: z.string(),
+   textAlign: z.enum(TextAlign).optional(),
+   lineSpacing: z.number().gte(0).optional(),
+   fontFile: z.string().optional(),
+   fontSize: z.int().positive().optional(),
+   fontColor: z.string().optional(),
+   x: z.union([z.number(), z.string()]).optional(),
+   y: z.union([z.number(), z.string()]).optional(),
+   borderWidth: z.number().gte(0).optional(),
+   borderColor: z.string().optional(),
+   shadowX: z.int().optional(),
+   shadowY: z.int().optional(),
+   shadowColor: z.string().optional(),
+   box: z.boolean().optional(),
+   boxColor: z.string().optional(),
+   boxBorderWidth: z.number().array().optional(),
+   enable: z.union([z.string(), z.boolean()]).optional(),
+}) satisfies ZodType<DrawTextOptions>;

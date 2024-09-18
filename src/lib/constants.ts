@@ -204,3 +204,15 @@ export const AspectRatios = [
 ] as const;
 
 export const ScaleFlags = ['bilinear', 'bicubic', 'lanczos', 'gaussian'];
+
+export const TextAlign = [
+   'left+top',
+   'left+middle',
+   'left+bottom',
+   'center+top',
+   'center+middle',
+   'center+bottom',
+   'right+top',
+   'right+middle',
+   'right+bottom',
+] as const;

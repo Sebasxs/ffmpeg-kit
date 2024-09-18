@@ -89,6 +89,7 @@ import {
    ColorMultiplierSchema,
    DeshakeSchema,
    PanSchema,
+   DrawTextSchema,
 } from '@/lib/validations';
 
 /**
@@ -963,7 +964,13 @@ export class MediaEditor extends FFmpegBase {
          throw new MissingStreamError('video', 'drawtext');
       }
 
-      const { videoFilter } = DrawTextFilter(options);
+      const result = DrawTextSchema.safeParse(options);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { videoFilter } = DrawTextFilter(result.data);
       this.addVideoFilter(videoFilter);
       return this;
    }
