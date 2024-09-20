@@ -90,6 +90,7 @@ import {
    DeshakeSchema,
    PanSchema,
    DrawTextSchema,
+   DraBoxSchema,
 } from '@/lib/validations';
 
 /**
@@ -998,7 +999,13 @@ export class MediaEditor extends FFmpegBase {
          throw new MissingStreamError('video', 'drawbox');
       }
 
-      const { videoFilter } = DrawBoxFilter(options);
+      const result = DraBoxSchema.safeParse(options);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { videoFilter } = DrawBoxFilter(result.data);
       this.addVideoFilter(videoFilter);
       return this;
    }

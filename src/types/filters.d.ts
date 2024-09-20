@@ -1182,13 +1182,13 @@ export interface DrawBoxOptions {
     * Accepts any valid FFmpeg color string (e.g., "white", "red", "#RRGGBB", "0xRRGGBBAA").
     * @default black
     */
-   fillColor: (typeof FFmpegColor)[number] | (string & {});
+   fillColor?: (typeof FFmpegColor)[number] | (string & {});
    /**
     * Specifies the color of the border.
     * Accepts any valid FFmpeg color string (e.g., "white", "red", "#RRGGBB", "0xRRGGBBAA").
     * @default gray
     */
-   borderColor: (typeof FFmpegColor)[number] | (string & {});
+   borderColor?: (typeof FFmpegColor)[number] | (string & {});
    /**
     * Sets the thickness of the box edge.
     * Supports expressions with variables like `in_w`, `in_h`, `dar`, `t`, etc.
@@ -1200,7 +1200,7 @@ export interface DrawBoxOptions {
     * The value can be a number or an expression. If the value evaluates to a non-zero number, the text will be drawn; otherwise, it will be disabled.
     * @default 1 (enabled)
     */
-   enable?: string | number | boolean;
+   enable?: string | boolean;
 }
 
 export interface DrawBoxBuilder {

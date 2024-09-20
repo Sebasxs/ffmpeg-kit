@@ -9,6 +9,7 @@ import {
    ColorMultiplierOptions,
    CropOptions,
    DeshakeOptions,
+   DrawBoxOptions,
    DrawTextOptions,
    DynaudnormOptions,
    FadeOptions,
@@ -260,3 +261,14 @@ export const DrawTextSchema = z.object({
    boxBorderWidth: z.number().array().optional(),
    enable: z.union([z.string(), z.boolean()]).optional(),
 }) satisfies ZodType<DrawTextOptions>;
+
+export const DraBoxSchema = z.object({
+   x: z.union([z.number(), z.string()]),
+   y: z.union([z.number(), z.string()]),
+   width: z.union([z.number(), z.string()]),
+   height: z.union([z.number(), z.string()]),
+   fillColor: z.string().optional(),
+   borderColor: z.string().optional(),
+   thickness: z.number().gt(0).optional(),
+   enable: z.union([z.string(), z.boolean()]).optional(),
+}) satisfies ZodType<DrawBoxOptions>;
