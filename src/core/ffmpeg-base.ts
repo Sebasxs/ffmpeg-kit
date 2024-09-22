@@ -1,7 +1,7 @@
 // @dependencies
 import { execSync } from 'node:child_process';
 import { join, extname, dirname } from 'node:path';
-import { accessSync, mkdirSync, constants } from 'node:fs';
+import { accessSync, mkdirSync, constants, existsSync } from 'node:fs';
 import crypto from 'crypto';
 import mime from 'mime';
 
@@ -23,6 +23,7 @@ import { getFileMetadata } from '@/lib/ffprobe';
 import {
    FFmpegCommandError,
    FFmpegError,
+   FileNotFoundError,
    InvalidFileExtensionError,
    InvalidMimeTypeError,
    InvalidOutputPathError,
@@ -41,6 +42,10 @@ export class FFmpegBase {
    protected videoSubgraph: string[];
 
    constructor(path: string) {
+      if (!existsSync(path)) {
+         throw new FileNotFoundError(path);
+      }
+
       this._hash = crypto.createHash('md5').update(path).digest('hex').slice(0, 6);
       this._outputAudioTag = null;
       this._outputVideoTag = null;
@@ -236,7 +241,7 @@ export class FFmpegBase {
 
       if (!options.audioNone && firstAudioStream !== -1 && !imageExpected) {
          if (options.audioCodec) outputOptions.push(`-c:a ${options.audioCodec}`);
-         if (options.audioBitrate ?? '96k') outputOptions.push(`-b:a ${options.audioBitrate}`);
+         if (options.audioBitrate) outputOptions.push(`-b:a ${options.audioBitrate}`);
          if (options.channels) outputOptions.push(`-ac ${options.channels}`);
          if (!outputAudioTag) {
             mapAudio = `${firstAudioStream}:a?`;
@@ -254,7 +259,7 @@ export class FFmpegBase {
 
       if (!options.videoNone && firstVideoStream !== -1) {
          if (options.videoCodec) outputOptions.push(`-c:v ${options.videoCodec}`);
-         if (options.videoBitrate ?? '1M') outputOptions.push(`-b:v ${options.videoBitrate}`);
+         if (options.videoBitrate) outputOptions.push(`-b:v ${options.videoBitrate}`);
          if (options.fps) outputOptions.push(`-r ${options.fps}`);
          if (options.crf) outputOptions.push(`-crf ${options.crf}`);
          if (options.preset) outputOptions.push(`-preset ${options.preset}`);
@@ -285,7 +290,7 @@ export class FFmpegBase {
       const { output, inputOptions, outputOptions, filterGraphParts, mapAudio, mapVideo } = params;
       this.ensureDirectoryExists(output);
 
-      let cmd = `ffmpeg ${inputOptions.join(' ')}`;
+      let cmd = `ffmpeg -hide_banner ${inputOptions.join(' ')}`;
 
       if (filterGraphParts.length) cmd += ` -filter_complex "${filterGraphParts.join(';')}"`;
       if (mapAudio) cmd += ` -map ${mapAudio}`;

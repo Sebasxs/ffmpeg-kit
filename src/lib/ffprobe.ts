@@ -41,6 +41,6 @@ export function getFileMetadata(path: string): FFProbeResult {
 
       return { streams, format, summary };
    } catch (error: any) {
-      throw new MetadataError(`Failed to get media info: ${error.message}`);
+      throw new MetadataError(error.message);
    }
 }

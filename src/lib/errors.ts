@@ -7,49 +7,56 @@ export class FFmpegError extends Error {
 
 export class MissingStreamError extends FFmpegError {
    constructor(streamType: 'audio' | 'video' | 'audio/video', filterName: string) {
-      super(`Missing ${streamType} stream for filter "${filterName}".`);
+      super(`missing ${streamType} stream for filter "${filterName}".`);
       this.name = 'MissingStreamError';
    }
 }
 
 export class FFmpegCommandError extends FFmpegError {
    constructor(command: string, stderr: string) {
-      super(`FFmpeg command failed: ${command}\nFFmpeg stderr:\n${stderr}`);
+      super(`${command}\n\nFFmpeg stderr:\n\n${stderr}`);
       this.name = 'FFmpegCommandError';
    }
 }
 
 export class InvalidOutputPathError extends FFmpegError {
    constructor(message: string) {
-      super(`Invalid output path: ${message}`);
+      super(message);
       this.name = 'InvalidOutputPathError';
    }
 }
 
 export class InvalidFileExtensionError extends FFmpegError {
    constructor(extension: string) {
-      super(`Invalid file extension: ${extension}`);
+      super(extension);
       this.name = 'InvalidFileExtensionError';
    }
 }
 
 export class InvalidMimeTypeError extends FFmpegError {
    constructor(mimeType: string) {
-      super(`Invalid mime type: ${mimeType}`);
+      super(mimeType);
       this.name = 'InvalidMimeTypeError';
    }
 }
 
 export class MetadataError extends FFmpegError {
    constructor(message: string) {
-      super(`Error getting metadata: ${message}`);
+      super(message);
       this.name = 'MetadataError';
    }
 }
 
 export class NoParametersError extends FFmpegError {
    constructor(filterName: string) {
-      super(`No parameters provided for filter "${filterName}".`);
+      super(`no parameters provided for filter "${filterName}".`);
       this.name = 'NoParametersError';
+   }
+}
+
+export class FileNotFoundError extends FFmpegError {
+   constructor(path: string) {
+      super(path);
+      this.name = 'FileNotFoundError';
    }
 }
