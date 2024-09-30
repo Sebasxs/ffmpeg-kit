@@ -227,13 +227,13 @@ export const DeshakeSchema = z
    .object({
       x: z.number().gte(-1).lte(1),
       y: z.number().gte(-1).lte(1),
-      width: z.int().gte(-1).lte(1),
-      height: z.int().gte(-1).lte(1),
-      motionRangeX: z.int().gte(0).lte(64),
-      motionRangeY: z.int().gte(0).lte(64),
+      width: z.int().min(-1).max(1),
+      height: z.int().min(-1).max(1),
+      motionRangeX: z.int().min(0).max(64),
+      motionRangeY: z.int().min(0).max(64),
       edge: z.enum(['blank', 'clamp', 'mirror', 'original']),
-      blocksize: z.int().gte(4).lte(128),
-      contrast: z.int().gte(1).lte(265),
+      blocksize: z.int().min(4).max(128),
+      contrast: z.int().min(1).max(265),
    })
    .partial() satisfies ZodType<DeshakeOptions>;
 
