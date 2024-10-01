@@ -139,22 +139,18 @@ export class FFmpegBase {
          const outputPath = this.normalizeOutputPath(output);
          const mimeType = this.getMimeType(outputPath);
 
-         const { inputs, filterGraphParts, outputAudioTag, outputVideoTag } = this.prepareData(
-            mimeType,
-            options,
-         );
+         const data = this.prepareData(mimeType, options);
 
-         const inputOptions = this.prepareInputOptions({
+         const { inputOptions, filterComplex, audioTag, videoTag } = this.prepareInputOptions({
             overwrite: options.overwrite ?? true,
-            inputs,
-            filterGraphParts,
             mimeType,
+            ...data,
          });
 
          const { outputOptions, mapAudio, mapVideo } = this.prepareOutputOptions({
-            inputs,
-            outputAudioTag,
-            outputVideoTag,
+            inputs: data.inputs,
+            audioTag,
+            videoTag,
             mimeType,
             options,
          });
@@ -162,7 +158,7 @@ export class FFmpegBase {
          const ffmpegCommand = this.buildFFmpegCommand({
             output: outputPath,
             inputOptions,
-            filterGraphParts,
+            filterComplex,
             outputOptions,
             mapAudio,
             mapVideo,
@@ -194,43 +190,53 @@ export class FFmpegBase {
    private prepareData(mimeType: string, options: OutputOptions): Omit<FFmpegBaseData, 'hash'> {
       const { inputs, filterGraphParts, outputAudioTag, outputVideoTag } = this.getCommandData();
       const onlyImages = Array.from(inputs.values()).every((input) => input.type === 'image');
-      const someTrimmed = filterGraphParts.some((part) => part.includes('trim'));
+      const durationFixed = filterGraphParts.some((part) => part.includes('trim'));
       const videoExpected = mimeType.includes('video') || mimeType.includes('gif');
 
-      if (onlyImages && !someTrimmed && videoExpected && !options.duration) {
+      if (onlyImages && !durationFixed && videoExpected && !options.duration) {
          options.duration = 5;
       }
 
       return { inputs, filterGraphParts, outputAudioTag, outputVideoTag };
    }
 
-   private prepareInputOptions(params: PrepareInputOptionsParams): string[] {
-      const { inputs, filterGraphParts, mimeType, overwrite } = params;
+   private prepareInputOptions(params: PrepareInputOptionsParams) {
+      const { inputs, filterGraphParts, mimeType, overwrite, outputAudioTag, outputVideoTag } =
+         params;
       const inputOptions: string[] = [];
       if (overwrite) inputOptions.push('-y');
       const staticImageExpected = mimeType.includes('image') && !mimeType.includes('gif');
       let inputIndex = 0;
-      let updatedFilterGraphParts = [...filterGraphParts];
+      let filterComplex = filterGraphParts.join(';');
+      let audioTag = outputAudioTag;
+      let videoTag = outputVideoTag;
 
       for (const [key, { path, type }] of inputs) {
          if (type === 'image' && !staticImageExpected) {
             inputOptions.push(`-loop 1`);
          }
-
          inputOptions.push(`-i ${path}`);
-         updatedFilterGraphParts = updatedFilterGraphParts.map((part) => {
-            const hash = `{${key}}`;
-            return part.includes(hash) ? part.replaceAll(hash, inputIndex.toString()) : part;
-         });
+
+         const hash = `{${key}}`;
+
+         if (audioTag && audioTag.includes(hash)) {
+            audioTag = audioTag.replace(hash, inputIndex.toString());
+         }
+
+         if (videoTag && videoTag.includes(hash)) {
+            videoTag = videoTag.replace(hash, inputIndex.toString());
+         }
+
+         filterComplex = filterComplex.replaceAll(hash, inputIndex.toString());
          inputIndex++;
       }
-      return inputOptions;
+      return { inputOptions, filterComplex, audioTag, videoTag };
    }
 
    private prepareOutputOptions(params: PrepareOutputOptionsParams) {
-      const { inputs, outputAudioTag, outputVideoTag, mimeType, options } = params;
-      let mapAudio = outputAudioTag;
-      let mapVideo = outputVideoTag;
+      const { inputs, audioTag, videoTag, mimeType, options } = params;
+      let mapAudio = audioTag;
+      let mapVideo = videoTag;
       const outputOptions: string[] = [];
       const gifExpected = mimeType.includes('gif');
       const imageExpected = mimeType.includes('image');
@@ -243,7 +249,7 @@ export class FFmpegBase {
          if (options.audioCodec) outputOptions.push(`-c:a ${options.audioCodec}`);
          if (options.audioBitrate) outputOptions.push(`-b:a ${options.audioBitrate}`);
          if (options.channels) outputOptions.push(`-ac ${options.channels}`);
-         if (!outputAudioTag) {
+         if (!audioTag) {
             mapAudio = `${firstAudioStream}:a?`;
             if (!options.audioCodec) outputOptions.push('-c:a copy');
          }
@@ -264,7 +270,7 @@ export class FFmpegBase {
          if (options.crf) outputOptions.push(`-crf ${options.crf}`);
          if (options.preset) outputOptions.push(`-preset ${options.preset}`);
          if (options.pixelFormat) outputOptions.push(`-pix_fmt ${options.pixelFormat}`);
-         if (!outputVideoTag) {
+         if (!videoTag) {
             mapVideo = `${firstVideoStream}:v?`;
             if (!options.videoCodec) outputOptions.push('-c:v copy');
          }
@@ -287,12 +293,12 @@ export class FFmpegBase {
    }
 
    private buildFFmpegCommand(params: BuildCommandParams): string {
-      const { output, inputOptions, outputOptions, filterGraphParts, mapAudio, mapVideo } = params;
+      const { output, inputOptions, outputOptions, filterComplex, mapAudio, mapVideo } = params;
       this.ensureDirectoryExists(output);
 
-      let cmd = `ffmpeg -hide_banner ${inputOptions.join(' ')}`;
+      let cmd = `ffmpeg -hide_banner -loglevel error ${inputOptions.join(' ')}`;
 
-      if (filterGraphParts.length) cmd += ` -filter_complex "${filterGraphParts.join(';')}"`;
+      if (filterComplex) cmd += ` -filter_complex "${filterComplex}"`;
       if (mapAudio) cmd += ` -map ${mapAudio}`;
       if (mapVideo) cmd += ` -map ${mapVideo}`;
 

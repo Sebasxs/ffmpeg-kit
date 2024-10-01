@@ -68,6 +68,8 @@ export interface PrepareInputOptionsParams {
    overwrite: boolean;
    inputs: Map<string, MediaInput>;
    filterGraphParts: string[];
+   outputVideoTag: string | null;
+   outputAudioTag: string | null;
    mimeType: string;
 }
 
@@ -75,15 +77,15 @@ export interface BuildCommandParams {
    output: string;
    inputOptions: string[];
    outputOptions: string[];
-   filterGraphParts: string[];
+   filterComplex: string;
    mapAudio: string | null;
    mapVideo: string | null;
 }
 
 export interface PrepareOutputOptionsParams {
    inputs: Map<string, MediaInput>;
-   outputAudioTag: string | null;
-   outputVideoTag: string | null;
+   audioTag: string | null;
+   videoTag: string | null;
    mimeType: string;
    options: OutputOptions;
 }
