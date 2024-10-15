@@ -6,19 +6,19 @@ export const ColorMultiplierFilter: ColorMultiplierBuilder = (options) => {
 
    const params = [];
    if (red !== undefined) {
-      if (typeof red === 'number') params.push(`r=${red}*r`);
+      if (typeof red === 'number') params.push(`r='${red}*val'`);
       else params.push(`r='${red}'`);
    }
    if (green !== undefined) {
-      if (typeof green === 'number') params.push(`g=${green}*g`);
+      if (typeof green === 'number') params.push(`g='${green}*val'`);
       else params.push(`g='${green}'`);
    }
    if (blue !== undefined) {
-      if (typeof blue === 'number') params.push(`b=${blue}*b`);
+      if (typeof blue === 'number') params.push(`b='${blue}*val'`);
       else params.push(`b='${blue}'`);
    }
    if (alpha !== undefined) {
-      if (typeof alpha === 'number') params.push(`a=${alpha}*a`);
+      if (typeof alpha === 'number') params.push(`a='${alpha}*val'`);
       else params.push(`a='${alpha}'`);
    }
 
