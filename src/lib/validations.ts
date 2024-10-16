@@ -72,15 +72,17 @@ export const FadeSchema = z.object({
 
 export const CropSchema = z.union([
    z.object({
-      width: z.union([z.string(), z.number().gt(10)]),
-      height: z.union([z.string(), z.number().gt(10)]),
+      aspectRatio: z.string().refine((val) => /^\d+:\d+$/.test(val), {
+         error: 'Invalid aspect ratio',
+      }),
       x: z.union([z.string(), z.number()]).optional(),
       y: z.union([z.string(), z.number()]).optional(),
    }),
    z.object({
-      aspectRatio: z.string().refine((val) => /^\d+:\d+$/.test(val), {
-         error: 'Invalid aspect ratio',
-      }),
+      width: z.union([z.string(), z.number().gt(10)]).default('iw'),
+      height: z.union([z.string(), z.number().gt(10)]).default('ih'),
+      x: z.union([z.string(), z.number()]).optional(),
+      y: z.union([z.string(), z.number()]).optional(),
    }),
 ]) satisfies ZodType<CropOptions>;
 
