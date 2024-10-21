@@ -26,6 +26,7 @@ export const DrawBoxFilter: DrawBoxBuilder = (options) => {
       const colorParam = buildParam('color', fillColor);
       filters.push(`drawbox=${boxParams}:t=fill:${colorParam}`);
    }
+
    if (borderColor !== undefined || thickness !== undefined) {
       const colorParam = buildParam('color', borderColor ?? "'gray'");
       let borderFilter = `drawbox=${boxParams}:${colorParam}`;
@@ -33,5 +34,6 @@ export const DrawBoxFilter: DrawBoxBuilder = (options) => {
       filters.push(borderFilter);
    }
 
+   if (!filters.length) return { videoFilter: `drawbox=${boxParams}:t=fill:color=white` };
    return { videoFilter: filters.join(',') };
 };
