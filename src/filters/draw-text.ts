@@ -11,6 +11,8 @@ const parseTextAlignValue = (value: string): string => {
       .replace('right', 'R');
 };
 
+const escapeSpecialChars = (text: string) => text.replace(/\\/g, '\\\\').replace(/'|"/g, '\\"');
+
 export const DrawTextFilter: DrawTextBuilder = (options) => {
    const {
       text,
@@ -32,7 +34,7 @@ export const DrawTextFilter: DrawTextBuilder = (options) => {
       enable,
    } = options;
 
-   let videoFilter = `drawtext=text='${text}'`;
+   let videoFilter = `drawtext=text='${escapeSpecialChars(text)}'`;
    const params = [];
    if (fontFile !== undefined) params.push(`fontfile='${fontFile}'`);
    if (fontSize !== undefined) params.push(buildParam('fontsize', fontSize));
