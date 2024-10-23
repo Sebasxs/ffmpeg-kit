@@ -1,6 +1,16 @@
 import { DrawTextBuilder } from '@/types/filters';
 import { buildParam } from '@/lib/common';
 
+const parseTextAlignValue = (value: string): string => {
+   return value
+      .replace('top', 'T')
+      .replace('middle', 'M')
+      .replace('bottom', 'B')
+      .replace('left', 'L')
+      .replace('center', 'C')
+      .replace('right', 'R');
+};
+
 export const DrawTextFilter: DrawTextBuilder = (options) => {
    const {
       text,
@@ -22,7 +32,7 @@ export const DrawTextFilter: DrawTextBuilder = (options) => {
       enable,
    } = options;
 
-   let videoFilter = `drawtext=text=${text}`;
+   let videoFilter = `drawtext=text='${text}'`;
    const params = [];
    if (fontFile !== undefined) params.push(`fontfile='${fontFile}'`);
    if (fontSize !== undefined) params.push(buildParam('fontsize', fontSize));
@@ -39,7 +49,9 @@ export const DrawTextFilter: DrawTextBuilder = (options) => {
    if (boxBorderWidth !== undefined) {
       params.push(buildParam('boxborderw', boxBorderWidth.join('|')));
    }
-   if (textAlign !== undefined) params.push(buildParam('textalign', textAlign));
+   if (textAlign !== undefined) {
+      params.push(buildParam('text_align', parseTextAlignValue(textAlign)));
+   }
    if (lineSpacing !== undefined) params.push(buildParam('linespacing', lineSpacing));
    if (enable !== undefined) {
       if (typeof enable === 'string') params.push(buildParam('enable', enable));

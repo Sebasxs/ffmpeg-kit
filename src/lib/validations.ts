@@ -246,9 +246,9 @@ export const PanSchema = z.object({
 
 export const DrawTextSchema = z.object({
    text: z.string(),
+   fontFile: z.string(),
    textAlign: z.enum(TextAlign).optional(),
    lineSpacing: z.number().gte(0).optional(),
-   fontFile: z.string().optional(),
    fontSize: z.int().positive().optional(),
    fontColor: z.string().optional(),
    x: z.union([z.number(), z.string()]).optional(),

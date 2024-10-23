@@ -1020,6 +1020,11 @@ export interface DrawTextOptions {
     */
    text: string;
    /**
+    * Path to the font file used for rendering the text.
+    * @default undefined
+    */
+   fontFile: string;
+   /**
     * Sets the horizontal and vertical alignment of the text within its bounding box.
     * Combines one horizontal ('left', 'center', 'right') and one vertical ('top', 'middle', 'bottom') alignment.
     *
@@ -1035,11 +1040,6 @@ export interface DrawTextOptions {
     * @default 0
     */
    lineSpacing?: number;
-   /**
-    * Path to the font file used for rendering the text.
-    * @default undefined
-    */
-   fontFile?: string;
    /**
     * Font size in pixels used to render the text.
     * @range Any positive number
@@ -1125,12 +1125,12 @@ export interface DrawTextOptions {
    /**
     * Sets the width of the border around the box using the `boxcolor`.
     * Can be specified in different formats for individual sides of the box:
-    * - `0` sets all borders to 10px.
-    * - `0|20` sets top/bottom borders to 10px, left/right to 20px.
-    * - `10|20|30` sets top to 10px, bottom to 30px, and left/right to 20px.
-    * - `10|20|30|40` sets top to 10px, right to 20px, bottom to 30px, and left to 40px.
+    * - [0] sets all borders to 10px.
+    * - [0, 20] sets top/bottom borders to 10px, left/right to 20px.
+    * - [10, 20, 30] sets top to 10px, bottom to 30px, and left/right to 20px.
+    * - [10, 20, 30, 40] sets top to 10px, right to 20px, bottom to 30px, and left to 40px.
     *
-    * @default "0"
+    * @default undefined
     */
    boxBorderWidth?: number[];
    /**
