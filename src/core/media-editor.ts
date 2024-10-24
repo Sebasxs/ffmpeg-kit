@@ -184,12 +184,12 @@ export class MediaEditor extends FFmpegBase {
     * @throws {MissingStreamError} If the input media does not have an audio stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#dynaudnorm FFmpeg dynaudnorm filter documentation}
     */
-   dynaudnorm(options: DynaudnormOptions): this {
+   dynaudnorm(options?: DynaudnormOptions): this {
       if (!this.hasAudioStream()) {
          throw new MissingStreamError('audio', 'dynaudnorm');
       }
 
-      const result = DynaudnormSchema.safeParse(options);
+      const result = DynaudnormSchema.safeParse(options || {});
       if (!result.success) {
          const pretty = prettifyError(result.error);
          throw new Error(pretty);
