@@ -64,7 +64,7 @@ export const TrimSchema = z.object({
 export const FadeSchema = z.object({
    type: z.enum(['in', 'out']),
    duration: z.number().gte(0.1),
-   start: z.number().gte(0),
+   start: z.number().gte(0).default(0),
    curve: z.enum(Curves).optional(),
    color: z.string().optional(),
    stream: z.enum(['audio', 'video']).optional(),
