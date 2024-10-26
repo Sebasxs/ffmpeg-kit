@@ -148,7 +148,7 @@ export interface DynaudnormOptions {
 }
 
 export interface DynaudnormBuilder {
-   (options: DynaudnormOptions): RequiredFilterOutput<'audioFilter'>;
+   (options?: DynaudnormOptions): RequiredFilterOutput<'audioFilter'>;
 }
 
 export interface PitchBuilder {
