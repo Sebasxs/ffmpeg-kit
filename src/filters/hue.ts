@@ -3,7 +3,7 @@ import { buildParam } from '@/lib/common';
 
 export const HueFilter: HueBuilder = (options) => {
    const { degrees, expression, saturation, brightness } = options;
-   const angle = expression ? `H='${expression}'` : `h='${degrees}*PI/180'`;
+   const angle = expression ? `H='${expression}'` : `h=${degrees}`;
 
    let videoFilter = `hue=${angle}`;
    const params = [];

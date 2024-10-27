@@ -156,14 +156,14 @@ export const BrightnessSchema = z
 
 export const HueSchema = z.union([
    z.object({
-      degrees: z.number().gte(-360).lte(360),
-      saturation: z.union([z.number().gte(-10).lte(10), z.string()]),
-      brightness: z.union([z.number().gte(-10).lte(10), z.string()]),
+      degrees: z.int().min(-360).max(360),
+      saturation: z.union([z.number().gte(-10).lte(10), z.string()]).optional(),
+      brightness: z.union([z.number().gte(-10).lte(10), z.string()]).optional(),
    }),
    z.object({
       expression: z.string(),
-      saturation: z.union([z.number().gte(-10).lte(10), z.string()]),
-      brightness: z.union([z.number().gte(-10).lte(10), z.string()]),
+      saturation: z.union([z.number().gte(-10).lte(10), z.string()]).optional(),
+      brightness: z.union([z.number().gte(-10).lte(10), z.string()]).optional(),
    }),
 ]) satisfies ZodType<HueOptions>;
 
