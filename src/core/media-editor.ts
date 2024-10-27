@@ -99,7 +99,6 @@ import {
  */
 export class MediaEditor extends FFmpegBase {
    /**
-    * Creates a new MediaEditor instance.
     * @param path - The path to the input media file.
     */
    constructor(path: string) {
@@ -109,7 +108,7 @@ export class MediaEditor extends FFmpegBase {
    /**
     * Adjusts the volume of the audio stream.
     *
-    * @param options - Options object with the following keys:
+    * @param options -
     *   - **volume**: Volume level or expression to apply.
     *   - **_eval**: Evaluation mode (`once` or `frame`) to control how often the volume is recalculated.
     *
@@ -138,7 +137,7 @@ export class MediaEditor extends FFmpegBase {
     *
     * Targets integrated loudness (IL), loudness range (LRA), and true peak (TP).
     *
-    * @param options - Options object with the following keys:
+    * @param options -
     *   - **average**: Integrated loudness target in LUFS (e.g. -23.0).
     *   - **range**: Target loudness range (LRA) in LU.
     *   - **peak**: Maximum allowed true peak level in dBTP.
@@ -171,7 +170,7 @@ export class MediaEditor extends FFmpegBase {
     * without compressing the dynamic range within individual sections.
     * This ensures the natural dynamics of the audio are maintained.
     *
-    * @param options - Options object with the following keys:
+    * @param options -
     *   - **frameLength**: Frame duration in milliseconds.
     *   - **gaussSize**: Gaussian smoothing window size (must be odd).
     *   - **peak**: Target peak level (0.0–1.0).
@@ -239,7 +238,7 @@ export class MediaEditor extends FFmpegBase {
     * Trims the input to output a single continuous segment.
     * Useful for extracting a specific portion of the media based on start and/or end time (or duration).
     *
-    * @param options - Options object with the following keys:
+    * @param options -
     *   - **stream**: Which stream to trim ('audio' | 'video').
     *   - **start**: Timestamp to begin output (e.g. `'00:00:30'` or `12`).
     *   - **end**: Timestamp to stop output (optional).
@@ -273,7 +272,7 @@ export class MediaEditor extends FFmpegBase {
    /**
     * Applies a fade-in or fade-out effect to the input video or audio stream.
     *
-    * @param options - Options object with the following keys:
+    * @param options -
     *   - **type**: `'in' | 'out'` — Whether to fade in or out.
     *   - **duration**: How long the fade effect lasts (in seconds).
     *   - **start**: When the fade should start (in seconds, optional).
@@ -309,7 +308,7 @@ export class MediaEditor extends FFmpegBase {
    /**
     * Crops the input video to a specific region or aspect ratio.
     *
-    * @param options - Options object with the following keys:
+    * @param options -
     *   - **width**: Desired width of the output (e.g., 640 or "iw/2").
     *   - **height**: Desired height of the output (e.g., 360 or "ih/2").
     *   - **x**: Horizontal offset of the cropped region (e.g., 100 or "(in_w-out_w)/2").
@@ -343,7 +342,7 @@ export class MediaEditor extends FFmpegBase {
     * Resizes the input video with flexible scaling options.
     * Allows for absolute or relative dimensions, and supports aspect ratio preservation and scaling quality flags.
     *
-    * @param options - Options object with the following keys:
+    * @param options -
     *   - **width** & **height**: Output size (e.g., 1280, "iw/2", -2 to preserve aspect ratio).
     *   - **percentage**: Resize by percent (overrides width/height).
     *   - **forceAspectRatio**: Ensures aspect ratio is preserved ("increase", "decrease", or "disable").
@@ -400,7 +399,7 @@ export class MediaEditor extends FFmpegBase {
     * @param factor - The speed factor.
     *               - `1`: No change.
     *               - `>1`: Faster.
-    *               - `<1`: Slower.    *
+    *               - `<1`: Slower.
     * @range 0.5 to 100, for lower or higher values chain multiple speed filters.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have an audio or video stream.
@@ -484,11 +483,11 @@ export class MediaEditor extends FFmpegBase {
    /**
     * Applies a denoising filter to the audio and/or video streams.
     *
-    * @param method - The denoising method.
-    *               - **'hqdn3d'**: High-quality 3D denoiser.
-    *               - **'nlmeans'**: Non-local means denoiser.
-    *               - **'atadenoise'**: Adaptive temporal averaging denoiser.
-    *               - **'afftdn'**: Adaptive frequency-domain temporal denoiser (audio only).
+    * @param method -
+    *    - **'hqdn3d'**: High-quality 3D denoiser.
+    *    - **'nlmeans'**: Non-local means denoiser.
+    *    - **'atadenoise'**: Adaptive temporal averaging denoiser.
+    *    - **'afftdn'**: Adaptive frequency-domain temporal denoiser (audio only).
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have an audio or video stream, depending on the method.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#hqdn3d FFmpeg hqdn3d filter documentation}
@@ -522,7 +521,7 @@ export class MediaEditor extends FFmpegBase {
     * Supports static angles in degrees or animated rotations using FFmpeg expressions.
     * You can also control the output dimensions and background fill color.
     *
-    * @param options - Rotation options:
+    * @param options -
     *   - **degrees**: Static angle in degrees (-360 to 360).
     *   - **expression**: Dynamic rotation in radians (e.g., `"t/5"` for time-based rotation).
     *   - **outputWidth/outputHeight**: Output size expressions (e.g., `"rotw(a)"`, `"roth(a)"`).
@@ -578,7 +577,7 @@ export class MediaEditor extends FFmpegBase {
     * Adds padding to the input image and positions the original content
     * at the specified (x, y) coordinates within the padded canvas.
     *
-    * @param options - Options object with the following keys:
+    * @param options -
     *   - **width**: Specifies the width of the output image after padding.
     *   - **height**: Specifies the height of the output image after padding.
     *   - **color**: Sets the background color used for the padded area.
@@ -680,12 +679,11 @@ export class MediaEditor extends FFmpegBase {
     * Applies basic color adjustments to the input video, including brightness,
     * contrast, saturation, and approximate gamma correction.
     *
-    * @param options - Adjustment options with the following keys:
+    * @param options -
     *   - **brightness**: Adjusts overall brightness (-1.0 to 1.0).
     *   - **contrast**: Adjusts contrast level (-1000.0 to 1000.0).
     *   - **saturation**: Adjusts color saturation (0.0 to 3.0).
     *   - **gamma**: Adjusts gamma correction (0.1 to 10.0).
-    *
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#eq FFmpeg eq filter documentation}
@@ -709,7 +707,7 @@ export class MediaEditor extends FFmpegBase {
    /**
     * Adjusts the hue, saturation, and brightness of the video stream.
     *
-    * @param options - Adjustment options with the following keys:
+    * @param options -
     *   - **degrees**: Hue rotation angle in degrees (-360 to 360).
     *   - **expression**: Hue rotation angle in radians (-π to π).
     *   - **saturation**: Saturation multiplier (-10.0 to 10.0).
@@ -743,7 +741,7 @@ export class MediaEditor extends FFmpegBase {
     * for red-cyan, green-magenta, and blue-yellow channels.
     * Positive values shift toward the primary color; negative values toward the complementary.
     *
-    * @param options - The color balance options with the following keys:
+    * @param options -
     *   - **redShadows**, **greenShadows**, **blueShadows**
     *   - **redMidtones**, **greenMidtones**, **blueMidtones**
     *   - **redHighlights**, **greenHighlights**, **blueHighlights**
@@ -775,7 +773,7 @@ export class MediaEditor extends FFmpegBase {
     * Each output channel is a weighted sum of the input channels,
     * allowing custom color transformations.
     *
-    * @param options - The color channel mixer options. The available properties are:
+    * @param options -
     *   - `redInRed`: Adjusts the red channel contribution to the output red channel.
     *   - `redInGreen`: Adjusts the red channel contribution to the output green channel.
     *   - `redInBlue`: Adjusts the red channel contribution to the output blue channel.
@@ -818,7 +816,7 @@ export class MediaEditor extends FFmpegBase {
    /**
     * Applies a color preset (lookup table) to the video stream.
     *
-    * Available presets:
+    * @param preset -
     * - `'sepia'`
     * - `'golden hour'`
     * - `'purple noir'`
@@ -832,7 +830,6 @@ export class MediaEditor extends FFmpegBase {
     * - `'cyberpunk'`
     * - `'vintage film'`
     *
-    * @param preset - The name of the color preset to apply.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#lutrgb FFmpeg lutrgb filter documentation}
@@ -943,7 +940,7 @@ export class MediaEditor extends FFmpegBase {
     * Draws a text string and overlays it onto the video using the libfreetype library.
     * Useful for subtitles, watermarks, timestamps, or dynamic text rendering.
     *
-    * @param options - The drawtext options, including:
+    * @param options -
     * - `text`: The text to be drawn.
     * - `textAlign`: Horizontal and vertical alignment of the text.
     * - `lineSpacing`: Spacing between lines of text (for multi-line rendering).
@@ -980,7 +977,7 @@ export class MediaEditor extends FFmpegBase {
     * Draws a colored box on the input video frame.
     * Commonly used for highlighting regions, annotations, or visual markers in a video.
     *
-    * @param options - The drawbox options, including:
+    * @param options -
     * - `x`, `y`: Position of the top-left corner (can be number or expression).
     * - `width`, `height`: Size of the box (can be number or expression).
     * - `fillColor`: Background color of the box.
