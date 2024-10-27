@@ -75,7 +75,7 @@ export interface LoudnormOptions {
 }
 
 export interface LoudnormBuilder {
-   (options: LoudnormOptions): RequiredFilterOutput<'audioFilter'>;
+   (options?: LoudnormOptions): RequiredFilterOutput<'audioFilter'>;
 }
 
 export interface DynaudnormOptions {

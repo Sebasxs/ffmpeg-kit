@@ -33,8 +33,8 @@ export const VolumeSchema = z.object({
 
 export const LoudnormSchema = z.object({
    average: z.number().gte(-70).lte(-5).default(-23),
-   range: z.number().gte(1).lte(50).default(9).optional(),
-   peak: z.number().gte(-9).lte(0).default(-1).optional(),
+   range: z.number().gte(1).lte(50).default(9).default(9),
+   peak: z.number().gte(-9).lte(0).default(-1).default(-1),
 }) satisfies ZodType<LoudnormOptions>;
 
 export const DynaudnormSchema = z.object({

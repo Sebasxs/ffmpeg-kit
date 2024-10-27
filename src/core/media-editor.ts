@@ -146,12 +146,12 @@ export class MediaEditor extends FFmpegBase {
     * @throws {MissingStreamError} If the input media does not have an audio stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#loudnorm FFmpeg loudnorm filter documentation}
     */
-   loudnorm(options: LoudnormOptions): this {
+   loudnorm(options?: LoudnormOptions): this {
       if (!this.hasAudioStream()) {
          throw new MissingStreamError('audio', 'loudnorm');
       }
 
-      const result = LoudnormSchema.safeParse(options);
+      const result = LoudnormSchema.safeParse(options || {});
       if (!result.success) {
          const pretty = prettifyError(result.error);
          throw new Error(pretty);
