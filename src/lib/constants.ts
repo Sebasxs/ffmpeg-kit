@@ -180,7 +180,6 @@ export const ColorPresets = [
    'negative',
    'matrix code green',
    'cyberpunk',
-   'vintage film',
 ] as const;
 
 export const AspectRatios = [

@@ -828,7 +828,6 @@ export class MediaEditor extends FFmpegBase {
     * - `'negative'`
     * - `'matrix code green'`
     * - `'cyberpunk'`
-    * - `'vintage film'`
     *
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
