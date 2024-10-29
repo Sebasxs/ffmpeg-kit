@@ -75,7 +75,7 @@ export interface LoudnormOptions {
 }
 
 export interface LoudnormBuilder {
-   (options?: LoudnormOptions): RequiredFilterOutput<'audioFilter'>;
+   (options: LoudnormOptions): RequiredFilterOutput<'audioFilter'>;
 }
 
 export interface DynaudnormOptions {
@@ -148,7 +148,7 @@ export interface DynaudnormOptions {
 }
 
 export interface DynaudnormBuilder {
-   (options?: DynaudnormOptions): RequiredFilterOutput<'audioFilter'>;
+   (options: DynaudnormOptions): RequiredFilterOutput<'audioFilter'>;
 }
 
 export interface PitchBuilder {
@@ -366,11 +366,11 @@ export interface ReverseOptions {
    /**
     * Specifies which stream to reverse ('audio', 'video', or undefined for both).
     */
-   stream?: StreamConstraint;
+   stream: StreamConstraint;
 }
 
 export interface ReverseBuilder {
-   (options?: ReverseOptions): RequiredFilterOutput<'audioFilter' | 'videoFilter'>;
+   (): RequiredFilterOutput<'audioFilter' | 'videoFilter'>;
 }
 
 export interface SpeedBuilder {
@@ -512,8 +512,14 @@ export interface DelayBuilder {
    (seconds: number): RequiredFilterOutput<'audioFilter' | 'videoFilter'>;
 }
 
+export interface NegateOptions {
+   red?: boolean;
+   green?: boolean;
+   blue?: boolean;
+}
+
 export interface NegateBuilder {
-   (alpha?: boolean): RequiredFilterOutput<'videoFilter'>;
+   (options: NegateOptions): RequiredFilterOutput<'videoFilter'>;
 }
 
 export interface GrayscaleBuilder {

@@ -15,6 +15,7 @@ import {
    FadeOptions,
    HueOptions,
    LoudnormOptions,
+   NegateOptions,
    PadOptions,
    PanOptions,
    RotateOptions,
@@ -140,7 +141,11 @@ export const PadSchema = z.object({
 
 export const DelaySchema = z.number().gt(0);
 
-export const NegateSchema = z.boolean().default(false);
+export const NegateSchema = z.object({
+   red: z.boolean().optional(),
+   green: z.boolean().optional(),
+   blue: z.boolean().optional(),
+}) satisfies ZodType<NegateOptions>;
 
 export const BrightnessSchema = z
    .object({

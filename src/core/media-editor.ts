@@ -52,6 +52,7 @@ import {
    FlipOptions,
    HueOptions,
    LoudnormOptions,
+   NegateOptions,
    PadOptions,
    PanOptions,
    ReverseOptions,
@@ -637,17 +638,20 @@ export class MediaEditor extends FFmpegBase {
    /**
     * Negates (inverts) the colors of the video stream.
     *
-    * @param alpha - If true, also negate the alpha channel.
+    * @param options -
+    *    - **red**: negates the red channel.
+    *    - **green**: negates the green channel.
+    *    - **blue**: negates the blue channel.
     * @returns The MediaEditor instance for method chaining.
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#negate FFmpeg negate filter documentation}
     */
-   negate(alpha: boolean): this {
+   negate(options?: NegateOptions): this {
       if (!this.hasVideoStream()) {
          throw new MissingStreamError('video', 'negate');
       }
 
-      const result = NegateSchema.safeParse(alpha);
+      const result = NegateSchema.safeParse(options || {});
       if (!result.success) {
          const pretty = prettifyError(result.error);
          throw new Error(pretty);
