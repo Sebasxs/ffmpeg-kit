@@ -512,14 +512,18 @@ export interface DelayBuilder {
    (seconds: number): RequiredFilterOutput<'audioFilter' | 'videoFilter'>;
 }
 
-export interface NegateOptions {
+export interface RGBOptions {
    red?: boolean;
    green?: boolean;
    blue?: boolean;
 }
 
 export interface NegateBuilder {
-   (options: NegateOptions): RequiredFilterOutput<'videoFilter'>;
+   (options: RGBOptions): RequiredFilterOutput<'videoFilter'>;
+}
+
+export interface RemoveColorBuilder {
+   (options: RGBOptions): RequiredFilterOutput<'videoFilter'>;
 }
 
 export interface GrayscaleBuilder {

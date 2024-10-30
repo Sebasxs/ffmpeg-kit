@@ -52,7 +52,7 @@ import {
    FlipOptions,
    HueOptions,
    LoudnormOptions,
-   NegateOptions,
+   RGBOptions,
    PadOptions,
    PanOptions,
    ReverseOptions,
@@ -92,7 +92,9 @@ import {
    PanSchema,
    DrawTextSchema,
    DraBoxSchema,
+   RemoveColorSchema,
 } from '@/lib/validations';
+import { RemoveColorFilter } from '@/filters/remove-color';
 
 /**
  * MediaEditor class provides a fluent interface for applying various audio and video filters to media files using FFmpeg.
@@ -646,7 +648,7 @@ export class MediaEditor extends FFmpegBase {
     * @throws {MissingStreamError} If the input media does not have a video stream.
     * @see {@link https://ffmpeg.org/ffmpeg-filters.html#negate FFmpeg negate filter documentation}
     */
-   negate(options?: NegateOptions): this {
+   negate(options?: RGBOptions): this {
       if (!this.hasVideoStream()) {
          throw new MissingStreamError('video', 'negate');
       }
@@ -658,6 +660,33 @@ export class MediaEditor extends FFmpegBase {
       }
 
       const { videoFilter } = NegateFilter(result.data);
+      this.addVideoFilter(videoFilter);
+      return this;
+   }
+
+   /**
+    * Remove colors from the video stream.
+    *
+    * @param options -
+    *    - **red**: removes the red channel.
+    *    - **green**: removes the green channel.
+    *    - **blue**: removes the blue channel.
+    * @returns The MediaEditor instance for method chaining.
+    * @throws {MissingStreamError} If the input media does not have a video stream.
+    * @see {@link https://ffmpeg.org/ffmpeg-filters.html#negate FFmpeg negate filter documentation}
+    */
+   removeColor(options: RGBOptions): this {
+      if (!this.hasVideoStream()) {
+         throw new MissingStreamError('video', 'negate');
+      }
+
+      const result = RemoveColorSchema.safeParse(options);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { videoFilter } = RemoveColorFilter(result.data);
       this.addVideoFilter(videoFilter);
       return this;
    }

@@ -15,7 +15,7 @@ import {
    FadeOptions,
    HueOptions,
    LoudnormOptions,
-   NegateOptions,
+   RGBOptions,
    PadOptions,
    PanOptions,
    RotateOptions,
@@ -145,7 +145,17 @@ export const NegateSchema = z.object({
    red: z.boolean().optional(),
    green: z.boolean().optional(),
    blue: z.boolean().optional(),
-}) satisfies ZodType<NegateOptions>;
+}) satisfies ZodType<RGBOptions>;
+
+export const RemoveColorSchema = z
+   .object({
+      red: z.boolean().optional(),
+      green: z.boolean().optional(),
+      blue: z.boolean().optional(),
+   })
+   .refine((data) => Object.keys(data).length > 0, {
+      error: 'At least one of red, green or blue must be provided',
+   }) satisfies ZodType<RGBOptions>;
 
 export const BrightnessSchema = z
    .object({
