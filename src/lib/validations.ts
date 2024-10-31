@@ -131,13 +131,17 @@ export const RotateSchema = z.union([
 
 export const AlphaSchema = z.number().gte(0).lte(1);
 
-export const PadSchema = z.object({
-   width: z.union([z.number().positive(), z.string()]),
-   height: z.union([z.number().positive(), z.string()]),
-   x: z.union([z.number().positive(), z.string()]).optional(),
-   y: z.union([z.number().positive(), z.string()]).optional(),
-   color: z.string().default('black'),
-}) satisfies ZodType<PadOptions>;
+export const PadSchema = z
+   .object({
+      width: z.union([z.number().positive(), z.string()]).optional(),
+      height: z.union([z.number().positive(), z.string()]).optional(),
+      x: z.union([z.number().positive(), z.string()]).default('(ow-iw)/2'),
+      y: z.union([z.number().positive(), z.string()]).default('(oh-ih)/2'),
+      color: z.string().default('black'),
+   })
+   .refine((data) => data.width || data.height, {
+      message: 'Either width or height must be provided',
+   }) satisfies ZodType<PadOptions>;
 
 export const DelaySchema = z.number().gt(0);
 

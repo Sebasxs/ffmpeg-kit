@@ -462,7 +462,7 @@ export interface PadOptions {
     * @range 0 or any valid expression using input/output dimension constants
     * @default 0
     */
-   width: number | string;
+   width?: number | string;
    /**
     * Specifies the height of the output image after padding.
     * Accepts expressions that can reference both input and output dimensions,
@@ -472,7 +472,7 @@ export interface PadOptions {
     * @range 0 or any valid expression using input/output dimension constants
     * @default 0
     */
-   height: number | string;
+   height?: number | string;
    /**
     * Sets the background color used for the padded area.
     *

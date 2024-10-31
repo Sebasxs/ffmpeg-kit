@@ -5,11 +5,11 @@ export const PadFilter: PadBuilder = (options) => {
    const { width, height, x, y, color } = options;
    const params = [];
 
-   params.push(buildParam('w', width));
-   params.push(buildParam('h', height));
-   params.push(buildParam('x', x ?? '(ow-iw)/2'));
-   params.push(buildParam('y', y ?? '(oh-ih)/2'));
-   params.push(buildParam('color', color ?? 'black'));
+   if (width !== undefined) params.push(buildParam('w', width));
+   if (height !== undefined) params.push(buildParam('h', height));
+   if (x !== undefined) params.push(buildParam('x', x));
+   if (y !== undefined) params.push(buildParam('y', y));
+   if (color !== undefined) params.push(buildParam('color', color));
 
    const videoFilter = `pad=${params.join(':')}`;
    return { videoFilter };
