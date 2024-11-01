@@ -945,7 +945,7 @@ export class MediaEditor extends FFmpegBase {
     * Useful for channel remixing, downmixing, or upmixing audio streams.
     * Accepts an output channel layout followed by individual channel mapping definitions.
     *
-    * @param options - The pan options, including the output channel layout (`layout`) and channel mappings (`channels`).
+    * @param options -
     * - `layout`: Defines the audio channel layout (e.g., 'mono', 'stereo', '5.1', '7.1').
     * - `channels`: Array defining how channels are mapped and mixed, where each element is either a gain value (e.g., `0.5`) or a mapping expression (e.g., `"FL=c0+0.5c1"`).
     * @returns The MediaEditor instance for method chaining.

@@ -1012,7 +1012,7 @@ export interface PanOptions {
     *
     * @example
     * [0.5, 1] // Maps `c0` with 0.5 gain and `c1` with 1 gain.
-    * ["FL=c0", "FR=c1+0.5c2"] // Maps `c0` to `FL`, and mixes `c1` with `0.5` gain and `c2` to `FR`.
+    * ["c0", "c1+0.5*c2"] // Maps `c0` to `FL`, and mixes `c1` with `0.5` gain and `c2` to `FR`.
     */
    channels: (number | string)[];
 }
