@@ -1002,9 +1002,8 @@ export interface PanOptions {
    /**
     * Defines how audio channels are mapped and mixed.
     * Each element of the array can either be a number (representing the gain for each channel in order, starting with channel c0 at index 0),
-    * or a mathematical expression in the form: `"out_name=[gain*]in_name[(+-)[gain*]in_name...]"`, with:
+    * or a mathematical expression in the form: `"[gain*]in_name[(+-)[gain*]in_name...]"`, with:
     *
-    * - `out_name`: The output channel (e.g., 'FL', 'FR', 'c0', 'c1').
     * - `gain`: An optional multiplier to adjust the volume of the input channel (default is 1).
     * - `in_name`: The input channel to use for the mapping (e.g., 'c0', 'c1').
     *
