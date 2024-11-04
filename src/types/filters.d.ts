@@ -5,6 +5,7 @@ import {
    ColorPresets,
    ScaleFlags,
    TextAlign,
+   VideoSize,
 } from '@/lib/constants';
 
 interface FilterOutput {
@@ -325,6 +326,15 @@ export interface ScaleOptions {
     * @default in_h
     */
    height?: number | string;
+   /**
+    * Sets the output video size using a predefined video size preset.
+    * If set, overrides width and height settings.
+    *
+    * @example
+    * 'hd720' // sets the video size to 1280x720
+    * 'vga' // sets the video size to 640x480
+    */
+   size?: (typeof VideoSize)[number];
    /**
     * Sets the scaling percentage for both width and height.
     * If set, overrides width and height settings.

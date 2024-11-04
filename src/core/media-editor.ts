@@ -347,7 +347,8 @@ export class MediaEditor extends FFmpegBase {
     *
     * @param options -
     *   - **width** & **height**: Output size (e.g., 1280, "iw/2", -2 to preserve aspect ratio).
-    *   - **percentage**: Resize by percent (overrides width/height).
+    *   - **percentage**: Resize by percent (overrides width/height), this takes precedence over width/height.
+    *   - **size**: Specifies the output size (e.g., "1280x720"), this takes precedence over width/height and percentage.
     *   - **forceAspectRatio**: Ensures aspect ratio is preserved ("increase", "decrease", or "disable").
     *   - **flags**: Sets the scaling algorithm (e.g., "bicubic", "lanczos").
     *

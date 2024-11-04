@@ -25,7 +25,7 @@ import {
 } from '@/types/filters';
 
 // @utils
-import { ColorPresets, Curves, ScaleFlags, TextAlign } from './constants';
+import { ColorPresets, Curves, ScaleFlags, TextAlign, VideoSize } from './constants';
 
 export const VolumeSchema = z.object({
    volume: z.union([z.number(), z.string()]),
@@ -87,22 +87,26 @@ export const CropSchema = z.union([
    }),
 ]) satisfies ZodType<CropOptions>;
 
-export const ScaleSchema = z.discriminatedUnion([
+export const ScaleSchema = z.union([
    z.object({
+      size: z.enum(VideoSize),
       flags: z.enum(ScaleFlags).optional(),
-      percentage: z.number().gte(10).lte(200),
    }),
    z.object({
+      percentage: z.number().gte(10).lte(200),
       flags: z.enum(ScaleFlags).optional(),
+   }),
+   z.object({
       width: z.union([z.string(), z.number().gt(10)]),
       height: z.union([z.string(), z.number().gt(10)]).optional(),
       forceAspectRatio: z.enum(['increase', 'decrease', 'disable']).optional(),
+      flags: z.enum(ScaleFlags).optional(),
    }),
    z.object({
-      flags: z.enum(ScaleFlags).optional(),
-      width: z.union([z.string(), z.number().gt(10)]).optional(),
       height: z.union([z.string(), z.number().gt(10)]),
+      width: z.union([z.string(), z.number().gt(10)]).optional(),
       forceAspectRatio: z.enum(['increase', 'decrease', 'disable']).optional(),
+      flags: z.enum(ScaleFlags).optional(),
    }),
 ]) satisfies ZodType<ScaleOptions>;
 

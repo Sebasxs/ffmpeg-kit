@@ -1,7 +1,8 @@
 import { ScaleBuilder } from '@/types/filters';
 
 export const ScaleFilter: ScaleBuilder = (options) => {
-   const { width, height, percentage, forceAspectRatio, flags } = options;
+   const { width, height, size, percentage, forceAspectRatio, flags } = options;
+
    const normalizedWidth = typeof width === 'number' ? Math.ceil(width / 2) * 2 : width;
    const normalizedHeight = typeof height === 'number' ? Math.ceil(height / 2) * 2 : height;
 
@@ -18,8 +19,10 @@ export const ScaleFilter: ScaleBuilder = (options) => {
    }
 
    if (forceAspectRatio && forceAspectRatio !== 'disable' && !percentage) {
-      videoFilter += `:force_original_aspect_ratio=${forceAspectRatio}`;
+      videoFilter += `:force_original_aspect_ratio=${forceAspectRatio}:force_divisible_by=2`;
    }
+
+   if (size) videoFilter = `scale=${size}`;
 
    if (flags) {
       videoFilter += `:flags=${flags}`;
