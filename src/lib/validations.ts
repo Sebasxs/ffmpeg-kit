@@ -57,7 +57,7 @@ export const PitchSchema = z.number().gte(0.125).lte(8);
 
 export const TrimSchema = z.object({
    stream: z.enum(['audio', 'video']).optional(),
-   start: z.union([z.number().gte(0), z.string()]),
+   start: z.union([z.number().gte(0), z.string()]).default(0),
    end: z.union([z.number().gt(0), z.string()]).optional(),
    duration: z.union([z.number().gt(0), z.string()]).optional(),
 }) satisfies ZodType<TrimOptions>;

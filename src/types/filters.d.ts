@@ -169,7 +169,7 @@ export type TrimOptions = {
     * '00:00:30' // starts output at 30 seconds
     * 12 // starts output at 12 seconds
     */
-   start: string | number;
+   start?: string | number;
    /**
     * Sets the end time of the trimmed output. The frame with this timestamp will be the last in the result.
     * Time can be specified using FFmpeg's duration syntax.

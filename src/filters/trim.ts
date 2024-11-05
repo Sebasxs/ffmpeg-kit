@@ -10,7 +10,7 @@ export const TrimFilter: TrimBuilder = (options) => {
    if (end !== undefined) filterParams.push(buildParam('end', end));
    else if (duration !== undefined) filterParams.push(buildParam('duration', duration));
 
-   const params = filterParams.join(',');
+   const params = filterParams.join(':');
    filter.audioFilter += params + ',asetpts=PTS-STARTPTS';
    filter.videoFilter += params + ',setpts=PTS-STARTPTS';
 
