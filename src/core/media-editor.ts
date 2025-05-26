@@ -91,7 +91,7 @@ import {
    DeshakeSchema,
    PanSchema,
    DrawTextSchema,
-   DraBoxSchema,
+   DrawBoxSchema,
    RemoveColorSchema,
 } from '@/lib/validations';
 import { RemoveColorFilter } from '@/filters/remove-color';
@@ -1029,7 +1029,7 @@ export class MediaEditor extends FFmpegBase {
          throw new MissingStreamError('video', 'drawbox');
       }
 
-      const result = DraBoxSchema.safeParse(options);
+      const result = DrawBoxSchema.safeParse(options);
       if (!result.success) {
          const pretty = prettifyError(result.error);
          throw new Error(pretty);

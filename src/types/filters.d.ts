@@ -15,7 +15,7 @@ interface FilterOutput {
 
 export type StreamConstraint = 'audio' | 'video';
 
-type RequiredFilterOutput<T extends keyof FilterOuput> = Required<Pick<FilterOutput, T>>;
+type RequiredFilterOutput<T extends keyof FilterOutput> = Required<Pick<FilterOutput, T>>;
 
 export interface VolumeOptions {
    /**
@@ -191,7 +191,7 @@ export type TrimOptions = {
 };
 
 export interface TrimBuilder {
-   (options): RequiredFilterOutput<'audioFilter' | 'videoFilter'>;
+   (options: TrimOptions): RequiredFilterOutput<'audioFilter' | 'videoFilter'>;
 }
 
 export interface FadeOptions {

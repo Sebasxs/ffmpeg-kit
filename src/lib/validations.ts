@@ -47,7 +47,7 @@ export const DynaudnormSchema = z.object({
       .refine((val) => val % 2 !== 0, { error: 'Gauss size must be an odd number' })
       .optional(),
    peak: z.number().gte(0).lte(1).default(0.9),
-   lteGain: z.number().gte(1).lte(100).optional(),
+   maxGain: z.number().gte(1).lte(100).optional(),
    rms: z.number().gte(0).lte(1).optional(),
    compress: z.number().gte(1).lte(30).optional(),
    threshold: z.number().gte(0).lte(1).optional(),
@@ -287,7 +287,7 @@ export const DrawTextSchema = z.object({
    enable: z.union([z.string(), z.boolean()]).optional(),
 }) satisfies ZodType<DrawTextOptions>;
 
-export const DraBoxSchema = z.object({
+export const DrawBoxSchema = z.object({
    x: z.union([z.number(), z.string()]),
    y: z.union([z.number(), z.string()]),
    width: z.union([z.number(), z.string()]),

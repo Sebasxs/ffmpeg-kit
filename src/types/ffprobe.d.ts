@@ -65,7 +65,7 @@ export interface FFProbeResult {
    summary: SimplifiedMetadata;
 }
 
-interface SimplifiedMetadata {
+export interface SimplifiedMetadata {
    hasAudio: boolean;
    hasVideo: boolean;
    duration?: number; // seconds
