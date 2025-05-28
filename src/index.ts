@@ -10,3 +10,4 @@ const vid = new MediaEditor('src/vid.mp4')
    .run('src/vid_out.mp4');
 
 console.log(vid);
+

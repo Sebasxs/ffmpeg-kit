@@ -1,5 +1,5 @@
 // @dependencies
-import { execSync } from 'node:child_process';
+import { spawn, spawnSync } from 'node:child_process';
 import { join, extname, dirname } from 'node:path';
 import { accessSync, mkdirSync, constants, existsSync } from 'node:fs';
 import crypto from 'crypto';
@@ -59,6 +59,17 @@ export class FFmpegBase {
       this._metadata = metadata;
       const type = this.getFileType(metadata.summary);
       this.inputs.set(this._hash, { path, type, metadata: metadata.summary });
+   }
+
+   protected addInput(path: string, type?: MediaType): string {
+      if (!existsSync(path)) {
+         throw new FileNotFoundError(path);
+      }
+      const hash = crypto.createHash('md5').update(path + Date.now().toString()).digest('hex').slice(0, 6);
+      const metadata = getFileMetadata(path);
+      const mediaType = type || this.getFileType(metadata.summary);
+      this.inputs.set(hash, { path, type: mediaType, metadata: metadata.summary });
+      return hash;
    }
 
    protected hasAudioStream(): boolean {
@@ -134,37 +145,56 @@ export class FFmpegBase {
       return this._metadata;
    }
 
+   private prepareCommand(output: string | string[], options: OutputOptions) {
+      const outputPath = this.normalizeOutputPath(output);
+      const mimeType = this.getMimeType(outputPath);
+
+      const data = this.prepareData(mimeType, options);
+
+      const { inputOptions, filterComplex, audioTag, videoTag } = this.prepareInputOptions({
+         overwrite: options.overwrite ?? true,
+         mimeType,
+         ...data,
+      });
+
+      const { outputOptions, mapAudio, mapVideo } = this.prepareOutputOptions({
+         inputs: data.inputs,
+         audioTag,
+         videoTag,
+         mimeType,
+         options,
+      });
+
+      this.ensureDirectoryExists(outputPath);
+
+      const args = this.buildFFmpegArgs({
+         output: outputPath,
+         inputOptions,
+         filterComplex,
+         outputOptions,
+         mapAudio,
+         mapVideo,
+      });
+
+      const displayCmd = this.formatCommand('ffmpeg', args);
+
+      return { args, displayCmd };
+   }
+
    run(output: string | string[], options: OutputOptions = {}): string {
       try {
-         const outputPath = this.normalizeOutputPath(output);
-         const mimeType = this.getMimeType(outputPath);
+         const { args, displayCmd } = this.prepareCommand(output, options);
+         return this.executeFFmpegCommandSync(args, displayCmd);
+      } catch (error: any) {
+         if (error instanceof FFmpegError) throw error;
+         throw new FFmpegError('An unexpected error occurred: ' + error.message);
+      }
+   }
 
-         const data = this.prepareData(mimeType, options);
-
-         const { inputOptions, filterComplex, audioTag, videoTag } = this.prepareInputOptions({
-            overwrite: options.overwrite ?? true,
-            mimeType,
-            ...data,
-         });
-
-         const { outputOptions, mapAudio, mapVideo } = this.prepareOutputOptions({
-            inputs: data.inputs,
-            audioTag,
-            videoTag,
-            mimeType,
-            options,
-         });
-
-         const ffmpegCommand = this.buildFFmpegCommand({
-            output: outputPath,
-            inputOptions,
-            filterComplex,
-            outputOptions,
-            mapAudio,
-            mapVideo,
-         });
-
-         return this.executeFFmpegCommand(ffmpegCommand);
+   async runAsync(output: string | string[], options: OutputOptions = {}): Promise<string> {
+      try {
+         const { args, displayCmd } = this.prepareCommand(output, options);
+         return await this.executeFFmpegCommandAsync(args, displayCmd);
       } catch (error: any) {
          if (error instanceof FFmpegError) throw error;
          throw new FFmpegError('An unexpected error occurred: ' + error.message);
@@ -213,9 +243,9 @@ export class FFmpegBase {
 
       for (const [key, { path, type }] of inputs) {
          if (type === 'image' && !staticImageExpected) {
-            inputOptions.push(`-loop 1`);
+            inputOptions.push('-loop', '1');
          }
-         inputOptions.push(`-i ${path}`);
+         inputOptions.push('-i', path);
 
          const hash = `{${key}}`;
 
@@ -246,12 +276,12 @@ export class FFmpegBase {
       );
 
       if (!options.audioNone && firstAudioStream !== -1 && !imageExpected) {
-         if (options.audioCodec) outputOptions.push(`-c:a ${options.audioCodec}`);
-         if (options.audioBitrate) outputOptions.push(`-b:a ${options.audioBitrate}`);
-         if (options.channels) outputOptions.push(`-ac ${options.channels}`);
+         if (options.audioCodec) outputOptions.push('-c:a', options.audioCodec);
+         if (options.audioBitrate) outputOptions.push('-b:a', options.audioBitrate);
+         if (options.channels) outputOptions.push('-ac', options.channels.toString());
          if (!audioTag) {
             mapAudio = `${firstAudioStream}:a?`;
-            if (!options.audioCodec) outputOptions.push('-c:a copy');
+            if (!options.audioCodec) outputOptions.push('-c:a', 'copy');
          }
       }
 
@@ -264,20 +294,20 @@ export class FFmpegBase {
       }
 
       if (!options.videoNone && firstVideoStream !== -1) {
-         if (options.videoCodec) outputOptions.push(`-c:v ${options.videoCodec}`);
-         if (options.videoBitrate) outputOptions.push(`-b:v ${options.videoBitrate}`);
-         if (options.fps) outputOptions.push(`-r ${options.fps}`);
-         if (options.crf) outputOptions.push(`-crf ${options.crf}`);
-         if (options.preset) outputOptions.push(`-preset ${options.preset}`);
-         if (options.pixelFormat) outputOptions.push(`-pix_fmt ${options.pixelFormat}`);
+         if (options.videoCodec) outputOptions.push('-c:v', options.videoCodec);
+         if (options.videoBitrate) outputOptions.push('-b:v', options.videoBitrate);
+         if (options.fps) outputOptions.push('-r', options.fps.toString());
+         if (options.crf) outputOptions.push('-crf', options.crf.toString());
+         if (options.preset) outputOptions.push('-preset', options.preset);
+         if (options.pixelFormat) outputOptions.push('-pix_fmt', options.pixelFormat);
          if (!videoTag) {
             mapVideo = `${firstVideoStream}:v?`;
-            if (!options.videoCodec) outputOptions.push('-c:v copy');
+            if (!options.videoCodec) outputOptions.push('-c:v', 'copy');
          }
       }
 
-      if (gifExpected) outputOptions.push('-loop 0');
-      if (options.duration) outputOptions.push(`-t ${options.duration}`);
+      if (gifExpected) outputOptions.push('-loop', '0');
+      if (options.duration) outputOptions.push('-t', options.duration.toString());
       if (options.shortest ?? true) outputOptions.push('-shortest');
 
       return { outputOptions, mapAudio, mapVideo };
@@ -292,27 +322,92 @@ export class FFmpegBase {
       }
    }
 
-   private buildFFmpegCommand(params: BuildCommandParams): string {
+   private buildFFmpegArgs(params: BuildCommandParams): string[] {
       const { output, inputOptions, outputOptions, filterComplex, mapAudio, mapVideo } = params;
-      this.ensureDirectoryExists(output);
 
-      let cmd = `ffmpeg -hide_banner -loglevel error ${inputOptions.join(' ')}`;
+      const args: string[] = ['-hide_banner', '-loglevel', 'error', ...inputOptions];
 
-      if (filterComplex) cmd += ` -filter_complex "${filterComplex}"`;
-      if (mapAudio) cmd += ` -map ${mapAudio}`;
-      if (mapVideo) cmd += ` -map ${mapVideo}`;
+      if (filterComplex) args.push('-filter_complex', filterComplex);
+      if (mapAudio) args.push('-map', mapAudio);
+      if (mapVideo) args.push('-map', mapVideo);
 
-      cmd += ` ${outputOptions.join(' ')} ${output}`;
-      return cmd;
+      args.push(...outputOptions, output);
+      return args;
    }
 
-   private executeFFmpegCommand(command: string): string {
-      try {
-         execSync(command, { encoding: 'utf-8' });
-         return command;
-      } catch (error: any) {
-         if (error.stderr) throw new FFmpegCommandError(command, error.stderr);
-         throw new FFmpegError('An unexpected error occurred: ' + error.message);
+   private formatCommand(executable: string, args: string[]): string {
+      return [
+         executable,
+         ...args.map((arg) => {
+            if (/[\s"']/.test(arg)) {
+               return `"${arg.replace(/"/g, '\\"')}"`;
+            }
+            return arg;
+         }),
+      ].join(' ');
+   }
+
+   private executeFFmpegCommandSync(args: string[], displayCmd: string): string {
+      const result = spawnSync('ffmpeg', args, {
+         encoding: 'utf-8',
+         maxBuffer: 10 * 1024 * 1024,
+         windowsHide: true,
+      });
+
+      if (result.error) {
+         if ((result.error as any).code === 'ENOENT') {
+            throw new FFmpegError(
+               'FFmpeg binary not found. Please ensure FFmpeg is installed and added to your system PATH.',
+            );
+         }
+         throw new FFmpegError('An unexpected error occurred: ' + result.error.message);
       }
+
+      if (result.status !== 0) {
+         const stderr = result.stderr
+            ? result.stderr.toString()
+            : result.stdout
+              ? result.stdout.toString()
+              : 'Unknown error';
+         throw new FFmpegCommandError(displayCmd, stderr);
+      }
+
+      return displayCmd;
+   }
+
+   private executeFFmpegCommandAsync(args: string[], displayCmd: string): Promise<string> {
+      return new Promise((resolve, reject) => {
+         const proc = spawn('ffmpeg', args, { windowsHide: true });
+         let stderr = '';
+
+         proc.stderr?.on('data', (chunk) => {
+            stderr += chunk.toString();
+         });
+
+         proc.on('error', (err) => {
+            if ((err as any).code === 'ENOENT') {
+               reject(
+                  new FFmpegError(
+                     'FFmpeg binary not found. Please ensure FFmpeg is installed and added to your system PATH.',
+                  ),
+               );
+            } else {
+               reject(new FFmpegError('An unexpected error occurred: ' + err.message));
+            }
+         });
+
+         proc.on('close', (code) => {
+            if (code === 0) {
+               resolve(displayCmd);
+            } else {
+               reject(
+                  new FFmpegCommandError(
+                     displayCmd,
+                     stderr || `FFmpeg process exited with code ${code}`,
+                  ),
+               );
+            }
+         });
+      });
    }
 }

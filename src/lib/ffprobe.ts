@@ -1,12 +1,30 @@
 import { FFProbeResult } from '@/types/ffprobe';
-import { execSync } from 'child_process';
+import { spawnSync } from 'node:child_process';
 import { MetadataError } from './errors';
 
 export function getFileMetadata(path: string): FFProbeResult {
-   const cmd = `ffprobe -v quiet -print_format json -show_format -show_streams "${path}"`;
    try {
-      const result = execSync(cmd, { encoding: 'utf-8' });
-      const { streams, format } = JSON.parse(result) as FFProbeResult;
+      const result = spawnSync(
+         'ffprobe',
+         ['-v', 'quiet', '-print_format', 'json', '-show_format', '-show_streams', path],
+         {
+            encoding: 'utf-8',
+            windowsHide: true,
+            maxBuffer: 10 * 1024 * 1024,
+         },
+      );
+
+      if (result.error) {
+         throw new MetadataError(result.error.message);
+      }
+
+      if (result.status !== 0) {
+         throw new MetadataError(
+            result.stderr ? result.stderr.toString() : `ffprobe exited with code ${result.status}`,
+         );
+      }
+
+      const { streams, format } = JSON.parse(result.stdout) as FFProbeResult;
 
       const videoStream = streams.find((source) => source.codec_type === 'video');
       const audioStream = streams.find((source) => source.codec_type === 'audio');
