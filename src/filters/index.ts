@@ -27,3 +27,6 @@ export { DeshakeFilter } from '@/filters/deshake';
 export { PanFilter } from '@/filters/pan';
 export { DrawTextFilter } from '@/filters/draw-text';
 export { DrawBoxFilter } from '@/filters/draw-box';
+export { OverlayFilter } from '@/filters/overlay';
+export { SubtitlesFilter } from '@/filters/subtitles';
+

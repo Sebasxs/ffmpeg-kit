@@ -1225,3 +1225,64 @@ export interface DrawBoxOptions {
 export interface DrawBoxBuilder {
    (options: DrawBoxOptions): RequiredFilterOutput<'videoFilter'>;
 }
+
+export interface OverlayOptions {
+   /**
+    * Horizontal position of the overlay. Can be a pixel number or expression (e.g. 10, '(W-w)/2', 'W-w-10').
+    * @default 0
+    */
+   x?: string | number;
+   /**
+    * Vertical position of the overlay. Can be a pixel number or expression (e.g. 10, '(H-h)/2', 'H-h-10').
+    * @default 0
+    */
+   y?: string | number;
+   /**
+    * Enables or disables overlay based on expression or boolean (e.g. 'between(t,1,5)').
+    */
+   enable?: string | boolean;
+   /**
+    * Action to take when end of file is reached on an input stream.
+    * 'repeat': repeat the last frame (useful for static images/watermarks).
+    * 'endall': end the video when overlay ends.
+    * 'pass': pass main video through.
+    * @default 'repeat'
+    */
+   eofAction?: 'repeat' | 'endall' | 'pass';
+   /**
+    * Force termination when the shortest input ends.
+    */
+   shortest?: boolean;
+}
+
+export interface OverlayBuilder {
+   (options: OverlayOptions): RequiredFilterOutput<'videoFilter'>;
+}
+
+export interface SubtitleOptions {
+   /**
+    * Font name to use for rendering subtitles.
+    */
+   fontName?: string;
+   /**
+    * Font size for subtitles.
+    */
+   fontSize?: number;
+   /**
+    * Primary subtitle color (hex or ASS color format like '&H00FFFFFF&').
+    */
+   primaryColor?: string;
+   /**
+    * Custom ASS style override string (e.g., 'FontSize=20,PrimaryColour=&H0000FFFF&').
+    */
+   forceStyle?: string;
+   /**
+    * Character encoding of the subtitle file.
+    */
+   charenc?: string;
+}
+
+export interface SubtitleBuilder {
+   (subtitlePath: string, options?: SubtitleOptions): RequiredFilterOutput<'videoFilter'>;
+}
+

@@ -1,4 +1,5 @@
 // @packages
+import { existsSync } from 'node:fs';
 import { FFmpegBase } from '@/core/ffmpeg-base';
 import { prettifyError } from 'zod';
 
@@ -33,6 +34,8 @@ import {
    PanFilter,
    DrawTextFilter,
    DrawBoxFilter,
+   OverlayFilter,
+   SubtitlesFilter,
 } from '@/filters';
 
 // @types
@@ -60,10 +63,12 @@ import {
    ScaleOptions,
    TrimOptions,
    VolumeOptions,
+   OverlayOptions,
+   SubtitleOptions,
 } from '@/types/filters';
 
 // @utils
-import { MissingStreamError } from '@/lib/errors';
+import { MissingStreamError, FileNotFoundError } from '@/lib/errors';
 import {
    LoudnormSchema,
    VolumeSchema,
@@ -93,6 +98,8 @@ import {
    DrawTextSchema,
    DrawBoxSchema,
    RemoveColorSchema,
+   OverlaySchema,
+   SubtitleSchema,
 } from '@/lib/validations';
 import { RemoveColorFilter } from '@/filters/remove-color';
 
@@ -1039,25 +1046,87 @@ export class MediaEditor extends FFmpegBase {
       this.addVideoFilter(videoFilter);
       return this;
    }
+
+   /**
+    * Overlays an image or video onto the current video stream.
+    *
+    * Useful for adding watermarks, logos, picture-in-picture, or visual badges.
+    *
+    * @param mediaPath - Path to the image or video to overlay.
+    * @param options -
+    *   - **x**: Horizontal position in pixels or expression (e.g. 10, '(W-w)/2', 'W-w-10').
+    *   - **y**: Vertical position in pixels or expression (e.g. 10, '(H-h)/2', 'H-h-10').
+    *   - **enable**: Timeline expression to conditionally display the overlay (e.g. 'between(t,1,5)').
+    *   - **eofAction**: Action when overlay stream ends ('repeat' | 'endall' | 'pass').
+    *   - **shortest**: Whether to terminate output when the shortest input stream ends.
+    *
+    * @returns The MediaEditor instance for method chaining.
+    * @throws {MissingStreamError} If the current media does not have a video stream.
+    * @throws {FileNotFoundError} If the overlay media file does not exist.
+    * @see {@link https://ffmpeg.org/ffmpeg-filters.html#overlay-1 FFmpeg overlay filter documentation}
+    */
+   overlay(mediaPath: string, options: OverlayOptions = {}): this {
+      if (!this.hasVideoStream()) {
+         throw new MissingStreamError('video', 'overlay');
+      }
+      if (!existsSync(mediaPath)) {
+         throw new FileNotFoundError(mediaPath);
+      }
+
+      const result = OverlaySchema.safeParse(options);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      this.flushVideoSubgraph();
+
+      const overlayHash = this.addInput(mediaPath);
+      const { videoFilter } = OverlayFilter(result.data);
+
+      const baseTag = this._outputVideoTag || `[{${this._hash}}:v]`;
+      const overlayTag = `[{${overlayHash}}:v]`;
+
+      this.appendVideoFilterToGraph({
+         filter: videoFilter,
+         inputs: [baseTag, overlayTag],
+      });
+
+      return this;
+   }
+
+   /**
+    * Burns subtitles directly into the video stream from an SRT, VTT, or ASS file.
+    *
+    * @param subtitlePath - Path to the subtitle file (.srt, .vtt, .ass).
+    * @param options -
+    *   - **fontName**: Font name for subtitle text.
+    *   - **fontSize**: Font size in points.
+    *   - **primaryColor**: Font color in hex or ASS format (&H00FFFFFF&).
+    *   - **forceStyle**: Custom ASS style overrides string.
+    *   - **charenc**: Subtitle file character encoding.
+    *
+    * @returns The MediaEditor instance for method chaining.
+    * @throws {MissingStreamError} If the current media does not have a video stream.
+    * @throws {FileNotFoundError} If the subtitle file does not exist.
+    * @see {@link https://ffmpeg.org/ffmpeg-filters.html#subtitles-1 FFmpeg subtitles filter documentation}
+    */
+   subtitles(subtitlePath: string, options: SubtitleOptions = {}): this {
+      if (!this.hasVideoStream()) {
+         throw new MissingStreamError('video', 'subtitles');
+      }
+      if (!existsSync(subtitlePath)) {
+         throw new FileNotFoundError(subtitlePath);
+      }
+
+      const result = SubtitleSchema.safeParse(options);
+      if (!result.success) {
+         const pretty = prettifyError(result.error);
+         throw new Error(pretty);
+      }
+
+      const { videoFilter } = SubtitlesFilter(subtitlePath, result.data);
+      this.addVideoFilter(videoFilter);
+      return this;
+   }
 }
-
-/*
-
-//    subtitles
-//    alphamerge
-//    overlay
-//    blend
-//    stack
-//    amerge
-//    amix
-//    concat
-//    crossfade
-
-
-export interface OverlayOptions {
-   x: string | number;
-   y: string | number;
-   enable?: string | number | boolean;
-}
-
-*/

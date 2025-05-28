@@ -22,6 +22,8 @@ import {
    ScaleOptions,
    TrimOptions,
    VolumeOptions,
+   OverlayOptions,
+   SubtitleOptions,
 } from '@/types/filters';
 
 // @utils
@@ -297,3 +299,20 @@ export const DrawBoxSchema = z.object({
    thickness: z.number().gt(0).optional(),
    enable: z.union([z.string(), z.boolean()]).optional(),
 }) satisfies ZodType<DrawBoxOptions>;
+
+export const OverlaySchema = z.object({
+   x: z.union([z.number(), z.string()]).default(0),
+   y: z.union([z.number(), z.string()]).default(0),
+   enable: z.union([z.string(), z.boolean()]).optional(),
+   eofAction: z.enum(['repeat', 'endall', 'pass']).optional(),
+   shortest: z.boolean().optional(),
+}) satisfies ZodType<OverlayOptions>;
+
+export const SubtitleSchema = z.object({
+   fontName: z.string().optional(),
+   fontSize: z.number().positive().optional(),
+   primaryColor: z.string().optional(),
+   forceStyle: z.string().optional(),
+   charenc: z.string().optional(),
+}) satisfies ZodType<SubtitleOptions>;
+

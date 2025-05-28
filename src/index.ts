@@ -11,3 +11,5 @@ const vid = new MediaEditor('src/vid.mp4')
 
 console.log(vid);
 
+
+

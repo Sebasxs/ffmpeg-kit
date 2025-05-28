@@ -30,11 +30,11 @@ import {
 } from '@/lib/errors';
 
 export class FFmpegBase {
-   private _hash: string;
-   private _filterCounter: number = 0;
-   private _outputAudioTag: string | null;
-   private _outputVideoTag: string | null;
-   private _metadata: FFProbeResult;
+   protected _hash: string;
+   protected _filterCounter: number = 0;
+   protected _outputAudioTag: string | null;
+   protected _outputVideoTag: string | null;
+   protected _metadata: FFProbeResult;
 
    protected filterGraphParts: string[];
    protected inputs: Map<string, MediaInput>;
@@ -120,18 +120,25 @@ export class FFmpegBase {
       return generatedOutputTag;
    }
 
-   getCommandData(): FFmpegBaseData {
+   protected flushAudioSubgraph(): void {
       if (this.audioSubgraph.length) {
          const filter = this.audioSubgraph.join(',');
          this.appendAudioFilterToGraph({ filter });
          this.audioSubgraph = [];
       }
+   }
 
+   protected flushVideoSubgraph(): void {
       if (this.videoSubgraph.length) {
          const filter = this.videoSubgraph.join(',');
          this.appendVideoFilterToGraph({ filter });
          this.videoSubgraph = [];
       }
+   }
+
+   getCommandData(): FFmpegBaseData {
+      this.flushAudioSubgraph();
+      this.flushVideoSubgraph();
 
       return {
          inputs: this.inputs,
