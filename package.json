@@ -9,7 +9,7 @@
       "dist"
    ],
    "scripts": {
-      "dev": "tsx src/index.ts",
+      "dev": "tsx examples/sample.ts",
       "build": "tsc",
       "start": "dist/index.js"
    },

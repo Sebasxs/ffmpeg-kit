@@ -1,15 +1,28 @@
-import { MediaEditor } from '@/core/media-editor';
+// Core
+export { MediaEditor } from '@/core/media-editor';
+export { FFmpegBase } from '@/core/ffmpeg-base';
 
-const vid = new MediaEditor('src/vid.mp4')
-   .removeColor({ red: true })
-   .trim({ end: 4 })
-   .fade({ type: 'in', duration: 2, color: 'Black' })
-   .fade({ type: 'out', duration: 1, color: 'pink', start: 2 })
-   .flip('horizontal')
-   .crop({ aspectRatio: '1:1' })
-   .run('src/vid_out.mp4');
+// Metadata and Utilities
+export { getFileMetadata } from '@/lib/ffprobe';
+export * from '@/lib/constants';
 
-console.log(vid);
+// Errors
+export {
+   FFmpegError,
+   MissingStreamError,
+   FFmpegCommandError,
+   InvalidOutputPathError,
+   InvalidFileExtensionError,
+   InvalidMimeTypeError,
+   MetadataError,
+   NoParametersError,
+   FileNotFoundError,
+} from '@/lib/errors';
 
+// Types
+export type * from '@/types/ffmpeg';
+export type * from '@/types/ffprobe';
+export type * from '@/types/filters';
 
-
+// Filters
+export * from '@/filters';
