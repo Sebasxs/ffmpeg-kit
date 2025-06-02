@@ -46,15 +46,15 @@ ffprobe -version
 Install using your preferred package manager:
 
 ```bash
-pnpm add ffmpeg-kit
+pnpm add @sebasxs/ffmpeg-kit
 ```
 
 ```bash
-npm install ffmpeg-kit
+npm install @sebasxs/ffmpeg-kit
 ```
 
 ```bash
-yarn add ffmpeg-kit
+yarn add @sebasxs/ffmpeg-kit
 ```
 
 <br>
@@ -66,7 +66,7 @@ yarn add ffmpeg-kit
 ### 1. Quick Start: Trim, Fade & Flip Video
 
 ```typescript
-import { MediaEditor } from 'ffmpeg-kit';
+import { MediaEditor } from '@sebasxs/ffmpeg-kit';
 
 const editor = new MediaEditor('input.mp4');
 
@@ -84,7 +84,7 @@ await editor
 Adjust video resolution, aspect ratios, and dimensions with automatic parity alignment:
 
 ```typescript
-import { MediaEditor } from 'ffmpeg-kit';
+import { MediaEditor } from '@sebasxs/ffmpeg-kit';
 
 const editor = new MediaEditor('input.mp4');
 
@@ -102,7 +102,7 @@ await editor
 Render subtitles with custom styles and overlay a secondary video or watermark logo:
 
 ```typescript
-import { MediaEditor } from 'ffmpeg-kit';
+import { MediaEditor } from '@sebasxs/ffmpeg-kit';
 
 const editor = new MediaEditor('interview.mp4');
 
@@ -126,7 +126,7 @@ await editor
 Enhance audio tracks with volume control, loudness normalization, and speed adjustment:
 
 ```typescript
-import { MediaEditor } from 'ffmpeg-kit';
+import { MediaEditor } from '@sebasxs/ffmpeg-kit';
 
 const editor = new MediaEditor('podcast.mp3');
 
@@ -144,7 +144,7 @@ await editor
 Extract detailed stream information, dimensions, codecs, and durations before processing:
 
 ```typescript
-import { getFileMetadata } from 'ffmpeg-kit';
+import { getFileMetadata } from '@sebasxs/ffmpeg-kit';
 
 const metadata = getFileMetadata('video.mp4');
 
@@ -165,7 +165,7 @@ if (videoStream) {
 Configure encoding flags and parameters through the second argument of `runAsync` or `run`:
 
 ```typescript
-import { MediaEditor } from 'ffmpeg-kit';
+import { MediaEditor } from '@sebasxs/ffmpeg-kit';
 
 await new MediaEditor('raw_footage.mov')
    .scale({ width: 1920, height: 1080 })
