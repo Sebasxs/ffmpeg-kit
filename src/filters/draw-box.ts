@@ -1,5 +1,5 @@
-import { DrawBoxBuilder, DrawBoxOptions } from '@/types/filters';
-import { buildParam } from '@/lib/common';
+import { DrawBoxBuilder, DrawBoxOptions } from '../types/filters.js';
+import { buildParam } from '../lib/common.js';
 
 const buildBoxParams = (options: Omit<DrawBoxOptions, 'fillColor' | 'borderColor'>) => {
    const { x, y, width, height, enable } = options || {};

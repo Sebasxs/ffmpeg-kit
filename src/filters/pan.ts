@@ -1,4 +1,4 @@
-import { PanBuilder } from '@/types/filters';
+import { PanBuilder } from '../types/filters.js';
 
 const numChannelsByLayout = {
    mono: 1,

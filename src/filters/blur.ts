@@ -1,4 +1,4 @@
-import { BlurBuilder } from '@/types/filters';
+import { BlurBuilder } from '../types/filters.js';
 
 export const BlurFilter: BlurBuilder = (radius) => {
    return {

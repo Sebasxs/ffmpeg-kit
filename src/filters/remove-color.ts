@@ -1,4 +1,4 @@
-import { RemoveColorBuilder } from '@/types/filters';
+import { RemoveColorBuilder } from '../types/filters.js';
 
 export const RemoveColorFilter: RemoveColorBuilder = (options) => {
    const { red, green, blue } = options;

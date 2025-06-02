@@ -1,4 +1,4 @@
-import { LoudnormBuilder } from '@/types/filters';
+import { LoudnormBuilder } from '../types/filters.js';
 
 export const LoudnormFilter: LoudnormBuilder = (options) => {
    const { average, range, peak } = options;

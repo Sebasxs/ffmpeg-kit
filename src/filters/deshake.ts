@@ -1,5 +1,5 @@
-import { DeshakeBuilder } from '@/types/filters';
-import { buildParam } from '@/lib/common';
+import { DeshakeBuilder } from '../types/filters.js';
+import { buildParam } from '../lib/common.js';
 
 export const DeshakeFilter: DeshakeBuilder = (options) => {
    const { x, y, width, height, motionRangeX, motionRangeY, edge, blocksize, contrast } =

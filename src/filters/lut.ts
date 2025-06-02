@@ -1,4 +1,4 @@
-import { LookUpTableBuilder } from '@/types/filters';
+import { LookUpTableBuilder } from '../types/filters.js';
 
 export const LutFilter: LookUpTableBuilder = (preset) => {
    let videoFilter = '';

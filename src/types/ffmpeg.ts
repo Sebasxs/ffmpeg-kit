@@ -1,4 +1,4 @@
-import { SimplifiedMetadata } from '@/types/ffprobe';
+import { SimplifiedMetadata } from './ffprobe.js';
 
 export type MediaType = 'audio' | 'image' | 'video';
 

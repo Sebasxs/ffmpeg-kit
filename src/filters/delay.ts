@@ -1,4 +1,4 @@
-import { DelayBuilder } from '@/types/filters';
+import { DelayBuilder } from '../types/filters.js';
 
 export const DelayFilter: DelayBuilder = (seconds: number) => {
    return {

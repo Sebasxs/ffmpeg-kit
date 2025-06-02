@@ -1,4 +1,4 @@
-import { DenoiseBuilder } from '@/types/filters';
+import { DenoiseBuilder } from '../types/filters.js';
 
 export const DenoiseFilter: DenoiseBuilder = (method) => {
    if (method === 'hqdn3d') return { videoFilter: 'hqdn3d=4:3:6:4.5', audioFilter: '' };

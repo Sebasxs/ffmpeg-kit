@@ -1,4 +1,4 @@
-import { MediaEditor } from '../src/index';
+import { MediaEditor } from '../src/index.js';
 
 async function main() {
    console.log('--- ffmpeg-kit Demonstration ---');

@@ -1,4 +1,4 @@
-import { DynaudnormBuilder } from '@/types/filters';
+import { DynaudnormBuilder } from '../types/filters.js';
 
 export const DynaudnormFilter: DynaudnormBuilder = (options) => {
    const { frameLength, gaussSize, peak, maxGain, rms, compress, threshold } = options;

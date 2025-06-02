@@ -1,4 +1,4 @@
-import { NegateBuilder } from '@/types/filters';
+import { NegateBuilder } from '../types/filters.js';
 
 export const NegateFilter: NegateBuilder = (options) => {
    const { red, green, blue } = options;

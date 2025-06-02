@@ -6,7 +6,7 @@ import crypto from 'crypto';
 import mime from 'mime';
 
 // @types
-import { FFProbeResult, SimplifiedMetadata } from '@/types/ffprobe';
+import { FFProbeResult, SimplifiedMetadata } from '../types/ffprobe.js';
 import {
    AddFilterParams,
    OutputOptions,
@@ -16,10 +16,10 @@ import {
    PrepareInputOptionsParams,
    BuildCommandParams,
    PrepareOutputOptionsParams,
-} from '@/types/ffmpeg';
+} from '../types/ffmpeg.js';
 
 // @utils
-import { getFileMetadata } from '@/lib/ffprobe';
+import { getFileMetadata } from '../lib/ffprobe.js';
 import {
    FFmpegCommandError,
    FFmpegError,
@@ -27,7 +27,7 @@ import {
    InvalidFileExtensionError,
    InvalidMimeTypeError,
    InvalidOutputPathError,
-} from '@/lib/errors';
+} from '../lib/errors.js';
 
 export class FFmpegBase {
    protected _hash: string;

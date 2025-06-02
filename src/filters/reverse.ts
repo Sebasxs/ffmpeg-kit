@@ -1,4 +1,4 @@
-import { ReverseBuilder } from '@/types/filters';
+import { ReverseBuilder } from '../types/filters.js';
 
 export const ReverseFilter: ReverseBuilder = () => {
    return {

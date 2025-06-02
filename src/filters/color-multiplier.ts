@@ -1,5 +1,5 @@
-import { ColorMultiplierBuilder } from '@/types/filters';
-import { NoParametersError } from '@/lib/errors';
+import { ColorMultiplierBuilder } from '../types/filters.js';
+import { NoParametersError } from '../lib/errors.js';
 
 export const ColorMultiplierFilter: ColorMultiplierBuilder = (options) => {
    const { red, green, blue, alpha } = options;

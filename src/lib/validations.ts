@@ -24,10 +24,10 @@ import {
    VolumeOptions,
    OverlayOptions,
    SubtitleOptions,
-} from '@/types/filters';
+} from '../types/filters.js';
 
 // @utils
-import { ColorPresets, Curves, ScaleFlags, TextAlign, VideoSize } from './constants';
+import { ColorPresets, Curves, ScaleFlags, TextAlign, VideoSize } from './constants.js';
 
 export const VolumeSchema = z.object({
    volume: z.union([z.number(), z.string()]),

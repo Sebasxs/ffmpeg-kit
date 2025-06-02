@@ -1,5 +1,5 @@
-import { DrawTextBuilder } from '@/types/filters';
-import { buildParam } from '@/lib/common';
+import { DrawTextBuilder } from '../types/filters.js';
+import { buildParam } from '../lib/common.js';
 
 const parseTextAlignValue = (value: string): string => {
    return value

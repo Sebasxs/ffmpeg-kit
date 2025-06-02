@@ -1,4 +1,4 @@
-import { SubtitleBuilder } from '@/types/filters';
+import { SubtitleBuilder } from '../types/filters.js';
 
 const escapeSubtitlePath = (filePath: string): string => {
    return filePath.replace(/\\/g, '/').replace(/:/g, '\\:').replace(/'/g, "'\\\\''");

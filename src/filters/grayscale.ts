@@ -1,4 +1,4 @@
-import { GrayscaleBuilder } from '@/types/filters';
+import { GrayscaleBuilder } from '../types/filters.js';
 
 export const GrayscaleFilter: GrayscaleBuilder = () => {
    return {

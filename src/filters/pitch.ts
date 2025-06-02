@@ -1,4 +1,4 @@
-import { PitchBuilder } from '@/types/filters';
+import { PitchBuilder } from '../types/filters.js';
 
 export const PitchFilter: PitchBuilder = (factor, sampleRate) => {
    return {

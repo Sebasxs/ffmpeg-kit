@@ -6,7 +6,7 @@ import {
    ScaleFlags,
    TextAlign,
    VideoSize,
-} from '@/lib/constants';
+} from '../lib/constants.js';
 
 interface FilterOutput {
    audioFilter?: string;

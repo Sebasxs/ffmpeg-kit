@@ -1,4 +1,4 @@
-import { CropBuilder } from '@/types/filters';
+import { CropBuilder } from '../types/filters.js';
 
 export const CropFilter: CropBuilder = (options, mediaWidth, mediaHeight) => {
    const { width, height, x, y, aspectRatio } = options;

@@ -1,5 +1,5 @@
-import { OverlayBuilder } from '@/types/filters';
-import { buildParam } from '@/lib/common';
+import { OverlayBuilder } from '../types/filters.js';
+import { buildParam } from '../lib/common.js';
 
 export const OverlayFilter: OverlayBuilder = (options) => {
    const { x = 0, y = 0, enable, eofAction, shortest } = options;

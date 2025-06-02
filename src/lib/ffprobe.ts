@@ -1,6 +1,6 @@
-import { FFProbeResult } from '@/types/ffprobe';
+import { FFProbeResult } from '../types/ffprobe.js';
 import { spawnSync } from 'node:child_process';
-import { MetadataError } from './errors';
+import { MetadataError } from './errors.js';
 
 export function getFileMetadata(path: string): FFProbeResult {
    try {

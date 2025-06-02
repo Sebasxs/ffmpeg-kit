@@ -1,6 +1,6 @@
-import { ColorBalanceBuilder } from '@/types/filters';
-import { buildParam } from '@/lib/common';
-import { NoParametersError } from '@/lib/errors';
+import { ColorBalanceBuilder } from '../types/filters.js';
+import { buildParam } from '../lib/common.js';
+import { NoParametersError } from '../lib/errors.js';
 
 export const ColorBalanceFilter: ColorBalanceBuilder = (options) => {
    const {

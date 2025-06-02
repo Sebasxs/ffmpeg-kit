@@ -1,4 +1,4 @@
-import { FlipBuilder } from '@/types/filters';
+import { FlipBuilder } from '../types/filters.js';
 
 export const FlipFilter: FlipBuilder = (axis) => {
    if (axis === 'horizontal') return { videoFilter: 'hflip' };

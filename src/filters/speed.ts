@@ -1,4 +1,4 @@
-import { SpeedBuilder } from '@/types/filters';
+import { SpeedBuilder } from '../types/filters.js';
 
 export const SpeedFilter: SpeedBuilder = (factor) => {
    return {

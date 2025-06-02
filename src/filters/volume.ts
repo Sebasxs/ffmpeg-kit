@@ -1,4 +1,4 @@
-import { VolumeBuilder } from '@/types/filters';
+import { VolumeBuilder } from '../types/filters.js';
 
 export const VolumeFilter: VolumeBuilder = ({ volume, _eval = 'once' }) => {
    if (typeof volume === 'number') return { audioFilter: `volume=${Math.abs(volume)}` };

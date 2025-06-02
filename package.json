@@ -5,13 +5,19 @@
    "type": "module",
    "main": "dist/index.js",
    "types": "dist/index.d.ts",
+   "exports": {
+      ".": {
+         "import": "./dist/index.js",
+         "types": "./dist/index.d.ts"
+      }
+   },
    "files": [
       "dist"
    ],
    "scripts": {
       "dev": "tsx examples/sample.ts",
       "build": "tsc",
-      "start": "dist/index.js"
+      "prepack": "pnpm run build"
    },
    "keywords": [
       "ffmpeg",

@@ -1,6 +1,6 @@
 // @packages
 import { existsSync } from 'node:fs';
-import { FFmpegBase } from '@/core/ffmpeg-base';
+import { FFmpegBase } from './ffmpeg-base.js';
 import { prettifyError } from 'zod';
 
 // @filters
@@ -34,9 +34,10 @@ import {
    PanFilter,
    DrawTextFilter,
    DrawBoxFilter,
+   RemoveColorFilter,
    OverlayFilter,
    SubtitlesFilter,
-} from '@/filters';
+} from '../filters/index.js';
 
 // @types
 import {
@@ -65,10 +66,10 @@ import {
    VolumeOptions,
    OverlayOptions,
    SubtitleOptions,
-} from '@/types/filters';
+} from '../types/filters.js';
 
 // @utils
-import { MissingStreamError, FileNotFoundError } from '@/lib/errors';
+import { MissingStreamError, FileNotFoundError } from '../lib/errors.js';
 import {
    LoudnormSchema,
    VolumeSchema,
@@ -100,8 +101,7 @@ import {
    RemoveColorSchema,
    OverlaySchema,
    SubtitleSchema,
-} from '@/lib/validations';
-import { RemoveColorFilter } from '@/filters/remove-color';
+} from '../lib/validations.js';
 
 /**
  * MediaEditor class provides a fluent interface for applying various audio and video filters to media files using FFmpeg.

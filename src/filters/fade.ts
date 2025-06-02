@@ -1,4 +1,4 @@
-import { FadeBuilder } from '@/types/filters';
+import { FadeBuilder } from '../types/filters.js';
 
 export const FadeFilter: FadeBuilder = (options) => {
    const { type = 'in', start = 0, duration, curve, color } = options;

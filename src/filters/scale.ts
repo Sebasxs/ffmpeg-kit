@@ -1,4 +1,4 @@
-import { ScaleBuilder } from '@/types/filters';
+import { ScaleBuilder } from '../types/filters.js';
 
 export const ScaleFilter: ScaleBuilder = (options) => {
    const { width, height, size, percentage, forceAspectRatio, flags } = options;
