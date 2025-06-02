@@ -68,19 +68,13 @@ yarn add ffmpeg-kit
 ```typescript
 import { MediaEditor } from 'ffmpeg-kit';
 
-async function processVideo() {
-  const editor = new MediaEditor('input.mp4');
+const editor = new MediaEditor('input.mp4');
 
-  await editor
-    .trim({ start: 2, end: 10 })
-    .fade({ type: 'in', duration: 1, color: 'Black' })
-    .flip('horizontal')
-    .runAsync('output.mp4');
-
-  console.log('Video processed successfully!');
-}
-
-processVideo();
+await editor
+   .trim({ start: 2, end: 10 })
+   .fade({ type: 'in', duration: 1, color: 'Black' })
+   .flip('horizontal')
+   .runAsync('output.mp4');
 ```
 
 ---
@@ -96,9 +90,9 @@ const editor = new MediaEditor('input.mp4');
 
 // Crop to 1:1 square ratio and scale to 1080p
 await editor
-  .crop({ aspectRatio: '1:1' })
-  .scale({ width: 1080, height: 1080 })
-  .runAsync('square_1080p.mp4');
+   .crop({ aspectRatio: '1:1' })
+   .scale({ width: 1080, height: 1080 })
+   .runAsync('square_1080p.mp4');
 ```
 
 ---
@@ -113,16 +107,16 @@ import { MediaEditor } from 'ffmpeg-kit';
 const editor = new MediaEditor('interview.mp4');
 
 await editor
-  .subtitles('captions.srt', {
-    fontSize: 24,
-    fontName: 'Arial',
-    primaryColor: '&H00FFFFFF',
-  })
-  .overlay('watermark.png', {
-    x: 30,
-    y: 30,
-  })
-  .runAsync('final_presentation.mp4');
+   .subtitles('captions.srt', {
+      fontSize: 24,
+      fontName: 'Arial',
+      primaryColor: '&H00FFFFFF',
+   })
+   .overlay('watermark.png', {
+      x: 30,
+      y: 30,
+   })
+   .runAsync('final_presentation.mp4');
 ```
 
 ---
@@ -137,10 +131,10 @@ import { MediaEditor } from 'ffmpeg-kit';
 const editor = new MediaEditor('podcast.mp3');
 
 await editor
-  .volume({ volume: '150%' })
-  .loudnorm({ average: -16, range: 7, peak: -1.5 })
-  .pitch(1.1) // Slightly pitch up without desynchronization
-  .runAsync('podcast_mastered.mp3');
+   .volume({ volume: '150%' })
+   .loudnorm({ average: -16, range: 7, peak: -1.5 })
+   .pitch(1.1) // Slightly pitch up without desynchronization
+   .runAsync('podcast_mastered.mp3');
 ```
 
 ---
@@ -157,10 +151,10 @@ const metadata = getFileMetadata('video.mp4');
 console.log('Duration (seconds):', metadata.format.duration);
 console.log('Streams count:', metadata.streams.length);
 
-const videoStream = metadata.streams.find(s => s.codec_type === 'video');
+const videoStream = metadata.streams.find((s) => s.codec_type === 'video');
 if (videoStream) {
-  console.log(`Resolution: ${videoStream.width}x${videoStream.height}`);
-  console.log(`Codec: ${videoStream.codec_name}`);
+   console.log(`Resolution: ${videoStream.width}x${videoStream.height}`);
+   console.log(`Codec: ${videoStream.codec_name}`);
 }
 ```
 
@@ -174,15 +168,15 @@ Configure encoding flags and parameters through the second argument of `runAsync
 import { MediaEditor } from 'ffmpeg-kit';
 
 await new MediaEditor('raw_footage.mov')
-  .scale({ width: 1920, height: 1080 })
-  .runAsync('optimized.mp4', {
-    videoCodec: 'libx264',
-    audioCodec: 'aac',
-    fps: 30,
-    crf: 23,
-    preset: 'fast',
-    overwrite: true,
-  });
+   .scale({ width: 1920, height: 1080 })
+   .runAsync('optimized.mp4', {
+      videoCodec: 'libx264',
+      audioCodec: 'aac',
+      fps: 30,
+      crf: 23,
+      preset: 'fast',
+      overwrite: true,
+   });
 ```
 
 <br>
@@ -191,13 +185,13 @@ await new MediaEditor('raw_footage.mov')
 
 ## Supported Filters
 
-| Category | Filters | Description |
-| :--- | :--- | :--- |
-| **Geometry & Motion** | `scale`, `crop`, `pad`, `rotate`, `flip`, `deshake` | Resize, reposition, aspect ratio adjustment, and stabilization. |
-| **Color & Look** | `brightness`, `hue`, `colorBalance`, `colorMixer`, `colorMultiplier`, `removeColor`, `grayscale`, `lut`, `negate` | Color grading, LUT presets (cyberpunk, sepia, vibrant, etc.), and adjustments. |
-| **Effects & Text** | `fade`, `blur`, `denoise`, `alpha`, `drawText`, `drawBox` | Transitions, text overlays, boxes, and transparency controls. |
-| **Multi-Media & Subs**| `overlay`, `subtitles` | Watermarking, picture-in-picture, and custom ASS/SRT caption styling. |
-| **Audio Controls** | `volume`, `loudnorm`, `dynaudnorm`, `pitch`, `pan`, `delay`, `reverse`, `speed` | Volume levels, broadcast loudness standards, tempo, and channel panning. |
+| Category               | Filters                                                                                                           | Description                                                                    |
+| :--------------------- | :---------------------------------------------------------------------------------------------------------------- | :----------------------------------------------------------------------------- |
+| **Geometry & Motion**  | `scale`, `crop`, `pad`, `rotate`, `flip`, `deshake`                                                               | Resize, reposition, aspect ratio adjustment, and stabilization.                |
+| **Color & Look**       | `brightness`, `hue`, `colorBalance`, `colorMixer`, `colorMultiplier`, `removeColor`, `grayscale`, `lut`, `negate` | Color grading, LUT presets (cyberpunk, sepia, vibrant, etc.), and adjustments. |
+| **Effects & Text**     | `fade`, `blur`, `denoise`, `alpha`, `drawText`, `drawBox`                                                         | Transitions, text overlays, boxes, and transparency controls.                  |
+| **Multi-Media & Subs** | `overlay`, `subtitles`                                                                                            | Watermarking, picture-in-picture, and custom ASS/SRT caption styling.          |
+| **Audio Controls**     | `volume`, `loudnorm`, `dynaudnorm`, `pitch`, `pan`, `delay`, `reverse`, `speed`                                   | Volume levels, broadcast loudness standards, tempo, and channel panning.       |
 
 <br>
 
